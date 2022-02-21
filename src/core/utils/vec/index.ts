@@ -118,10 +118,4 @@ export class Vec {
             y: trans_vec.x * Math.sin(r) + trans_vec.y * Math.cos(r) + pt.y
         }
     }
-
-    
-
-    
-
-
 } 
