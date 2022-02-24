@@ -20,5 +20,13 @@ export interface ellipse {
 export interface triangle {
     a: point,
     b: point,
-    c: point
+    c: point,
+    r?: number
+}
+
+export interface bound {
+    top: number,
+    bot: number,
+    left: number,
+    right: number 
 }
