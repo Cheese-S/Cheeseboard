@@ -25,8 +25,8 @@ export interface triangle {
 }
 
 export interface bound {
-    top: number,
-    bot: number,
-    left: number,
-    right: number 
+    lft: number, 
+    top: number, 
+    rgt: number,
+    btm: number
 }
