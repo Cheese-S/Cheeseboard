@@ -90,7 +90,11 @@ export class Quadtree {
         this.root_mx = this.root_sx = w / 2; 
         this.root_my = this.root_sy = h / 2;
         this.max_elements = max_elements;
-        this.max_depth = max_depth; 
+        this.max_depth = max_depth;
+
+        this.qnodes.insert();
+        this.qnodes.set(0, qnode_idx_fc, -1);
+        this.qnodes.set(0, qnode_idx_num_children, 0);  
     }
 
     /**
@@ -212,17 +216,17 @@ export class Quadtree {
             while (current_enode_index !== -1) {
                 const element = this.enodes.get(current_enode_index, enode_idx_elt);
                 const lft = this.elts.get(element, elt_idx_lft);
-                const rgt = this.elts.get(element, elt_idx_lft);
-                const top = this.elts.get(element, elt_idx_lft);
-                const btm = this.elts.get(element, elt_idx_lft);
+                const rgt = this.elts.get(element, elt_idx_rgt);
+                const top = this.elts.get(element, elt_idx_top);
+                const btm = this.elts.get(element, elt_idx_btm);
 
-                if (!this.temp[element] && (omit_ele && !omit_ele?.includes(element)) && Quadtree.intersect(qlft, qtop, qrgt, qbtm, lft, top, rgt, btm)) {
+                if (!this.temp[element] && !(omit_ele?.includes(element)) && Quadtree.intersect(qlft, qtop, qrgt, qbtm, lft, top, rgt, btm)) {
                     out.push(this.elts.get(element, elt_idx_id)); 
                     affected.push(element); 
                     this.temp[element] = true; 
                 }
+                current_enode_index = this.enodes.get(current_enode_index, enode_idx_next); 
             }
-            current_enode_index = this.enodes.get(current_enode_index, enode_idx_next); 
         }
 
         for (let i = 0; i < affected.length; i++) {
@@ -315,7 +319,7 @@ export class Quadtree {
             const nd_depth = to_process.get(back_idx, qnd_idx_depth);
             to_process.pop(); 
 
-            if (this.qnodes.get(nd_index, qnode_idx_fc) !== -1) {
+            if (this.qnodes.get(nd_index, qnode_idx_num_children) !== -1) {
                 Quadtree.push_node(leaves, nd_index, nd_depth, nd_mx, nd_my, nd_sx, nd_sy); 
             } else {
                 const fc = this.qnodes.get(nd_index, qnode_idx_fc);
@@ -379,6 +383,7 @@ export class Quadtree {
             this.qnodes.insert();
             this.qnodes.insert();
             this.qnodes.insert();
+            this.qnodes.set(node, qnode_idx_fc, fc); 
             
             for (let i = 0; i < 4; i++) {
                 this.qnodes.set(fc+i, qnode_idx_fc, -1); 
