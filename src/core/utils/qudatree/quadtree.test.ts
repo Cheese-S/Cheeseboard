@@ -1,5 +1,5 @@
-import { Quadtree } from "./core/utils/qudatree";
-import { bound } from "./core/type"
+import { Quadtree } from ".";
+import { bound } from "../../type"
 let setup = () => {
     let q = new Quadtree(1000, 1000, 4, 10); 
     q.insert(1, 300, 300, 300,300); 
