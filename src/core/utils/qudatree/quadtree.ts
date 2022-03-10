@@ -65,11 +65,17 @@ class Quadtree {
     // Buffer for queries
     private temp: boolean[]; 
 
+    
+
     /* -------------------------------- QUADNODE -------------------------------- */
     private quad_nodes: IntList = new IntList(2);
 
+    /* ------------------------------ ELEMENT NODES ----------------------------- */
+    private enodes = new IntList(2); 
+
     /* --------------------------------- ELEMENT -------------------------------- */
     private elts = new IntList(5);
+
 
     /**
      * Construct an element with the specified dimension, max_elem, and max_depth. 
@@ -110,13 +116,18 @@ class Quadtree {
         const top = this.elts.get(elt, elt_top); 
         const rgt = this.elts.get(elt, elt_rgt); 
         const btm = this.elts.get(elt, elt_btm);
+        let leaves = this.find_leaves(index, depth, mx, my, sx, sy, lft, top, rgt, btm); 
+        
+        for (let i = 0; i < leaves.size(); i++) {
+            
+        }
         
         
     }
 
     find_leaves(node: number, depth:number, 
                 mx: number, my: number, sx: number, sy: number,
-                lft: number, top: number, rgt: number, bot: number): IntList {
+                lft: number, top: number, rgt: number, btm: number): IntList {
                     
         let leaves = new IntList(qn_field_num);
         let process = new IntList(qn_field_num);
@@ -135,14 +146,33 @@ class Quadtree {
             if (this.quad_nodes.get(nd_idx, qn_num) != -1) {
                 Quadtree.push_node(leaves, nd_idx, nd_depth, nd_mx, nd_my, nd_sx, nd_sy);
             } else {
-                
+                const fc = this.quad_nodes.get(nd_idx, qn_fc); 
+                const hx = nd_sx / 2; 
+                const hy = nd_sy / 2; 
+                const l = nd_mx - hx; 
+                const t = nd_my - hy;
+                const r = nd_mx + hx;
+                const b = nd_my + hy; 
+                if (top <= nd_my) {
+                    if (lft <= nd_mx) {
+                        Quadtree.push_node(process, fc + 0, nd_depth + 1, l, t, hx, hy);
+                    }
+                    if (rgt > nd_mx) {
+                        Quadtree.push_node(process, fc + 1, nd_depth + 1, r, t, hx, hy); 
+                    }
+                } 
+                if (btm > nd_my) {
+                    if (lft <= nd_mx) {
+                        Quadtree.push_node(process, fc + 2, nd_depth + 1, l, b, hx, hy);
+                    }
+                    if (rgt > nd_mx) {
+                        Quadtree.push_node(process, fc + 3, nd_depth + 1, r, b, hx, hy); 
+                    }
+                }
+
             }
-
-
         }
-
-
-
+        return leaves; 
     }
 
     private static push_node(lst: IntList, index: number, depth: number, mx: number, my: number, sx: number, sy: number): void {
@@ -153,6 +183,29 @@ class Quadtree {
         lst.set(insert_idx, qn_sy, sy);
         lst.set(insert_idx, qn_depth, depth);
         lst.set(insert_idx, qn_idx, index); 
+    }
+
+    private insert_leaf(node: number, depth: number, mx:number, my: number, sx: number, sy: number, elt: number): void {
+        const nd_fc = this.quad_nodes.get(node, qn_fc);
+        this.quad_nodes.set(node, qn_fc, this.enodes.insert());
+        this.enodes.set(this.quad_nodes.get(node, qn_fc), enode_next, nd_fc);
+        this.enodes.set(this.quad_nodes.get(node, qn_fc), enode_elt, elt); 
+
+        if (this.quad_nodes.get(node, qn_num) == this.max_elem && depth < this.max_depth) {
+            let elts = new IntList(1); 
+            while (this.quad_nodes.get(node, qn_fc) != -1) {
+                const index = this.quad_nodes.get(node, qn_fc); 
+                const next_index = this.enodes.get(index, enode_next); 
+                const elt = this.enodes.get(index, enode_elt);
+
+                this.quad_nodes.set(node, qn_fc, next_index);
+                this.enodes.remove(index);
+
+                elts.set(elts.push(), 0, elt);
+            }
+
+            
+        }
     }
 
 
