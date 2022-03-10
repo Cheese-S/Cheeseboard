@@ -1,32 +1,32 @@
-export interface point {
+export interface Point {
     x: number,
     y: number
 }
 
-export interface rect {
-    origin: point, // Top Left Pt 
+export interface Rect {
+    origin: Point, // Top Left Pt 
     h: number, 
     w: number, 
     r: number
 }
 
-export interface ellipse {
-    center: point,
+export interface Ellipse {
+    center: Point,
     rx: number,
     ry: number,
     rot: number 
 }
 
-export interface triangle {
-    a: point,
-    b: point,
-    c: point,
+export interface Triangle {
+    a: Point,
+    b: Point,
+    c: Point,
     r?: number
 }
 
-export interface bound {
-    top: number,
-    bot: number,
-    left: number,
-    right: number 
+export interface Bound {
+    lft: number, 
+    top: number, 
+    rgt: number,
+    btm: number
 }

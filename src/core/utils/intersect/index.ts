@@ -1,4 +1,4 @@
-import { point, rect, ellipse, triangle } from "../../type";
+import { point, rect, ellipse, triangle, bound } from "../../type";
 import { Vec } from "../vec";
 
 /* -------------------------------------------------------------------------- */
@@ -235,5 +235,3 @@ function get_triangle_edges(t: triangle): point[][] {
 /* -------------------------------------------------------------------------- */
 /*                                    BOUND                                   */
 /* -------------------------------------------------------------------------- */
-
-
