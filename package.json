@@ -61,6 +61,7 @@
     "dist"
   ],
   "dependencies": {
-    "mobx-react-lite": "^3.2.3"
+    "mobx-react-lite": "^3.2.3",
+    "recoil": "^0.6.1"
   }
 }

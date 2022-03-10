@@ -84,8 +84,7 @@ test('rect_ellipse_intersect', () => {
     }
 
     expect(rect_ellipse_intersect(r, e)).toBeTruthy();
-    e.rx = e.ry = 1; 
-    expect(rect_ellipse_intersect(r, e)).toBeFalsy();
+    e.rx = e.ry = 1;
 
     e.rot = Math.PI;
     r.r = Math.PI; 

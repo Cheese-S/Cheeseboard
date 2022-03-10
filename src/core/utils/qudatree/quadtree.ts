@@ -1,4 +1,4 @@
-import { bound } from "../../type";
+import { Bound } from "../../type";
 import IntList from "./intlist";
 
 /* --------------------------- ELEMENT NODE FIELD --------------------------- */
@@ -195,7 +195,7 @@ export class Quadtree {
      * @returns A list of element id that can intersect with the input AABB. 
      */
 
-    query(bd: bound, omit_ele?: number[]): number[] {
+    query(bd: Bound, omit_ele?: number[]): number[] {
         let out: number[] = []; 
         let affected: number[] = []; 
 
