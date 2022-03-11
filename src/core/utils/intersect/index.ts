@@ -1,4 +1,4 @@
-import { point, rect, ellipse, triangle, bound } from "../../type";
+import { Point, Rect, Ellipse, Triangle, Bound } from "../../type";
 import { Vec } from "../vec";
 
 /* -------------------------------------------------------------------------- */
@@ -13,7 +13,7 @@ import { Vec } from "../vec";
  * @returns true if point lies on a segment, false otherwise 
  */
 
-function pt_on_seg(lp1: point, lp2: point, p: point): boolean {
+function pt_on_seg(lp1: Point, lp2: Point, p: Point): boolean {
     return Math.min(lp1.x, lp2.x) <= p.x && p.x <= Math.max(lp1.x, lp2.x) &&
     Math.min(lp1.y, lp2.y) <= p.y && p.y <= Math.max(lp1.y, lp2.y)
 }
@@ -27,7 +27,7 @@ function pt_on_seg(lp1: point, lp2: point, p: point): boolean {
  * @returns true if line segment p1p2 intersects with line segment p3p4 
  */
 
-export function seg_seg_intersect(p1: point, p2: point, p3: point, p4: point): boolean {
+export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
     let d1 = Vec.direction(p1, p2, p3);
     let d2 = Vec.direction(p1, p2, p4);
     let d3 = Vec.direction(p3, p4, p1);
@@ -56,7 +56,7 @@ export function seg_seg_intersect(p1: point, p2: point, p3: point, p4: point): b
  * @returns True if a segment intersect with a ellipse, false otherwise 
  */
 
-export function seg_ellipse_intersect(p1:point, p2: point, e: ellipse): boolean {
+export function seg_ellipse_intersect(p1:Point, p2: Point, e: Ellipse): boolean {
     let trans_p1 = Vec.sub(Vec.rot_about(p1, e.center, -e.rot), e.center); 
     let trans_p2 = Vec.sub(Vec.rot_about(p2, e.center, -e.rot), e.center);
     
@@ -91,7 +91,7 @@ export function seg_ellipse_intersect(p1:point, p2: point, e: ellipse): boolean 
  * @returns True if the line segment intersect with a polyline, false otherwise
  */
 
-export function seg_polyseg_intersect(p1: point, p2: point, poly: point[]): boolean {
+export function seg_polyseg_intersect(p1: Point, p2: Point, poly: Point[]): boolean {
     for (let i = 1; i < poly.length; i++) {
         if (seg_seg_intersect(p1, p2, poly[i - 1], poly[i])) {
             return true; 
@@ -112,7 +112,7 @@ export function seg_polyseg_intersect(p1: point, p2: point, poly: point[]): bool
  * @returns [top_left, top_right, bot_left, bot_right]
  */
 
-function get_rect_pts(rect: rect): point[] {
+export function get_rect_pts(rect: Rect): Point[] {
     return [
         Vec.rot(rect.origin, rect.r),
         Vec.rot({x: rect.origin.x + rect.w, y: rect.origin.y}, rect.r),
@@ -127,7 +127,7 @@ function get_rect_pts(rect: rect): point[] {
  * @param pts vertecies of the rectangle, expects to be orderd as [top_left, top_right, bot_left, bot_right]
  * @returns [top_edge, left_edge, bot_edge, right_edge]
  */
-function get_rect_edges(rect: rect, pts?: point[]): point[][] {
+export function get_rect_edges(rect: Rect, pts?: Point[]): Point[][] {
     if (!pts) {
         pts = get_rect_pts(rect);
     }
@@ -146,7 +146,7 @@ function get_rect_edges(rect: rect, pts?: point[]): point[][] {
  * @param rect 
  * @returns True if pt in rectangle, false otherwise 
  */
-export function pt_in_rect(p: point, rect: rect): boolean {
+export function pt_in_rect(p: Point, rect: Rect): boolean {
     let r_p = Vec.rot(p, -rect.r);
     return ((rect.origin.x <= r_p.x) && (r_p.x <= rect.origin.x + rect.w)) &&
         ((rect.origin.y - rect.h <= r_p.y) && (r_p.y <= rect.origin.y));
@@ -159,7 +159,7 @@ export function pt_in_rect(p: point, rect: rect): boolean {
  * @returns True if two rectangles intersect (or enclose), false otherwise
  */
 
-export function rect_rect_intersect(r1: rect, r2: rect): boolean {
+export function rect_rect_intersect(r1: Rect, r2: Rect): boolean {
     let r1_pts = get_rect_pts(r1);
     if (r1_pts.some((e)=> { return pt_in_rect(e, r2) })) {
         return true; 
@@ -180,7 +180,7 @@ export function rect_rect_intersect(r1: rect, r2: rect): boolean {
  * @returns True if the rectangle intersect (or enclose) with the ellipse, false otherwise. 
  */
 
-export function rect_ellipse_intersect(r: rect, e: ellipse): boolean {
+export function rect_ellipse_intersect(r: Rect, e: Ellipse): boolean {
     let r_edges = get_rect_edges(r);
     return r_edges.some((edge) => seg_ellipse_intersect(edge[0], edge[1], e)) || pt_in_rect(e.center, r); 
 }
@@ -192,7 +192,7 @@ export function rect_ellipse_intersect(r: rect, e: ellipse): boolean {
  * @returns True if the rectangle intersect (or enclose) with the ellipse, false otherwise. 
  */
 
-export function rect_triangle_intersect(r: rect, t: triangle): boolean {
+export function rect_triangle_intersect(r: Rect, t: Triangle): boolean {
     let r_edges = get_rect_edges(r); 
     let t_edges = get_triangle_edges(t);
     return r_edges.some((e1) => {
@@ -209,7 +209,7 @@ export function rect_triangle_intersect(r: rect, t: triangle): boolean {
  * @returns True if the rectangle intersect (or enclose) with the polyline, false otherwsie. 
  */
 
-export function rect_poly_intersect(r: rect, poly: point[]): boolean {
+export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
     let r_edges = get_rect_edges(r);
     return poly.some((p) => pt_in_rect(p, r)) || 
         r_edges.some((e) => seg_polyseg_intersect(e[0], e[1], poly));
@@ -224,7 +224,7 @@ export function rect_poly_intersect(r: rect, poly: point[]): boolean {
  * @param t 
  * @returns [AB, AC, BC]
  */
-function get_triangle_edges(t: triangle): point[][] {
+function get_triangle_edges(t: Triangle): Point[][] {
     return [
         [t.a, t.b],
         [t.a, t.c], 
