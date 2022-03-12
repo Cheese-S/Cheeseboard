@@ -1,5 +1,5 @@
 import { Point, Rect, Ellipse, Triangle, Bound } from "../../type";
-import { Vec } from "../vec";
+import { Vec } from "../vec/vec";
 
 /* -------------------------------------------------------------------------- */
 /*                                LINE SEGMENT                                */
@@ -46,6 +46,18 @@ export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): b
     return false; 
 }
 
+/* -------------------------------------------------------------------------- */
+/*                                   ELLIPSE                                  */
+/* -------------------------------------------------------------------------- */
+
+export function get_ellipse_pts(e: Ellipse): Point[] {
+    return [
+        Vec.rot_about({x: e.center.x + e.rx, y: e.center.y}, e.center, e.r),
+        Vec.rot_about({x: e.center.x - e.rx, y: e.center.y}, e.center, e.r),
+        Vec.rot_about({x: e.center.x, y: e.center.y + e.ry}, e.center, e.r),
+        Vec.rot_about({x: e.center.x, y: e.center.y - e.ry}, e.center, e.r),
+    ]
+}
 
 /**
  * Check to see if a line segment intersect with an ellipse
@@ -57,8 +69,8 @@ export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): b
  */
 
 export function seg_ellipse_intersect(p1:Point, p2: Point, e: Ellipse): boolean {
-    let trans_p1 = Vec.sub(Vec.rot_about(p1, e.center, -e.rot), e.center); 
-    let trans_p2 = Vec.sub(Vec.rot_about(p2, e.center, -e.rot), e.center);
+    let trans_p1 = Vec.sub(Vec.rot_about(p1, e.center, -e.r), e.center); 
+    let trans_p2 = Vec.sub(Vec.rot_about(p2, e.center, -e.r), e.center);
     
     const diff = Vec.sub(trans_p2, trans_p1);
 
@@ -114,10 +126,10 @@ export function seg_polyseg_intersect(p1: Point, p2: Point, poly: Point[]): bool
 
 export function get_rect_pts(rect: Rect): Point[] {
     return [
-        Vec.rot(rect.origin, rect.r),
-        Vec.rot({x: rect.origin.x + rect.w, y: rect.origin.y}, rect.r),
-        Vec.rot({x: rect.origin.x, y: rect.origin.y - rect.h}, rect.r),
-        Vec.rot({x: rect.origin.x + rect.w, y: rect.origin.y - rect.h}, rect.r),
+        Vec.rot_about({x: rect.center.x - rect.mx, y: rect.center.y - rect.my}, rect.center, rect.r), 
+        Vec.rot_about({x: rect.center.x + rect.mx, y: rect.center.y - rect.my}, rect.center, rect.r), 
+        Vec.rot_about({x: rect.center.x - rect.mx, y: rect.center.y + rect.my}, rect.center, rect.r), 
+        Vec.rot_about({x: rect.center.x + rect.mx, y: rect.center.y + rect.my}, rect.center, rect.r) 
     ]; 
 }
 
@@ -147,29 +159,29 @@ export function get_rect_edges(rect: Rect, pts?: Point[]): Point[][] {
  * @returns True if pt in rectangle, false otherwise 
  */
 export function pt_in_rect(p: Point, rect: Rect): boolean {
-    let r_p = Vec.rot(p, -rect.r);
-    return ((rect.origin.x <= r_p.x) && (r_p.x <= rect.origin.x + rect.w)) &&
-        ((rect.origin.y - rect.h <= r_p.y) && (r_p.y <= rect.origin.y));
+    let r_p = Vec.rot_about(p, rect.center, -rect.r);
+    return ((rect.center.x - rect.mx <= r_p.x) && (r_p.x <= rect.center.x + rect.mx)) &&
+        ((rect.center.y - rect.my <= r_p.y) && (r_p.y <= rect.center.y + rect.my));
 }
 
 /**
- * Test to see if two rectangles intersect (or enclose)
+ * Test to see if r1 intersects/contains r2
  * @param r1 
  * @param r2 
- * @returns True if two rectangles intersect (or enclose), false otherwise
+ * @returns True if r1 intersects/contains r2, false otherwise (return false if r2 contains r1)
  */
 
 export function rect_rect_intersect(r1: Rect, r2: Rect): boolean {
-    let r1_pts = get_rect_pts(r1);
-    if (r1_pts.some((e)=> { return pt_in_rect(e, r2) })) {
+    let r2_pts = get_rect_pts(r2);
+    if (r2_pts.some((pt) => { return pt_in_rect(pt, r1) })) {
         return true; 
     }
-    let r1_edges = get_rect_edges(r1, r1_pts);
-    let r2_edges = get_rect_edges(r2); 
+    let r1_edges = get_rect_edges(r1);
+    let r2_edges = get_rect_edges(r2, r2_pts);
     return r1_edges.some((e1) => {
-       return r2_edges.some((e2) => {
-           return seg_seg_intersect(e1[0],e1[1],e2[0], e2[1]); 
-       }) 
+        return r2_edges.some((e2) => {
+            return seg_seg_intersect(e1[0],e1[1],e2[0], e2[1]); 
+        }) 
     }) 
 }
 
@@ -219,19 +231,181 @@ export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
 /*                                  TRIANGLE                                  */
 /* -------------------------------------------------------------------------- */
 
+function get_triangle_pts(t: Triangle): Point[] {
+    let center = Vec.mul_n(Vec.add_vecs(t.a, t.b, t.c), 1/3); 
+    return [
+        Vec.rot_about(t.a, center, t.r),
+        Vec.rot_about(t.b, center, t.r),
+        Vec.rot_about(t.c, center, t.r)
+    ]
+}
+
 /**
  * Given a triangle with vertices A, B, C, return the three edges associated with it. 
  * @param t 
  * @returns [AB, AC, BC]
  */
 function get_triangle_edges(t: Triangle): Point[][] {
+    let pts = get_triangle_pts(t);
     return [
-        [t.a, t.b],
-        [t.a, t.c], 
-        [t.b, t.c],
+        [pts[0], pts[1]],
+        [pts[0], pts[2]], 
+        [pts[1], pts[2]]
     ]
 }
 
 /* -------------------------------------------------------------------------- */
 /*                                    BOUND                                   */
 /* -------------------------------------------------------------------------- */
+
+/**
+ * Get a rectangle represented by bound
+ * @param bd 
+ * @returns Rectangle with 0 rotation
+ */
+export function get_bound_rect(bd: Bound): Rect {
+    let mx = Math.abs(bd.lft - bd.rgt) / 2;
+    let my = Math.abs(bd.top - bd.btm) / 2;
+    return {
+        center: {x: bd.lft + mx, y: bd.top - my},
+        mx: mx, 
+        my: my, 
+        r: 0 
+    }; 
+}
+
+
+/**
+ * Get a rectangle's bound
+ * @param rect 
+ * @returns Bound 
+ */
+export function get_rect_bound(rect: Rect): Bound {
+    let pts = get_rect_pts(rect);
+    let t:number, l:number, b:number, r:number; 
+    pts.forEach((pt) => {
+        if (t === undefined || t < pt.y) t = pt.y;
+        if (b === undefined || b > pt.y) b = pt.y;
+        if (l === undefined || l > pt.x) l = pt.x;
+        if (r === undefined || r < pt.x) r = pt.x;
+    })
+    return {
+        //@ts-ignore
+        lft: l,
+        //@ts-ignore
+        top: t,
+        //@ts-ignore
+        rgt: r,
+        //@ts-ignore
+        btm: b
+    }
+} 
+
+/**
+ * Get a ellipse's bound 
+ * @param e 
+ * @returns Bound
+ */
+export function get_ellipse_bound(e: Ellipse): Bound {
+    let pts = get_ellipse_pts(e);
+    let t: number, l:number, b: number, r:number;
+    pts.forEach((pt) => {
+        if (t === undefined || t < pt.y) t = pt.y;
+        if (b === undefined || b > pt.y) b = pt.y;
+        if (l === undefined || l > pt.x) l = pt.x;
+        if (r === undefined || r < pt.x) r = pt.x;
+    })
+    return {
+        //@ts-ignore
+        lft: l,
+        //@ts-ignore
+        top: t,
+        //@ts-ignore
+        rgt: r,
+        //@ts-ignore
+        btm: b
+    }
+}
+
+/**
+ * Get a triangle's bound
+ * @param tri 
+ * @returns Bound 
+ */
+
+export function get_triangle_bound(tri: Triangle): Bound {
+    let pts = get_triangle_pts(tri);
+    let t: number, l:number, b: number, r:number;
+    pts.forEach((pt) => {
+        if (t === undefined || t < pt.y) t = pt.y;
+        if (b === undefined || b > pt.y) b = pt.y;
+        if (l === undefined || l > pt.x) l = pt.x;
+        if (r === undefined || r < pt.x) r = pt.x;
+    })
+    return {
+        //@ts-ignore
+        lft: l,
+        //@ts-ignore
+        top: t,
+        //@ts-ignore
+        rgt: r,
+        //@ts-ignore
+        btm: b
+    }
+}
+
+/**
+ * Get a common bounding box
+ * @param bd1 
+ * @param bd2 
+ * @returns The bouding box that bounds both bd1 and bd2 
+ */
+
+export function get_common_bound(bd1: Bound, bd2: Bound): Bound {
+    return {
+        lft: bd1.lft < bd2.lft ? bd1.lft : bd2.lft, 
+        top: bd1.top > bd2.top ? bd1.top : bd2.top, 
+        rgt: bd1.rgt > bd2.rgt ? bd1.rgt : bd2.rgt, 
+        btm: bd1.btm < bd2.btm ? bd1.btm : bd2.btm, 
+    }
+}
+
+/**
+ * Check if two bounds intersect with each other
+ * @param bd1 
+ * @param bd2 
+ * @returns True if two bounds intersect, false otherwise 
+ */
+
+export function bound_bound_intersect(bd1: Bound, bd2: Bound): Boolean {
+    return bd2.lft <= bd1.rgt && bd2.rgt >= bd1.lft && bd2.top <= bd1.btm && bd2.btm >= bd1.top; 
+}
+
+function bound_circle_intersect(bd: Bound, e: Ellipse): Boolean {
+    let rect = get_bound_rect(bd); 
+    let dis_x = Math.abs(rect.center.x - e.center.x); 
+    let dis_y = Math.abs(rect.center.y - e.center.y);
+    
+    if (dis_x > rect.mx + e.rx) return false;
+    if (dis_y > rect.my + e.ry) return false;
+
+    if (dis_x <= rect.mx) return true; 
+    if (dis_y <= rect.my) return true; 
+
+    let corner_sq = (e.rx - rect.mx) ** 2 + (e.ry - rect.my) ** 2; 
+
+    return corner_sq <= (e.rx ** 2); 
+}
+
+export function bound_ellipse_intersect(bd: Bound, e: Ellipse): Boolean {
+    if (e.rx === e.ry) return bound_circle_intersect(bd, e);
+    return rect_ellipse_intersect(get_bound_rect(bd), e); 
+}
+
+export function bound_triangle_intersect(bd: Bound, t: Triangle): Boolean {
+    return rect_triangle_intersect(get_bound_rect(bd), t);
+}
+
+export function bound_poly_intersect(bd: Bound, poly: Point[]): Boolean {
+    return rect_poly_intersect(get_bound_rect(bd), poly); 
+}

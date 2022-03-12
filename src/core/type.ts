@@ -6,9 +6,9 @@ export interface Point {
 }
 
 export interface Rect extends Shape  {
-    origin: Point, // Top Left Pt 
-    h: number, 
-    w: number, 
+    center: Point,
+    mx: number,
+    my: number, 
     r: number
 }
 
@@ -16,14 +16,14 @@ export interface Ellipse extends Shape {
     center: Point,
     rx: number,
     ry: number,
-    rot: number 
+    r: number 
 }
 
 export interface Triangle extends Shape {
     a: Point,
     b: Point,
     c: Point,
-    r?: number
+    r: number
 }
 
 export interface Bound {
