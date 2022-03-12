@@ -79,39 +79,39 @@ describe('get bounds from shapes', () => {
 
     test('unrotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: 0 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({lft: 0, top:5, rgt: 2, btm: -3});
+        expect(get_ellipse_bound(e)).toMatchCloseTo({ lft: 0, top: 5, rgt: 2, btm: -3 });
     })
 
     test('rotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: Math.PI / 2 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({lft: -3, top:2, rgt: 5, btm: 0});
+        expect(get_ellipse_bound(e)).toMatchCloseTo({ lft: -3, top: 2, rgt: 5, btm: 0 });
     })
 
     test('unrotated triangle', () => {
-        let t = {a: {x: 0, y: 0}, b: {x: 1, y: 0}, c: {x: 0.5, y: 0.5}, r: 0}; 
-        expect(get_triangle_bound(t)).toStrictEqual({ lft:0, top: 0.5, rgt: 1, btm: 0 });
+        let t = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, c: { x: 0.5, y: 0.5 }, r: 0 };
+        expect(get_triangle_bound(t)).toStrictEqual({ lft: 0, top: 0.5, rgt: 1, btm: 0 });
     })
 
     test('rotated triangle', () => {
-        let t = {a: {x: 0, y: 0}, b: {x: 1, y: 0}, c: {x: 0.5, y: 0.5}, r: Math.PI}; 
-        let center = Vec.mul_n(Vec.add_vecs(t.a, t.b, t.c), 1/3); 
-        let rotated_c = Vec.rot_about({x: 0.5, y: 0.5}, center, Math.PI); 
-        let rotated_a = Vec.rot_about({x: 0, y: 0}, center, Math.PI); 
-        
-        expect(get_triangle_bound(t)).toMatchCloseTo({ lft:0, top: rotated_a.y, rgt: 1, btm: rotated_c.y });
+        let t = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, c: { x: 0.5, y: 0.5 }, r: Math.PI };
+        let center = Vec.mul_n(Vec.add_vecs(t.a, t.b, t.c), 1 / 3);
+        let rotated_c = Vec.rot_about({ x: 0.5, y: 0.5 }, center, Math.PI);
+        let rotated_a = Vec.rot_about({ x: 0, y: 0 }, center, Math.PI);
+
+        expect(get_triangle_bound(t)).toMatchCloseTo({ lft: 0, top: rotated_a.y, rgt: 1, btm: rotated_c.y });
     })
 
     test('Get Common Bound', () => {
-        let bd1 = { lft:0, top: 0.5, rgt: 1, btm: 0 };
-        let bd2 = { lft:5, top: 5, rgt: 5, btm: 5 };
+        let bd1 = { lft: 0, top: 0.5, rgt: 1, btm: 0 };
+        let bd2 = { lft: 5, top: 5, rgt: 5, btm: 5 };
 
-        expect(get_common_bound(bd1, bd2)).toStrictEqual({ lft:0, top: 5, rgt: 5, btm: 0 }); 
-        expect(get_common_bound(bd2, bd1)).toStrictEqual({ lft:0, top: 5, rgt: 5, btm: 0 }); 
+        expect(get_common_bound(bd1, bd2)).toStrictEqual({ lft: 0, top: 5, rgt: 5, btm: 0 });
+        expect(get_common_bound(bd2, bd1)).toStrictEqual({ lft: 0, top: 5, rgt: 5, btm: 0 });
     })
 
     test('Get Rect Formed by Bound', () => {
-        let bd = {lft: 0, top: 1, rgt: 1, btm: 0 };
-        expect(get_bound_rect(bd)).toMatchCloseTo({ center: {x:0.5 , y: 0.5}, mx: 0.5, my: 0.5, r: 0});
+        let bd = { lft: 0, top: 1, rgt: 1, btm: 0 };
+        expect(get_bound_rect(bd)).toMatchCloseTo({ center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: 0 });
     })
 })
 
@@ -132,7 +132,17 @@ describe('rect_ellipse_intersect', () => {
     })
 
     test('falsy ellipse', () => {
-        e.center = {x: 2, y: 2}; 
+        e.center = { x: 2, y: 2 };
+        expect(rect_ellipse_intersect(r, e)).toBeFalsy();
+    })
+
+    test('Rect contains ellipse', () => {
+        r = { center: { x: 5, y: 5 }, mx: 10, my: 10, r: 0 };
+        expect(rect_ellipse_intersect(r, e)).toBeTruthy();
+    })
+
+    test('Ellipse contains rect', () => {
+        r = { center: { x: 1, y: 1 }, mx: 0.1, my: 0.1, r: 0 };
         expect(rect_ellipse_intersect(r, e)).toBeFalsy();
     })
 });
@@ -140,7 +150,7 @@ describe('rect_ellipse_intersect', () => {
 describe('rect_triangle_intersect', () => {
     let t: Triangle, r: Rect;
     beforeEach(() => {
-        t = {a: {x: 0, y: 0}, b: {x: 1, y: 0}, c: {x: 0.5, y: 0.5}, r: 0}; 
+        t = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, c: { x: 0.5, y: 0.5 }, r: 0 };
         r = { center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: 0 };
     });
 
@@ -149,8 +159,18 @@ describe('rect_triangle_intersect', () => {
     });
 
     test('rotated triangle', () => {
-        r = {center: {x: 0.5, y: -0.5}, mx: 0.5, my: 0.4, r: 0};
+        r = { center: { x: 0.5, y: -0.5 }, mx: 0.5, my: 0.4, r: 0 };
         t.r = Math.PI;
         expect(rect_triangle_intersect(r, t)).toBeTruthy();
     });
+
+    test('Rect contains triangle', () => {
+        r = { center: { x: 0.5, y: 0.5 }, mx: 10, my: 10, r: 0 };
+        expect(rect_triangle_intersect(r, t)).toBeTruthy(); 
+    })
+
+    test('Triangle contains Rect', () => {
+        t = { a: { x: 0.5, y: 2 }, b: { x: 2, y: -0.5 }, c: { x: -1, y: -0.5 }, r: 0 };
+        expect(rect_triangle_intersect(r, t)).toBeFalsy();
+    })
 });

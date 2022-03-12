@@ -50,6 +50,12 @@ export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): b
 /*                                   ELLIPSE                                  */
 /* -------------------------------------------------------------------------- */
 
+export function pt_in_ellipse(pt: Point, e: Ellipse): boolean {
+    let r_pt = Vec.rot_about(pt, e.center, -e.r);
+    return r_pt.x <= e.center.x + e.rx && r_pt.x >= e.center.x - e.rx &&
+    r_pt.y <= e.center.y + e.ry && r_pt.y >= e.center.y - e.ry   
+}
+
 export function get_ellipse_pts(e: Ellipse): Point[] {
     return [
         Vec.rot_about({x: e.center.x + e.rx, y: e.center.y}, e.center, e.r),
@@ -164,6 +170,13 @@ export function pt_in_rect(p: Point, rect: Rect): boolean {
         ((rect.center.y - rect.my <= r_p.y) && (r_p.y <= rect.center.y + rect.my));
 }
 
+function rect_inside_ellipse(r: Rect, e: Ellipse): boolean {
+    let pts = get_rect_pts(r);
+    return pts.every((pt) => {
+        return pt_in_ellipse(pt, e); 
+    })
+}
+
 /**
  * Test to see if r1 intersects/contains r2
  * @param r1 
@@ -194,7 +207,7 @@ export function rect_rect_intersect(r1: Rect, r2: Rect): boolean {
 
 export function rect_ellipse_intersect(r: Rect, e: Ellipse): boolean {
     let r_edges = get_rect_edges(r);
-    return r_edges.some((edge) => seg_ellipse_intersect(edge[0], edge[1], e)) || pt_in_rect(e.center, r); 
+    return r_edges.some((edge) => seg_ellipse_intersect(edge[0], edge[1], e)) || (pt_in_rect(e.center, r) && !rect_inside_ellipse(r, e)); 
 }
 
 /**
@@ -225,6 +238,10 @@ export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
     let r_edges = get_rect_edges(r);
     return poly.some((p) => pt_in_rect(p, r)) || 
         r_edges.some((e) => seg_polyseg_intersect(e[0], e[1], poly));
+}
+
+export function rect_bound_intersect(r: Rect, bd: Bound): boolean {
+    return rect_rect_intersect(get_bound_rect(bd), r); 
 }
 
 /* -------------------------------------------------------------------------- */
@@ -377,11 +394,11 @@ export function get_common_bound(bd1: Bound, bd2: Bound): Bound {
  * @returns True if two bounds intersect, false otherwise 
  */
 
-export function bound_bound_intersect(bd1: Bound, bd2: Bound): Boolean {
+export function bound_bound_intersect(bd1: Bound, bd2: Bound): boolean {
     return bd2.lft <= bd1.rgt && bd2.rgt >= bd1.lft && bd2.top <= bd1.btm && bd2.btm >= bd1.top; 
 }
 
-function bound_circle_intersect(bd: Bound, e: Ellipse): Boolean {
+function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
     let rect = get_bound_rect(bd); 
     let dis_x = Math.abs(rect.center.x - e.center.x); 
     let dis_y = Math.abs(rect.center.y - e.center.y);
@@ -397,15 +414,19 @@ function bound_circle_intersect(bd: Bound, e: Ellipse): Boolean {
     return corner_sq <= (e.rx ** 2); 
 }
 
-export function bound_ellipse_intersect(bd: Bound, e: Ellipse): Boolean {
+export function bound_ellipse_intersect(bd: Bound, e: Ellipse): boolean {
     if (e.rx === e.ry) return bound_circle_intersect(bd, e);
     return rect_ellipse_intersect(get_bound_rect(bd), e); 
 }
 
-export function bound_triangle_intersect(bd: Bound, t: Triangle): Boolean {
+export function bound_triangle_intersect(bd: Bound, t: Triangle): boolean {
     return rect_triangle_intersect(get_bound_rect(bd), t);
 }
 
-export function bound_poly_intersect(bd: Bound, poly: Point[]): Boolean {
+export function bound_poly_intersect(bd: Bound, poly: Point[]): boolean {
     return rect_poly_intersect(get_bound_rect(bd), poly); 
+}
+
+export function bound_rect_intersect(bd: Bound, r: Rect): boolean {
+    return rect_bound_intersect(r, bd); 
 }
