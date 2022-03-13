@@ -83,8 +83,6 @@ export class Vec {
     static slope = (p1: Point, p2: Point): number => {
         return (p2.y - p1.y) / (p2.x - p1.x); 
     }
-
-    
     
     /**
      * Calculate the cross product of p1 and p2 
@@ -106,6 +104,17 @@ export class Vec {
     
     static direction = (p1: Point, p2: Point, p3: Point): number => {
         return this.crp(this.create_vec(p1, p3), this.create_vec(p1, p2)); 
+    }
+
+    /**
+     * Get the angle (radian) between two vectors
+     * @param p1 
+     * @param p2 
+     * @returns The angle in radian
+     */
+
+    static get_angle = (p1: Point, p2: Point): number => {
+        return Math.atan2(p2.y - p1.y, p2.x - p1.x);
     }
 
     /**

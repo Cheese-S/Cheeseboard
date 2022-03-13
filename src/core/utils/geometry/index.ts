@@ -56,6 +56,12 @@ export function pt_in_ellipse(pt: Point, e: Ellipse): boolean {
     r_pt.y <= e.center.y + e.ry && r_pt.y >= e.center.y - e.ry   
 }
 
+/**
+ * Get the four end points lying on an ellipse's axis
+ * @param e 
+ * @returns The four end points 
+ */
+
 export function get_ellipse_pts(e: Ellipse): Point[] {
     return [
         Vec.rot_about({x: e.center.x + e.rx, y: e.center.y}, e.center, e.r),
@@ -240,9 +246,8 @@ export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
         r_edges.some((e) => seg_polyseg_intersect(e[0], e[1], poly));
 }
 
-export function rect_bound_intersect(r: Rect, bd: Bound): boolean {
-    return rect_rect_intersect(get_bound_rect(bd), r); 
-}
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  TRIANGLE                                  */
@@ -398,13 +403,21 @@ export function bound_bound_intersect(bd1: Bound, bd2: Bound): boolean {
     return bd2.lft <= bd1.rgt && bd2.rgt >= bd1.lft && bd2.top <= bd1.btm && bd2.btm >= bd1.top; 
 }
 
-function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
+/**
+ * Check if a Bound intersects / contains a circle
+ * @param bd 
+ * @param e 
+ * @returns 
+ */
+
+export function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
     let rect = get_bound_rect(bd); 
     let dis_x = Math.abs(rect.center.x - e.center.x); 
     let dis_y = Math.abs(rect.center.y - e.center.y);
     
     if (dis_x > rect.mx + e.rx) return false;
     if (dis_y > rect.my + e.ry) return false;
+    if (rect_inside_ellipse(rect, e)) return false; 
 
     if (dis_x <= rect.mx) return true; 
     if (dis_y <= rect.my) return true; 
@@ -428,5 +441,5 @@ export function bound_poly_intersect(bd: Bound, poly: Point[]): boolean {
 }
 
 export function bound_rect_intersect(bd: Bound, r: Rect): boolean {
-    return rect_bound_intersect(r, bd); 
+    return rect_rect_intersect(get_bound_rect(bd), r); 
 }

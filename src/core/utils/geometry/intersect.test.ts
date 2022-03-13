@@ -145,6 +145,22 @@ describe('rect_ellipse_intersect', () => {
         r = { center: { x: 1, y: 1 }, mx: 0.1, my: 0.1, r: 0 };
         expect(rect_ellipse_intersect(r, e)).toBeFalsy();
     })
+
+    test('Rect intersects circle', () => {
+        e = {center: {x: 1, y: 0.5}, rx: 1, ry: 1, r: 0};
+        expect(rect_ellipse_intersect(r, e)).toBeTruthy(); 
+    })
+
+    test('Rect contains circle', () => {
+        r = { center: { x: 5, y: 5 }, mx: 10, my: 10, r: 0 };
+        e = {center: {x: 0.5, y: 0.5}, rx: 1, ry: 1, r: 0};
+        expect(rect_ellipse_intersect(r, e)).toBeTruthy(); 
+    })
+
+    test('Circle contains rect', () => {
+        e = {center: {x: 0.5, y: 0.5}, rx: 10, ry: 10, r: 0};
+        expect(rect_ellipse_intersect(r, e)).toBeFalsy(); 
+    })
 });
 
 describe('rect_triangle_intersect', () => {
