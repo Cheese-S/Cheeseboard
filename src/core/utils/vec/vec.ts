@@ -146,25 +146,5 @@ export class Vec {
         }
     }
 
-    /**
-     * Convert vectors from canvas space into cartesian sapce 
-     * @param vec 
-     * @returns Converted Vectors 
-     */
-
-    static canvas_to_cart = (...vecs: Point[]): Point[] => {
-        return vecs.map((e) => {
-            return {x: e.x, y: -e.y}
-        }); 
-    }
-
-    /**
-     * Convert vectors from cartesian space into canvas space
-     * @param vecs 
-     * @returns Converted Vectors
-     */
-
-    static cart_to_canvas = (...vecs: Point[]): Point[] => {
-        return this.canvas_to_cart(...vecs); 
-    }
+    
 } 

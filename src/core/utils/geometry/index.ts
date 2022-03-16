@@ -407,10 +407,10 @@ export function bound_bound_intersect(bd1: Bound, bd2: Bound): boolean {
  * Check if a Bound intersects / contains a circle
  * @param bd 
  * @param e 
- * @returns 
+ * @returns True if a bound intersects / contains a circle, false otherwise
  */
 
-export function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
+function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
     let rect = get_bound_rect(bd); 
     let dis_x = Math.abs(rect.center.x - e.center.x); 
     let dis_y = Math.abs(rect.center.y - e.center.y);
@@ -427,18 +427,44 @@ export function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
     return corner_sq <= (e.rx ** 2); 
 }
 
+/**
+ * Check if a Bound intersects / contains a ellipse
+ * @param bd 
+ * @param e 
+ * @returns True if a bound intersects / contains a ellipse, false otherwise
+ */
+
 export function bound_ellipse_intersect(bd: Bound, e: Ellipse): boolean {
     if (e.rx === e.ry) return bound_circle_intersect(bd, e);
     return rect_ellipse_intersect(get_bound_rect(bd), e); 
 }
 
+/**
+ * Check if a Bound intersects / contains a triangle
+ * @param bd 
+ * @param t 
+ * @returns True if a bound intersects / contains a triangle, false otherwise
+ */
 export function bound_triangle_intersect(bd: Bound, t: Triangle): boolean {
     return rect_triangle_intersect(get_bound_rect(bd), t);
 }
 
+/**
+ * Check if a Bound intersects / contains poly line segments
+ * @param bd 
+ * @param poly 
+ * @returns True if a bound intersects / contains poly line segments, false otherwise
+ */
 export function bound_poly_intersect(bd: Bound, poly: Point[]): boolean {
     return rect_poly_intersect(get_bound_rect(bd), poly); 
 }
+
+/**
+ * Check if a Bound intersects / contains a rectangle
+ * @param bd 
+ * @param r 
+ * @returns True if a bound intersects / contains a rectangle, false otherwise
+ */
 
 export function bound_rect_intersect(bd: Bound, r: Rect): boolean {
     return rect_rect_intersect(get_bound_rect(bd), r); 

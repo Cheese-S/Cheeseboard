@@ -1,10 +1,16 @@
 import React from 'react'
 
-import { ExampleComponent } from 'cheeseboard-core'
+import {CheeseBoard} from 'cheeseboard-core'
+import { RecoilRoot } from 'recoil'
+
 import 'cheeseboard-core/dist/index.css'
 
 const App = () => {
-  return <ExampleComponent text="Create React Library Example 😄" />
+  return <RecoilRoot>
+    <React.StrictMode>
+      <CheeseBoard/>
+    </React.StrictMode>
+  </RecoilRoot>
 }
 
-export default App
+export default App; 
