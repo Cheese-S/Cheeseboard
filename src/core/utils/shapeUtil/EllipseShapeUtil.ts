@@ -1,5 +1,5 @@
-import { Shape, Bound, Point, Ellipse } from "../type";
-import { bound_ellipse_intersect, get_ellipse_bound } from "../utils/geometry";
+import { Shape, Ellipse, Point, Bound } from "../../type";
+import { bound_ellipse_intersect, get_ellipse_bound } from "../geometry";
 import ShapeUtil from "./ShapeUtil";
 
 export default class EllipseShapeUtil extends ShapeUtil {

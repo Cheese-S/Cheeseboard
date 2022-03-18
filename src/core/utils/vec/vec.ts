@@ -10,7 +10,7 @@ export class Vec {
     * @returns The vector p1p2
     */
     static create_vec = (p1: Point, p2: Point): Point => {
-        return this.sub(p2, p1); 
+        return Vec.sub(p2, p1); 
     }
     
     /**
@@ -103,7 +103,7 @@ export class Vec {
      */
     
     static direction = (p1: Point, p2: Point, p3: Point): number => {
-        return this.crp(this.create_vec(p1, p3), this.create_vec(p1, p2)); 
+        return Vec.crp(Vec.create_vec(p1, p3), Vec.create_vec(p1, p2)); 
     }
 
     /**

@@ -6,5 +6,6 @@ import ShapeUtil from "./ShapeUtil";
 export {
     EllipseShapeUtil,
     PencilShapeUtil,
-    RectShapeUtil
+    RectShapeUtil,
+    ShapeUtil 
 }

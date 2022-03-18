@@ -1,5 +1,6 @@
-import { Bound, Point, Rect } from "../type";
-import { bound_rect_intersect, get_rect_bound } from "../utils/geometry";
+import React from "react";
+import { Bound, Point, Rect } from "../../type";
+import { bound_rect_intersect, get_rect_bound } from "../geometry";
 import ShapeUtil from "./ShapeUtil";
 
 
@@ -27,4 +28,5 @@ export default class RectShapeUtil extends ShapeUtil {
             r.r = rot; 
         }
     }
+
 }

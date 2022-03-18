@@ -1,9 +1,93 @@
 /* add css module styles here (optional) */
 
-.test {
-  margin: 2em;
-  padding: 0.5em;
-  border: 2px solid #000;
-  font-size: 2em;
-  text-align: center;
+:root {
+  --cbPadding: 64px; 
+  --cbIndicatorViolet: #D6BFED; 
+  
+  --cbRed: #D00000;
+  --cbYellow: #FFBA08;
+  --cbBlue: #3F88C5;
+  --cbGreen: #136F63;
+  --cbDarkBlue: #032B43;
+  --cbBlack: #0A0A0A;
+
+  --cbRedFill:#FFD6D6;
+  --cbYellowFill:#FFF3D6;
+  --cbBlueFill:#E0ECF6;
+  --cbGreenFill:#DCF9F5;
+  --cbDarkBlueFill:#D8EFFD;
+  --cbBlackFill:#EBEBEB;
+}
+
+.cbCanvas {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  pointer-events: all;
+  overflow: clip;
+}
+
+
+.cbAbsolute {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform-origin: center center;
+  contain: layout style size;
+}
+
+.cbContainer {
+  position: relative;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  z-index: 100;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.cbContainer * {
+  box-sizing: border-box;
+}
+
+.cbPositioned {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  transform-origin: center center;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout style size;
+}
+
+.cbPositionedSvg {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  contain: layout style size;
+}
+
+.cbCenteredG {
+  transform: translate(var(--cbPadding), var(--cbPadding));
+}
+
+.cbStroke {
+  stroke-linejoin: round;
+  rx: 4; 
+}
+
+.cbIndicatorStroke {
+  stroke: var(--cbIndicatorColor);
+  stroke-width: 2; 
+  pointer-events: none;
 }

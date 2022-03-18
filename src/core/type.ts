@@ -1,21 +1,20 @@
 import { CBITEM_TYPE } from "./constant"
 
-
-export interface Shape {}; 
+export type Shape = Rect | Ellipse | Triangle | Polyline
 
 export interface Point {
     x: number,
     y: number
 }
 
-export interface Rect extends Shape  {
+export interface Rect {
     center: Point,
     mx: number,
     my: number, 
     r: number
 }
 
-export interface Ellipse extends Shape {
+export interface Ellipse {
     center: Point,
     rx: number,
     ry: number,
@@ -28,23 +27,24 @@ export interface Ellipse extends Shape {
  *                B (TOP)
  *              A   C (BOTTOM)
  */
-export interface Triangle extends Shape {
+export interface Triangle {
     a: Point,
     b: Point,
     c: Point,
     r: number
 }
 
-export interface Polyline extends Shape {
+export interface Polyline {
     points: Point[],
     r: number
 }
 
+// The usual top/left/bottom/right representation is not well defined in browser space.
 export interface Bound {
-    lft: number, 
-    top: number, 
-    rgt: number,
-    btm: number
+    min_x: number, 
+    max_y: number, 
+    max_x: number,
+    min_y: number
 }
 
 export interface CBItem { 

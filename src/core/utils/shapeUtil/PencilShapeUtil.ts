@@ -1,4 +1,4 @@
-import { Shape, Bound, Point } from "../type";
+import { Shape, Point, Bound } from "../../type";
 import ShapeUtil from "./ShapeUtil";
 
 export default class PencilShapeUtil extends ShapeUtil {

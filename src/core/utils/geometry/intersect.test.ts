@@ -68,28 +68,28 @@ describe('get bounds from shapes', () => {
 
     test('unrotated rectangle', () => {
         let r = { center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: 0 };
-        expect(get_rect_bound(r)).toStrictEqual({ lft: 0, top: 1, rgt: 1, btm: 0 });
+        expect(get_rect_bound(r)).toStrictEqual({ min_x: 0, max_y: 1, max_x: 1, min_y: 0 });
     });
 
     test('rotated rectangle', () => {
         let r = { center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: Math.PI / 4 };
         let corner_dis = Math.sqrt(0.5 ** 2 + 0.5 ** 2);
-        expect(get_rect_bound(r)).toMatchCloseTo({ lft: 0.5 - corner_dis, top: 0.5 + corner_dis, rgt: 0.5 + corner_dis, btm: 0.5 - corner_dis });
+        expect(get_rect_bound(r)).toMatchCloseTo({ min_x: 0.5 - corner_dis, max_y: 0.5 + corner_dis, max_x: 0.5 + corner_dis, min_y: 0.5 - corner_dis });
     });
 
     test('unrotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: 0 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({ lft: 0, top: 5, rgt: 2, btm: -3 });
+        expect(get_ellipse_bound(e)).toMatchCloseTo({ min_x: 0, max_y: 5, max_x: 2, min_y: -3 });
     })
 
     test('rotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: Math.PI / 2 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({ lft: -3, top: 2, rgt: 5, btm: 0 });
+        expect(get_ellipse_bound(e)).toMatchCloseTo({ min_x: -3, max_y: 2, max_x: 5, min_y: 0 });
     })
 
     test('unrotated triangle', () => {
         let t = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, c: { x: 0.5, y: 0.5 }, r: 0 };
-        expect(get_triangle_bound(t)).toStrictEqual({ lft: 0, top: 0.5, rgt: 1, btm: 0 });
+        expect(get_triangle_bound(t)).toStrictEqual({ min_x: 0, max_y: 0.5, max_x: 1, min_y: 0 });
     })
 
     test('rotated triangle', () => {
@@ -98,19 +98,19 @@ describe('get bounds from shapes', () => {
         let rotated_c = Vec.rot_about({ x: 0.5, y: 0.5 }, center, Math.PI);
         let rotated_a = Vec.rot_about({ x: 0, y: 0 }, center, Math.PI);
 
-        expect(get_triangle_bound(t)).toMatchCloseTo({ lft: 0, top: rotated_a.y, rgt: 1, btm: rotated_c.y });
+        expect(get_triangle_bound(t)).toMatchCloseTo({ min_x: 0, max_y: rotated_a.y, max_x: 1, min_y: rotated_c.y });
     })
 
     test('Get Common Bound', () => {
-        let bd1 = { lft: 0, top: 0.5, rgt: 1, btm: 0 };
-        let bd2 = { lft: 5, top: 5, rgt: 5, btm: 5 };
+        let bd1 = { min_x: 0, max_y: 0.5, max_x: 1, min_y: 0 };
+        let bd2 = { min_x: 5, max_y: 5, max_x: 5, min_y: 5 };
 
-        expect(get_common_bound(bd1, bd2)).toStrictEqual({ lft: 0, top: 5, rgt: 5, btm: 0 });
-        expect(get_common_bound(bd2, bd1)).toStrictEqual({ lft: 0, top: 5, rgt: 5, btm: 0 });
+        expect(get_common_bound(bd1, bd2)).toStrictEqual({ min_x: 0, max_y: 5, max_x: 5, min_y: 0 });
+        expect(get_common_bound(bd2, bd1)).toStrictEqual({ min_x: 0, max_y: 5, max_x: 5, min_y: 0 });
     })
 
     test('Get Rect Formed by Bound', () => {
-        let bd = { lft: 0, top: 1, rgt: 1, btm: 0 };
+        let bd = { min_x: 0, max_y: 1, max_x: 1, min_y: 0 };
         expect(get_bound_rect(bd)).toMatchCloseTo({ center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: 0 });
     })
 })
@@ -188,5 +188,10 @@ describe('rect_triangle_intersect', () => {
     test('Triangle contains Rect', () => {
         t = { a: { x: 0.5, y: 2 }, b: { x: 2, y: -0.5 }, c: { x: -1, y: -0.5 }, r: 0 };
         expect(rect_triangle_intersect(r, t)).toBeFalsy();
+    })
+
+    test('Browser Space', () => {
+        t = { a: {x: 0, y: 1}, b: { x: 1, y: 0 }, c: { x: 2, y: 1}, r: 0}
+        expect(rect_triangle_intersect(r, t)).toBeTruthy(); 
     })
 });

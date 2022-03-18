@@ -199,10 +199,10 @@ export class Quadtree {
         let out: number[] = []; 
         let affected: number[] = []; 
 
-        const qlft = Math.floor(bd.lft);
-        const qtop = Math.floor(bd.top);
-        const qrgt = Math.floor(bd.rgt);
-        const qbtm = Math.floor(bd.btm);
+        const qlft = Math.floor(bd.min_x);
+        const qtop = Math.floor(bd.max_y);
+        const qrgt = Math.floor(bd.max_x);
+        const qbtm = Math.floor(bd.min_y);
         let leaves = this.find_leaves(0, 0, this.root_mx, this.root_mx, this.root_sx, this.root_sy, qlft, qtop, qrgt, qbtm);
 
         if (!this.temp || this.temp.length < this.elts.size()) {

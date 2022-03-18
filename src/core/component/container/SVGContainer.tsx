@@ -1,4 +1,6 @@
 import * as React from 'react'
+import styles from '../../../styles.module.css'
+
 
 interface SVGContainerProp extends React.SVGProps<SVGSVGElement> {
     children: React.ReactNode;
@@ -6,8 +8,8 @@ interface SVGContainerProp extends React.SVGProps<SVGSVGElement> {
 
 export const SVGContainer = ({children, className="", ...rest}: SVGContainerProp) => {
     return (
-        <svg className={`${className}`} {...rest}>
-            <g>
+        <svg className={`${styles.cbPositionedSvg} ${className}`} {...rest}>
+            <g className = {styles.cbCenteredG}>
                 {children}
             </g>
         </svg>

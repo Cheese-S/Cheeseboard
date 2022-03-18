@@ -286,10 +286,10 @@ function get_triangle_edges(t: Triangle): Point[][] {
  * @returns Rectangle with 0 rotation
  */
 export function get_bound_rect(bd: Bound): Rect {
-    let mx = Math.abs(bd.lft - bd.rgt) / 2;
-    let my = Math.abs(bd.top - bd.btm) / 2;
+    let mx = Math.abs(bd.min_x - bd.max_x) / 2;
+    let my = Math.abs(bd.max_y - bd.min_y) / 2;
     return {
-        center: {x: bd.lft + mx, y: bd.top - my},
+        center: {x: bd.min_x + mx, y: bd.max_y - my},
         mx: mx, 
         my: my, 
         r: 0 
@@ -313,13 +313,13 @@ export function get_rect_bound(rect: Rect): Bound {
     })
     return {
         //@ts-ignore
-        lft: l,
+        min_x: l,
         //@ts-ignore
-        top: t,
+        max_y: t,
         //@ts-ignore
-        rgt: r,
+        max_x: r,
         //@ts-ignore
-        btm: b
+        min_y: b
     }
 } 
 
@@ -339,13 +339,13 @@ export function get_ellipse_bound(e: Ellipse): Bound {
     })
     return {
         //@ts-ignore
-        lft: l,
+        min_x: l,
         //@ts-ignore
-        top: t,
+        max_y: t,
         //@ts-ignore
-        rgt: r,
+        max_x: r,
         //@ts-ignore
-        btm: b
+        min_y: b
     }
 }
 
@@ -366,13 +366,13 @@ export function get_triangle_bound(tri: Triangle): Bound {
     })
     return {
         //@ts-ignore
-        lft: l,
+        min_x: l,
         //@ts-ignore
-        top: t,
+        max_y: t,
         //@ts-ignore
-        rgt: r,
+        max_x: r,
         //@ts-ignore
-        btm: b
+        min_y: b
     }
 }
 
@@ -385,10 +385,10 @@ export function get_triangle_bound(tri: Triangle): Bound {
 
 export function get_common_bound(bd1: Bound, bd2: Bound): Bound {
     return {
-        lft: bd1.lft < bd2.lft ? bd1.lft : bd2.lft, 
-        top: bd1.top > bd2.top ? bd1.top : bd2.top, 
-        rgt: bd1.rgt > bd2.rgt ? bd1.rgt : bd2.rgt, 
-        btm: bd1.btm < bd2.btm ? bd1.btm : bd2.btm, 
+        min_x: bd1.min_x < bd2.min_x ? bd1.min_x : bd2.min_x, 
+        max_y: bd1.max_y > bd2.max_y ? bd1.max_y : bd2.max_y, 
+        max_x: bd1.max_x > bd2.max_x ? bd1.max_x : bd2.max_x, 
+        min_y: bd1.min_y < bd2.min_y ? bd1.min_y : bd2.min_y, 
     }
 }
 
@@ -400,7 +400,7 @@ export function get_common_bound(bd1: Bound, bd2: Bound): Bound {
  */
 
 export function bound_bound_intersect(bd1: Bound, bd2: Bound): boolean {
-    return bd2.lft <= bd1.rgt && bd2.rgt >= bd1.lft && bd2.top <= bd1.btm && bd2.btm >= bd1.top; 
+    return bd2.min_x <= bd1.max_x && bd2.max_x >= bd1.min_x && bd2.max_y <= bd1.min_y && bd2.min_y >= bd1.max_y; 
 }
 
 /**

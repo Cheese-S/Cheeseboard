@@ -19,3 +19,12 @@ export enum CBITEM_TYPE {
     TRIANGLE,
     PENCIL
 }
+
+export enum CBCOLOR_TYPE {
+    RED,
+    BLUE,
+    GREEN,
+    BLACK,
+    DARK_BLUE,
+    YELLOW
+}

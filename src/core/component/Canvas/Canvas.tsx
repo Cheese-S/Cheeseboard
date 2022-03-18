@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { useRecoilState } from 'recoil'
-import { elementIDState } from '../../state'
-import { CanvasItem } from '../CanvasItem/CanvasItem'
-
+import { itemIDState } from '../../state'
+import { CanvasItem } from '../CanvasItem'
+import styles from '../../../styles.module.css'
+import { Point } from '../../type'
 // import { Bound} from '../type';
 
 // interface Camera extends Bound{
@@ -11,39 +12,49 @@ import { CanvasItem } from '../CanvasItem/CanvasItem'
 
 // const CANVAS_SIZE = 65356; 
 
-export const Canvas: React.FC = ({}) => {
-    const [ids, setIds] = useRecoilState(elementIDState); 
-    const addId = () => setIds((ids) => [...ids, 1]); 
-    let pos = useMousePosition(); 
-    return <div>
-        <div> HELLO </div>
-        <button onClick={addId}>
-            CLICK ME
-        </button>
-        {ids.map((id) => {
-            console.log(ids); 
-            return <CanvasItem id={id}/>
-        })}
-    </ div>
+const mousePosition: Point = {
+    x: 0,
+    y: 0
+}
 
+export const Canvas: React.FC = ({ }) => {
+    const [ids, setIds] = useRecoilState(itemIDState);
+    const addId = () => setIds((ids) => [...ids, 1]);
+    let pos = useMousePosition();
+    return (
+        <div className={`${styles.cbCanvas} ${styles.cbAbsolute}`}>
+            <div> HELLO </div>
+            <button onClick={addId}>
+                CLICK ME
+            </button>
+            {ids.map((id) => {
+                return <CanvasItem id={id} />
+            })}
+            <div style={{backgroundColor:'var(--cbRed)', width:100, height:100}}/>
+            <div style={{backgroundColor:'var(--cbYellow)', width:100, height:100}}/>
+            <div style={{backgroundColor:'var(--cbBlue)', width:100, height:100}}/>
+            <div style={{backgroundColor:'var(--cbDarkBlue)', width:100, height:100}}/>
+            <div style={{backgroundColor:'var(--cbGreen)', width:100, height:100}}/>
+        </ div>
+    )
 }
 
 export const useMousePosition = () => {
-    const [position, setPosition] = React.useState({ x: 0, y: 0 });
-    console.log(position);
-  
+    
+    console.log(mousePosition);
+
     React.useEffect(() => {
-      const setFromEvent = (e: any) => setPosition({ x: e.clientX, y: e.clientY });
-      window.addEventListener("mousemove", setFromEvent);
-  
-      return () => {
-        window.removeEventListener("mousemove", setFromEvent);
-      };
+        const setFromEvent = (e: any) => { mousePosition.x = e.clientX; mousePosition.y = e.clientY };
+        window.addEventListener("mousemove", setFromEvent);
+
+        return () => {
+            window.removeEventListener("mousemove", setFromEvent);
+        };
     }, []);
-  
-    return position;
-  };
-  
+
+    return mousePosition;
+};
+
 
 
 

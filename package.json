@@ -63,6 +63,7 @@
   "dependencies": {
     "jest-matcher-deep-close-to": "^3.0.2",
     "mobx-react-lite": "^3.2.3",
+    "nanoid": "^3.3.1",
     "recoil": "^0.6.1"
   }
 }
