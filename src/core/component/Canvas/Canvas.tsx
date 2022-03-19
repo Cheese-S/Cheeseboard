@@ -4,6 +4,7 @@ import { itemID_state } from '../../state'
 import { CanvasItem } from '../CanvasItem'
 import styles from '../../../styles.module.css'
 import { Point } from '../../type'
+import { RectSelect } from '../RectangleSelect'
 // import { Bound} from '../type';
 
 // interface Camera extends Bound{
@@ -35,6 +36,7 @@ export const Canvas: React.FC = ({ }) => {
             <div style={{backgroundColor:'var(--cbBlue)', width:100, height:100}}/>
             <div style={{backgroundColor:'var(--cbDarkBlue)', width:100, height:100}}/>
             <div style={{backgroundColor:'var(--cbGreen)', width:100, height:100}}/>
+            <RectSelect/>
         </ div>
     )
 }

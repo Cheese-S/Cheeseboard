@@ -14,7 +14,6 @@ export const RectComponent: React.FC<RectComponentProps> = ({shape, item_css}: R
     const {container_css, component_css} = item_css; 
     const pointer_events_type = (component_css.fill && component_css.fill === 'none') ? 'stroke' : 'all'; 
     return (
-        <React.Fragment>
             <Container style={container_css}>    
                 <SVGContainer>
                     <rect className={styles.cbStroke} style={component_css} width={shape.mx * 2} height={shape.my * 2}/>
@@ -22,6 +21,5 @@ export const RectComponent: React.FC<RectComponentProps> = ({shape, item_css}: R
                     <rect className={styles.cbEventRecieverStroke} ref={event_reciever_ref} name="eventReciever" width={shape.mx * 2} height={shape.my * 2} pointerEvents={pointer_events_type}/>
                 </SVGContainer>
             </Container>
-        </React.Fragment>
     )
 }

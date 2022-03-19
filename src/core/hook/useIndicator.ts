@@ -1,6 +1,6 @@
 import { RefObject, useLayoutEffect, useRef } from "react"
 
-type IndicatorRefType = SVGRectElement | SVGEllipseElement | SVGPolylineElement;
+type IndicatorRefType = SVGRectElement | SVGEllipseElement | SVGPathElement;
 
 export function useIndicator<T extends IndicatorRefType>(): RefObject<T>[] {
     let indicator_ref = useRef<T>(null); 

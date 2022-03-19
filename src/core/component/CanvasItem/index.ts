@@ -1,3 +1,1 @@
-export {
-    CanvasItem
-} from './CanvasItem'
+export * from './CanvasItem'

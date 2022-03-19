@@ -5,7 +5,9 @@
 
   /* INDICATOR ONLY */
   --cbViolet: #D6BFED; 
-  
+  --cbPurple: #AD80DB; 
+
+
   --cbRed: #D00000;
   --cbYellow: #FFBA08;
   --cbBlue: #3F88C5;
@@ -118,5 +120,13 @@
   stroke-linejoin: round;
   stroke-linecap: round; 
   rx: 4; 
+}
+
+.cbSelectStroke {
+  fill: var(--cbViolet);
+  fill-opacity: 0.1;
+
+  stroke: var(--cbPurple);
+  stroke-width: 1;
 }
 

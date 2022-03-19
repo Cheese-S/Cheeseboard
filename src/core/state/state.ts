@@ -1,11 +1,9 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily } from "recoil";
 import { CBCOLOR, CBITEM_TYPE, CBSTROKE_WIDTH } from "../constant";
-import { CBItem, Shape, CBStyle } from "../type";
+import { CBItem, Shape, CBStyle, Bound } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
-import { customAlphabet } from 'nanoid'
 
-const nanoid = customAlphabet('1234567890', 9);
 
 
 function get_default_shape(type: CBITEM_TYPE): Shape {
@@ -61,7 +59,7 @@ export interface ItemCSS {
 }
 
 export const item_css_state = selectorFamily<ItemCSS, number>({
-    key: "container_css",
+    key: "item_css",
     get: (id: number) => ({get}) => {
         let container_css: CSSProperties = {}, component_css: CSSProperties; 
         const item = get(item_state(id));; 
@@ -108,10 +106,20 @@ export const tool_state = atom<CBITEM_TYPE>({
 export const style_state = atom<CBStyle>({
     key: "style",
     default: {
-        color: CBCOLOR.BLACK,
-        fill: false,
+        color: CBCOLOR.RED,
         size: CBSTROKE_WIDTH.MEDIUM,
+        fill: true,
         dotted: false
+    }
+})
+
+export const select_state = atom<Bound>({
+    key: "select",
+    default: {
+        min_x: 300,
+        max_y: 500,
+        max_x: 500,
+        min_y: 300 
     }
 })
 
