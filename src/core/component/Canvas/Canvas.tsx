@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useRecoilState } from 'recoil'
-import { itemIDState } from '../../state'
+import { itemID_state } from '../../state'
 import { CanvasItem } from '../CanvasItem'
 import styles from '../../../styles.module.css'
 import { Point } from '../../type'
@@ -18,7 +18,7 @@ const mousePosition: Point = {
 }
 
 export const Canvas: React.FC = ({ }) => {
-    const [ids, setIds] = useRecoilState(itemIDState);
+    const [ids, setIds] = useRecoilState(itemID_state);
     const addId = () => setIds((ids) => [...ids, 1]);
     let pos = useMousePosition();
     return (

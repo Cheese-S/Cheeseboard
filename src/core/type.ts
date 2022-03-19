@@ -1,4 +1,4 @@
-import { CBITEM_TYPE } from "./constant"
+import { CBCOLOR, CBITEM_TYPE, CBSTROKE_WIDTH } from "./constant"
 
 export type Shape = Rect | Ellipse | Triangle | Polyline
 
@@ -49,7 +49,15 @@ export interface Bound {
 
 export interface CBItem { 
     type: CBITEM_TYPE,
-    shape: Shape
+    shape: Shape,
+    style: CBStyle
+}
+
+export interface CBStyle {
+    color: CBCOLOR,
+    fill: boolean,
+    size: CBSTROKE_WIDTH,
+    dotted: boolean
 }
 
 

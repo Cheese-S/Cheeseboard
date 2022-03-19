@@ -2,7 +2,9 @@
 
 :root {
   --cbPadding: 64px; 
-  --cbIndicatorViolet: #D6BFED; 
+
+  /* INDICATOR ONLY */
+  --cbViolet: #D6BFED; 
   
   --cbRed: #D00000;
   --cbYellow: #FFBA08;
@@ -10,13 +12,20 @@
   --cbGreen: #136F63;
   --cbDarkBlue: #032B43;
   --cbBlack: #0A0A0A;
-
+  
   --cbRedFill:#FFD6D6;
   --cbYellowFill:#FFF3D6;
   --cbBlueFill:#E0ECF6;
   --cbGreenFill:#DCF9F5;
   --cbDarkBlueFill:#D8EFFD;
   --cbBlackFill:#EBEBEB;
+
+  --cbStrokeWidthL: 8;
+  --cbStrokeWidthM: 6;
+  --cbStrokeWidthS: 4;
+
+  --cbDotted: 14; 
+  
 }
 
 .cbCanvas {
@@ -83,11 +92,31 @@
 
 .cbStroke {
   stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none; 
   rx: 4; 
 }
 
 .cbIndicatorStroke {
-  stroke: var(--cbIndicatorColor);
-  stroke-width: 2; 
+  fill:none;
   pointer-events: none;
+  
+  stroke: var(--cbViolet);
+  stroke-width: 2; 
+  stroke-linejoin: round;
+  stroke-linecap: round; 
+  rx: 4; 
+  visibility: hidden; 
 }
+
+.cbEventRecieverStroke {
+  visibility: hidden;
+  fill: none;
+  
+  stroke: none; 
+  stroke-width: 10;
+  stroke-linejoin: round;
+  stroke-linecap: round; 
+  rx: 4; 
+}
+

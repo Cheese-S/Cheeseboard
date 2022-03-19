@@ -12,7 +12,7 @@ export default class TriangleShapeUtil extends ShapeUtil {
     get_path(t: Triangle): string {
         const h = t.a.y - t.b.y; 
         const w = t.c.x - t.a.x; 
-        return `M ${0} ${h} L ${w/2} ${0} L ${w} ${h} Z`;
+        return `M 0 ${h} L ${w/2} 0 L ${w} ${h} Z`;
     }
 
     intersect_bound(bd: Bound, t: Triangle): boolean {

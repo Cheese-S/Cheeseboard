@@ -20,11 +20,17 @@ export enum CBITEM_TYPE {
     PENCIL
 }
 
-export enum CBCOLOR_TYPE {
-    RED,
-    BLUE,
-    GREEN,
-    BLACK,
-    DARK_BLUE,
-    YELLOW
+export enum CBCOLOR {
+    RED = '--cbRed',
+    BLUE = '--cbBlue',
+    GREEN = '--cbGreen',
+    BLACK = '--cbBlack',
+    DARK_BLUE = '--cbDarkBlue',
+    YELLOW = '--cbYellow'
+}
+
+export enum CBSTROKE_WIDTH {
+    SMALL = '--cbStrokeWidthL',
+    MEDIUM = '--cbStrokeWidthM',
+    LARGE = '--cbStrokeWidthS'
 }
