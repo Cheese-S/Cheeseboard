@@ -60,4 +60,10 @@ export interface CBStyle {
     dotted: boolean
 }
 
+export interface CBPointer {
+    init_point: Point,
+    curr_point: Point, 
+    is_active: boolean
+}
+
 

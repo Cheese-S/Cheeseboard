@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily } from "recoil";
 import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH } from "../constant";
-import { CBItem, Shape, CBStyle, Bound } from "../type";
+import { CBItem, Shape, CBStyle, Bound, CBPointer } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 
 
@@ -68,14 +68,14 @@ export interface ItemCSS {
 export const item_css_state = selectorFamily<ItemCSS, number>({
     key: "item_css",
     get: (id: number) => ({ get }) => {
-        let res: ItemCSS = {container_css: {}, component_css: {}}; 
+        let res: ItemCSS = { container_css: {}, component_css: {} };
         const item = get(item_state(id));;
         const shapeUtil = CanvasUtil.get_shapeutil(item.type);
         const bd = shapeUtil?.get_bound(item.shape);
         if (bd) {
-            res = CanvasUtil.get_item_css(bd, item); 
+            res = CanvasUtil.get_item_css(bd, item);
         }
-        return res; 
+        return res;
     }
 })
 
@@ -106,6 +106,15 @@ export const select_state = atom<Bound>({
         max_y: 500,
         max_x: 500,
         min_y: 300
+    }
+})
+
+export const pointer_state = atom<CBPointer>({
+    key: "pointer",
+    default: {
+        init_point: { x: 0, y: 0 },
+        curr_point: { x: 0, y: 0 },
+        is_active: false
     }
 })
 

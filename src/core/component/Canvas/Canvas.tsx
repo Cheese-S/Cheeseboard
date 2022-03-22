@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { itemID_state, style_state } from '../../state'
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { itemID_state, pointer_state } from '../../state'
 import { CanvasItem } from '../CanvasItem'
 import styles from '../../../styles.module.css'
 import { Point } from '../../type'
@@ -14,18 +14,15 @@ import { ToolbarWrapper } from '../Toolbar'
 
 // const CANVAS_SIZE = 65356; 
 
-const mousePosition: Point = {
-    x: 0,
-    y: 0
-}
-
 export const Canvas: React.FC = ({ }) => {
     const [ids, setIds] = useRecoilState(itemID_state);
-    const style = useRecoilValue(style_state); 
+    const set_pointer = useSetRecoilState(pointer_state); 
     const addId = () => setIds((ids) => [...ids, 1]);
-    let pos = useMousePosition();
+    const on_mouse_move = (e: React.MouseEvent) => {
+        
+    }
     return (
-        <div className={`${styles.cbCanvas} ${styles.cbAbsolute}`}>
+        <div className={`${styles.cbCanvas} ${styles.cbAbsolute}`} onMouseMove={on_mouse_move}>
             <div> HELLO </div>
             <button className={styles.cbButton} onClick={addId}>
                 CLICK ME
@@ -43,19 +40,3 @@ export const Canvas: React.FC = ({ }) => {
         </ div>
     )
 }
-
-export const useMousePosition = () => {
-    
-    console.log(mousePosition);
-
-    React.useEffect(() => {
-        const setFromEvent = (e: any) => { mousePosition.x = e.clientX; mousePosition.y = e.clientY };
-        window.addEventListener("mousemove", setFromEvent);
-
-        return () => {
-            window.removeEventListener("mousemove", setFromEvent);
-        };
-    }, []);
-
-    return mousePosition;
-};
