@@ -13,11 +13,15 @@ export enum TRANSFORM_HANDLE {
     CENTER
 }
 
-export enum CBITEM_TYPE {
+export enum CBTOOL {
     RECTANGLE,
     ELLIPSE,
     TRIANGLE,
-    PENCIL
+    PENCIL,
+    TEXT,
+
+    SELECT,
+    ERASER
 }
 
 export enum CBCOLOR {
@@ -30,7 +34,7 @@ export enum CBCOLOR {
 }
 
 export enum CBSTROKE_WIDTH {
-    SMALL = '--cbStrokeWidthL',
+    SMALL = '--cbStrokeWidthS',
     MEDIUM = '--cbStrokeWidthM',
-    LARGE = '--cbStrokeWidthS'
+    LARGE = '--cbStrokeWidthL'
 }

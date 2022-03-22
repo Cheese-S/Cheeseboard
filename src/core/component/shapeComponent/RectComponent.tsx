@@ -16,9 +16,9 @@ export const RectComponent: React.FC<RectComponentProps> = ({shape, item_css}: R
     return (
             <Container style={container_css}>    
                 <SVGContainer>
-                    <rect className={styles.cbStroke} style={component_css} width={shape.mx * 2} height={shape.my * 2}/>
-                    <rect className={styles.cbIndicatorStroke} ref={indicator_ref} name="indicator" width={shape.mx * 2} height={shape.my * 2}/>
-                    <rect className={styles.cbEventRecieverStroke} ref={event_reciever_ref} name="eventReciever" width={shape.mx * 2} height={shape.my * 2} pointerEvents={pointer_events_type}/>
+                    <rect className={styles.cbStroke} style={component_css}  width={shape.mx * 2} height={shape.my * 2} rx={4}/>
+                    <rect className={styles.cbIndicatorStroke} ref={indicator_ref} name="indicator" width={shape.mx * 2} height={shape.my * 2} rx={4}/>
+                    <rect className={styles.cbEventRecieverStroke} ref={event_reciever_ref} name="eventReciever" width={shape.mx * 2} height={shape.my * 2} pointerEvents={pointer_events_type} rx={4} />
                 </SVGContainer>
             </Container>
     )

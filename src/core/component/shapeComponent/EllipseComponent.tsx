@@ -18,8 +18,8 @@ export const EllipseComponent: React.FC<EllipseComponentProps> = ({ shape, item_
     return (
         <Container style={container_css}>
             <SVGContainer>
-                <ellipse className={styles.cbStroke} cx={shape.rx} cy={shape.ry} rx={shape.rx} ry={shape.ry} shape-rendering="geometricPrecision"/>
-                <ellipse className={styles.cbIndicatorStroke} ref={indicator_ref} cx={shape.rx} cy={shape.ry} rx={shape.rx} ry={shape.ry} shape-rendering="geometricPrecision"/>
+                <ellipse className={styles.cbStroke} style={component_css} cx={shape.rx} cy={shape.ry} rx={shape.rx} ry={shape.ry} shapeRendering="geometricPrecision"/>
+                <ellipse className={styles.cbIndicatorStroke} ref={indicator_ref} cx={shape.rx} cy={shape.ry} rx={shape.rx} ry={shape.ry} shapeRendering="geometricPrecision"/>
                 <ellipse className={styles.cbEventRecieverStroke} ref={event_reciever_ref} cx={shape.rx} cy={shape.ry} rx={shape.rx} ry={shape.ry} pointerEvents={pointer_events_type}/>
             </SVGContainer>
         </Container>

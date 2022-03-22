@@ -1,16 +1,16 @@
 import React from 'react'
 
-import {CheeseBoard} from 'cheeseboard-core'
-import { RecoilRoot } from 'recoil'
+import { CheeseBoard } from 'cheeseboard-core'
 
 import 'cheeseboard-core/dist/index.css'
 
 const App = () => {
-  return <RecoilRoot>
-    <React.StrictMode>
-      <CheeseBoard/>
-    </React.StrictMode>
-  </RecoilRoot>
+  return (
+      <React.StrictMode>
+        <CheeseBoard />
+      </React.StrictMode>
+  )
 }
+
 
 export default App; 

@@ -6,6 +6,7 @@
   /* INDICATOR ONLY */
   --cbViolet: #D6BFED; 
   --cbPurple: #AD80DB; 
+  --cbDutchWhite: #ede2bf; 
 
 
   --cbRed: #D00000;
@@ -27,7 +28,10 @@
   --cbStrokeWidthS: 4;
 
   --cbDotted: 14; 
-  
+}
+
+html *{
+  box-sizing: border-box;
 }
 
 .cbCanvas {
@@ -69,6 +73,56 @@
   box-sizing: border-box;
 }
 
+.cbToolbarContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  grid-row-gap: 16px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.cbToolCotainer {
+  display: flex;
+  width: fit-content;
+  border-radius: 100px;
+  border: 1px solid;
+  overflow: hidden;
+  padding: 2px;
+  justify-self: center;
+  margin: 10px;
+  border-color: var(--cbPurple);
+}
+
+.cbToolButton {
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  padding: 2px;
+  margin: 2px;
+  background: none;
+  border: none;
+  color: var(--cbPurple);
+  transition-duration: 0.2s;
+}
+
+.cbToolButtonHighlight {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 100%;
+  transition: background-color .025s; 
+}
+
+.cbToolButtonHighlight:hover {
+  background-color: #E0E0E0;
+}
+
 .cbPositioned {
   position: absolute;
   top: 0px;
@@ -96,7 +150,6 @@
   stroke-linejoin: round;
   stroke-linecap: round;
   pointer-events: none; 
-  rx: 4; 
 }
 
 .cbIndicatorStroke {
@@ -107,7 +160,6 @@
   stroke-width: 2; 
   stroke-linejoin: round;
   stroke-linecap: round; 
-  rx: 4; 
   visibility: hidden; 
 }
 
@@ -119,7 +171,6 @@
   stroke-width: 10;
   stroke-linejoin: round;
   stroke-linecap: round; 
-  rx: 4; 
 }
 
 .cbSelectStroke {
