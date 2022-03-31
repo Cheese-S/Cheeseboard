@@ -1,15 +1,19 @@
 import React from "react"
-import { Canvas } from "../Canvas"
-import { RecoilRoot } from "recoil"
+import { Canvas, CanvasContainer } from "../Canvas"
+import { RecoilRoot, useSetRecoilState } from "recoil"
+
 
 
 
 
 
 export const CheeseBoard: React.FC = () => {
+
     return (
         <RecoilRoot>
-            <Canvas/>
+            <CanvasContainer>
+                <Canvas />
+            </CanvasContainer>
         </RecoilRoot>
     )
 }

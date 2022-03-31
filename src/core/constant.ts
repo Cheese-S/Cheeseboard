@@ -38,3 +38,7 @@ export enum CBSTROKE_WIDTH {
     MEDIUM = '--cbStrokeWidthM',
     LARGE = '--cbStrokeWidthL'
 }
+
+export const LEFT_MOUSE = 0;
+export const MID_MOUSE = 1;
+export const RIGHT_MOUSE = 2;

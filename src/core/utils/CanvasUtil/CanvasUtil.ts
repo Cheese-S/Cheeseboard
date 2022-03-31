@@ -23,6 +23,7 @@ export class CanvasUtil {
     static get_shapeutil(type: CBTOOL) {
         return this.ShapeUtilMap.get(type);
     }
+    
 
     static get_item_css(bd: Bound, item: CBItem ): ItemCSS {
         let container_css: CSSProperties, component_css: CSSProperties;
