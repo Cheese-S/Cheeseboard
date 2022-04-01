@@ -38,4 +38,12 @@ export default class TriangleShapeUtil extends ShapeUtil {
             t.r = rot; 
         }
     }
+
+    set_shape_top_left(shape: Triangle, pt: Point): void {
+        const x_diff = shape.b.x - shape.a.x; 
+        const y_diff = shape.a.y - shape.b.y; 
+        shape.a = {x: pt.x, y: pt.y + y_diff};
+        shape.b = {x: pt.x + x_diff, y: pt.y};
+        shape.c = {x: pt.x + 2 * x_diff, y: pt.y + y_diff}; 
+    }
 }

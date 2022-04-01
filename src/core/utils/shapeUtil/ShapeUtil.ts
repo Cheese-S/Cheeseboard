@@ -25,6 +25,13 @@ export default abstract class ShapeUtil {
 
     abstract transform_shape(shape: Shape, scale?: Point, trans?: Point, rot?: number): void;
 
+    /**
+     * Translate a shape to the point's position. (The point is treated as a top left anchor)
+     * @param shape 
+     * @param pt 
+     */
+    abstract set_shape_top_left(shape: Shape, pt: Point): void; 
+
     
 
     

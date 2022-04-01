@@ -57,7 +57,8 @@ export interface CBStyle {
     color: CBCOLOR,
     fill: boolean,
     size: CBSTROKE_WIDTH,
-    dotted: boolean
+    dotted: boolean,
+    is_ghost: boolean
 }
 
 export interface CBPointer {

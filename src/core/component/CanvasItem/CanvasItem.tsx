@@ -7,7 +7,7 @@ import {
     RectComponent,
     EllipseComponent,
     TriangleComponent 
-} from "../shapeComponent";
+} from "../ShapeComponent";
 
 
 
@@ -26,7 +26,7 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({id}: CanvasIte
 
     switch (CBItem.type) {
         case CBTOOL.RECTANGLE:
-            return <RectComponent shape={CBItem.shape as Rect} item_css={item_style}/>
+            return <RectComponent shape={CBItem.shape as Rect} item_css={item_style} opacity={0.3}/>
         case CBTOOL.ELLIPSE:
             return <EllipseComponent shape={CBItem.shape as Ellipse} item_css={item_style}/>
         case CBTOOL.TRIANGLE:

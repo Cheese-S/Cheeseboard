@@ -1,8 +1,8 @@
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { select_state, pointer_state, tool_state } from "../../state";
-import { Container } from "../container/Container";
-import { SVGContainer } from "../container/SVGContainer";
+import { Container } from "../Container/Container";
+import { SVGContainer } from "../Container/SVGContainer";
 import styles from '../../../styles.module.css'
 import { CanvasUtil } from "../../utils/CanvasUtil";
 import { CBTOOL } from "../../constant";

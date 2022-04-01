@@ -1,5 +1,5 @@
 import { CSSProperties } from "react";
-import { atomFamily, atom, selectorFamily, selector } from "recoil";
+import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
 import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH } from "../constant";
 import { CBItem, Shape, CBStyle, Bound, CBPointer } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
@@ -34,30 +34,32 @@ export const selected_itemID_state = atom<number[]>({
 })
 
 export const visible_itemID_state = selector<number[]>({
-    key: "visible_itemIDs", 
-    get: ({get}) => {
+    key: "visible_itemIDs",
+    get: ({ get }) => {
         const camera = get(camera_state);
         const qt = get(qt_state);
-        return qt.query(camera); 
+        return qt.query(camera);
     }
 })
 
 export const item_state = atomFamily<CBItem, number>({
     key: "elements",
-    default: selectorFamily({
-        key: "element_default",
-        get: () => ({ get }) => {
-            const tool = get(tool_state);
-            const style = get(style_state);
-            return {
-                type: CBTOOL.RECTANGLE,
-                shape: get_default_shape(tool),
-                style: style
-            }
+    default: {
+        type: CBTOOL.RECTANGLE,
+        shape: {
+            center: { x: Math.random() * 2000, y: Math.random() * 1400 },
+            mx: 50,
+            my: 50,
+            r: 0
+        },
+        style: {
+            color: CBCOLOR.BLACK,
+            fill: false,
+            size: CBSTROKE_WIDTH.MEDIUM,
+            dotted: false
         }
-    })
+    }
 });
-
 
 export const item_css_state = selectorFamily<ItemCSS, number>({
     key: "item_css",
@@ -67,53 +69,29 @@ export const item_css_state = selectorFamily<ItemCSS, number>({
         const shapeUtil = CanvasUtil.get_shapeutil(item.type);
         const bd = shapeUtil?.get_bound(item.shape);
         if (bd) {
-            res = CanvasUtil.get_item_css(bd, item);
+            res = CanvasUtil.get_item_css(bd, item.shape, item.style);
         }
         return res;
     }
 })
 
-
-
-
-
-function get_default_shape(type: CBTOOL): Shape {
-    switch (type) {
-        case CBTOOL.RECTANGLE:
-            return {
-                center: { x: Math.random() * 2000, y: Math.random() * 1400 },
-                mx: 50,
-                my: 50,
-                r: 0
-            }
-        case CBTOOL.ELLIPSE:
-            return {
-                center: { x: Math.random() * 2000, y: Math.random() * 1400 },
-                rx: 50,
-                ry: 50,
-                r: 0
-            }
-        case CBTOOL.TRIANGLE:
-            return {
-                a: { x: 100, y: 100 },
-                b: { x: 150, y: 50 },
-                c: { x: 200, y: 100 },
-                r: 0
-            }
-        case CBTOOL.PENCIL:
-            return {
-                points: [],
-                r: 0
-            }
-        default:
-            return {
-                center: { x: Math.random() * 2000, y: Math.random() * 1400 },
-                mx: 50,
-                my: 50,
-                r: 0
-            }
+export const item_state_accessor = selectorFamily<CBItem, number>({
+    key: "items_selector",
+    get: (itemID: number) => ({ get }) => {
+        return get(item_state(itemID));
+    },
+    set: (itemID: number) => ({ set, reset }, new_CBItem: CBItem | DefaultValue) => {
+        if (new_CBItem instanceof DefaultValue) {
+            reset(item_state(itemID));
+            set(itemID_state, (prev) => prev.filter((id) => id !== itemID));
+        } else {
+            set(item_state(itemID), new_CBItem);
+            set(itemID_state, (prev) => [...prev, itemID]);
+        }
     }
-}
+})
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                                 TOOL STATE                                 */
@@ -176,11 +154,12 @@ export const select_state = selector<Bound>({
     }
 })
 
+
 /* -------------------------------------------------------------------------- */
 /*                                CANVAS STATE                                */
 /* -------------------------------------------------------------------------- */
 
-const CANVAS_SIZE = 2147483648; 
+const CANVAS_SIZE = 2147483648;
 
 export const camera_state = atom<Bound>({
     key: "camera",

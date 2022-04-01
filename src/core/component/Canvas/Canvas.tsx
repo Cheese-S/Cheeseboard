@@ -9,44 +9,37 @@ import { ToolbarWrapper } from '../Toolbar'
 import produce from 'immer'
 import { LEFT_MOUSE, MID_MOUSE, RIGHT_MOUSE } from '../../constant'
 import { useContainerDimension } from '../../hook/useContainerDimension'
-// import { Bound} from '../type';
-
-// interface Camera extends Bound{
-//     zoom: number
-// }
-
-// const CANVAS_SIZE = 65356; 
+import { customAlphabet } from 'nanoid'
+import { ToolWrapper } from '../Container/ToolWrapper'
 
 export const Canvas: React.FC = ({ }) => {
     const [ids, setIds] = useRecoilState(itemID_state);
     const set_pointer = useSetRecoilState(pointer_state);
     const addId = () => setIds((ids) => [...ids, 1]);
-    const [camera, set_camera] = useRecoilState(camera_state); 
-    const visible = useRecoilValue(visible_itemID_state);
-    console.log(visible);
+    const [camera, set_camera] = useRecoilState(camera_state);
     const on_mouse_move = (e: React.MouseEvent) => {
-        switch(e.button) {
+        switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     return produce(prev, draft => {
-                        draft.curr_point = {x: e.clientX, y: e.clientY};
+                        draft.curr_point = { x: e.clientX, y: e.clientY };
                     })
-                })   
+                })
         }
     }
     const on_mouse_down = (e: React.MouseEvent) => {
-        switch(e.button) {
+        switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     return produce(prev, draft => {
-                        draft.is_active = true; 
-                        draft.init_point = {x: e.clientX, y: e.clientY}; 
-                    }) 
+                        draft.is_active = true;
+                        draft.init_point = { x: e.clientX, y: e.clientY };
+                    })
                 })
         }
     }
     const on_mouse_up = (e: React.MouseEvent) => {
-        switch(e.button) {
+        switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     return produce(prev, draft => {
@@ -70,7 +63,7 @@ export const Canvas: React.FC = ({ }) => {
             <div style={{ backgroundColor: 'var(--cbBlue)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbDarkBlue)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbGreen)', width: 100, height: 100 }} />
-            <RectSelect />
+            <ToolWrapper />
             <ToolbarWrapper />
         </ div>
     )

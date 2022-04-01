@@ -28,4 +28,8 @@ export default class EllipseShapeUtil extends ShapeUtil {
         }
     }
 
+    set_shape_top_left(shape: Ellipse, pt: Point): void {
+        shape.center =  {x: pt.x + shape.rx, y: pt.y + shape.ry }
+    }
+
 }

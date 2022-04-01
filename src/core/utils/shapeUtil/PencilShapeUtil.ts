@@ -11,5 +11,9 @@ export default class PencilShapeUtil extends ShapeUtil {
     transform_shape(shape: Shape, scale?: Point, trans?: Point, rot?: number): void {
         throw new Error("Method not implemented.");
     }
+
+    set_shape_top_left(shape: Shape, pt: Point): void {
+        throw new Error("Method not implemented.");
+    }
     
 }

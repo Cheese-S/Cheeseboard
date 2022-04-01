@@ -1,5 +1,5 @@
 import React from "react";
-import { Bound, Point, Rect } from "../../type";
+import { Bound, Point, Rect, Shape } from "../../type";
 import { bound_rect_intersect, get_rect_bound } from "../geometry";
 import ShapeUtil from "./ShapeUtil";
 
@@ -27,6 +27,10 @@ export default class RectShapeUtil extends ShapeUtil {
         if (rot !== undefined) {
             r.r = rot; 
         }
+    }
+
+    set_shape_top_left(shape: Rect, pt: Point): void {
+        shape.center =  {x: pt.x + shape.mx, y: pt.y + shape.my }
     }
 
 }

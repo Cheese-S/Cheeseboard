@@ -1,7 +1,7 @@
 import React from "react";
 import { Ellipse } from "../../type";
-import { SVGContainer } from "../container/SVGContainer";
-import { Container } from "../container/Container";
+import { SVGContainer } from "../Container/SVGContainer";
+import { Container } from "../Container/Container";
 import styles from '../../../styles.module.css'
 import { ItemCSS } from '../../state'
 import { ComponentProps } from './internal'
