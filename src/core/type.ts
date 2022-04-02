@@ -1,4 +1,5 @@
 import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH } from "./constant"
+import { CSSProperties } from "react"
 
 export type Shape = Rect | Ellipse | Triangle | Polyline
 
@@ -50,7 +51,8 @@ export interface Bound {
 export interface CBItem { 
     type: CBTOOL,
     shape: Shape,
-    style: CBStyle
+    style: CBStyle,
+    qt_id: number
 }
 
 export interface CBStyle {
@@ -67,4 +69,8 @@ export interface CBPointer {
     is_active: boolean
 }
 
+export interface ItemCSS {
+    container_css: CSSProperties,
+    component_css: CSSProperties
+}
 

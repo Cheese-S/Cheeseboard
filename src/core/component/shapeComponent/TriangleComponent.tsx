@@ -19,8 +19,8 @@ export const TriangleComponent: React.FC<TriangleComponentProps> = ({shape, item
     const pointer_events_type = (component_css.fill && component_css.fill === 'none') ? 'stroke' : 'all'; 
     
     return (
-        <Container style={container_css}>
-            <SVGContainer {...rest}>
+        <Container style={container_css} >
+            <SVGContainer {...rest} >
                 <path className={styles.cbStroke} style={component_css} d={path} rx={4}/>
                 <path className={styles.cbIndicatorStroke} ref={indicator_ref} d={path} name="indicator" rx={4} />
                 <path className={styles.cbEventRecieverStroke} ref={event_reciever_ref} d={path} name="eventReciever" pointerEvents={pointer_events_type} rx={4}/>

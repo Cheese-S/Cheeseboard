@@ -135,6 +135,7 @@ html *{
   align-items: center;
   justify-content: center;
   contain: layout style size;
+  pointer-events: none;
 }
 
 .cbPositionedSvg {
@@ -183,3 +184,6 @@ html *{
   stroke-width: 1;
 }
 
+.test {
+  pointer-events: all;
+}

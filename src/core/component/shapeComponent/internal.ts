@@ -1,5 +1,4 @@
-import { ItemCSS } from "../../state";
-import { Shape } from "../../type";
+import { Shape, ItemCSS } from "../../type";
 import React from "react";
 
 export interface ComponentProps<T extends Shape> extends React.SVGProps<SVGSVGElement> {

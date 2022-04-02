@@ -8,9 +8,9 @@ import { RectSelect } from '../RectangleSelect'
 import { ToolbarWrapper } from '../Toolbar'
 import produce from 'immer'
 import { LEFT_MOUSE, MID_MOUSE, RIGHT_MOUSE } from '../../constant'
-import { useContainerDimension } from '../../hook/useContainerDimension'
 import { customAlphabet } from 'nanoid'
 import { ToolWrapper } from '../Container/ToolWrapper'
+import { SelectedWrapper } from '../Selected'
 
 export const Canvas: React.FC = ({ }) => {
     const [ids, setIds] = useRecoilState(itemID_state);
@@ -18,6 +18,7 @@ export const Canvas: React.FC = ({ }) => {
     const addId = () => setIds((ids) => [...ids, 1]);
     const [camera, set_camera] = useRecoilState(camera_state);
     const on_mouse_move = (e: React.MouseEvent) => {
+        e.preventDefault();
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
@@ -28,6 +29,7 @@ export const Canvas: React.FC = ({ }) => {
         }
     }
     const on_mouse_down = (e: React.MouseEvent) => {
+        e.preventDefault();
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
@@ -39,6 +41,7 @@ export const Canvas: React.FC = ({ }) => {
         }
     }
     const on_mouse_up = (e: React.MouseEvent) => {
+        e.preventDefault();
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
@@ -56,8 +59,9 @@ export const Canvas: React.FC = ({ }) => {
                 CLICK ME
             </button>
             {ids.map((id) => {
-                return <CanvasItem id={id} />
+                return <CanvasItem key={id} id={id} />
             })}
+            <SelectedWrapper />
             <div style={{ backgroundColor: 'var(--cbRed)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbYellow)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbBlue)', width: 100, height: 100 }} />

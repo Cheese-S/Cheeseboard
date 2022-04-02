@@ -3,7 +3,7 @@ import { Bound } from "../../type"
 
 
 let getBound = (a: number, b: number, c: number, d: number): Bound => {
-    return {min_x: a, max_y: b, max_x: c, min_y: d}; 
+    return {min_x: a, min_y: b, max_x: c, max_y: d}; 
 }
 
 describe('Query Points in Quadtree', () => {

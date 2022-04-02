@@ -13,7 +13,6 @@ export function useIndicator<T extends IndicatorRefType>(): RefObject<T>[] {
         const event_receiver_element = event_receiver_ref.current!; 
         const indicator_element = indicator_ref.current!; 
         const onMouseEnterHandler = () => {
-            console.log("HELLO"); 
             indicator_element.style.setProperty('visibility', 'visible');
         }
         const onMouseLeaveHandler = () => {

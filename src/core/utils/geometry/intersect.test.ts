@@ -126,6 +126,14 @@ describe('rect_ellipse_intersect', () => {
         expect(rect_ellipse_intersect(r, e)).toBeTruthy();
     });
 
+    test('unrotated ellipse', () => {
+        e = { center: { x: 1110, y: 911 }, rx: 50, ry: 50, r: 0 };
+        r = { center: { x: 1196, y: 1019.5}, mx: 66 , my: 96.5, r: 0 }
+        expect(rect_ellipse_intersect(r, e)).toBeTruthy();
+        r = { center: { x: 1196, y: 1022.5}, mx: 66 , my: 99.5, r: 0 }
+        expect(rect_ellipse_intersect(r, e)).toBeTruthy();
+    });
+
     test('rotated ellipse', () => {
         e.r = Math.PI;
         expect(rect_ellipse_intersect(r, e)).toBeTruthy();
@@ -133,6 +141,12 @@ describe('rect_ellipse_intersect', () => {
 
     test('falsy ellipse', () => {
         e.center = { x: 2, y: 2 };
+        expect(rect_ellipse_intersect(r, e)).toBeFalsy();
+    })
+
+    test('falsy rect', () => {
+        r = { center: { x: 0.1, y: 0.1 }, mx: 0.1, my: 0.1, r: 0 };
+        e = { center: { x: 1, y: 1}, rx: 1, ry: 1, r: 0 }; 
         expect(rect_ellipse_intersect(r, e)).toBeFalsy();
     })
 

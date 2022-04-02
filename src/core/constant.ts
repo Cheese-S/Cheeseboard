@@ -1,3 +1,4 @@
+import { Bound } from "./type";
 export enum TRANSFORM_HANDLE {
     TL_CORNER,
     TR_CORNER,
@@ -42,3 +43,10 @@ export enum CBSTROKE_WIDTH {
 export const LEFT_MOUSE = 0;
 export const MID_MOUSE = 1;
 export const RIGHT_MOUSE = 2;
+
+export const empty_bd: Bound = {
+    min_x: 0,
+    min_y: 0,
+    max_x: 0,
+    max_y: 0
+}

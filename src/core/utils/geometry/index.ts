@@ -280,6 +280,8 @@ function get_triangle_edges(t: Triangle): Point[][] {
 /*                                    BOUND                                   */
 /* -------------------------------------------------------------------------- */
 
+
+
 /**
  * Get a rectangle represented by bound
  * @param bd 
@@ -435,7 +437,6 @@ function bound_circle_intersect(bd: Bound, e: Ellipse): boolean {
  */
 
 export function bound_ellipse_intersect(bd: Bound, e: Ellipse): boolean {
-    if (e.rx === e.ry) return bound_circle_intersect(bd, e);
     return rect_ellipse_intersect(get_bound_rect(bd), e); 
 }
 

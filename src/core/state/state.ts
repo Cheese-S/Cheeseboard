@@ -1,26 +1,13 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH } from "../constant";
-import { CBItem, Shape, CBStyle, Bound, CBPointer } from "../type";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd } from "../constant";
+import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
-
-export const empty_bd: Bound = {
-    min_x: 0,
-    min_y: 0,
-    max_x: 0,
-    max_y: 0
-}
-
 
 /* -------------------------------------------------------------------------- */
 /*                                 ITEM STATTE                                */
 /* -------------------------------------------------------------------------- */
-
-export interface ItemCSS {
-    container_css: CSSProperties,
-    component_css: CSSProperties
-}
 
 
 export const itemID_state = atom<number[]>({
@@ -56,8 +43,10 @@ export const item_state = atomFamily<CBItem, number>({
             color: CBCOLOR.BLACK,
             fill: false,
             size: CBSTROKE_WIDTH.MEDIUM,
-            dotted: false
-        }
+            dotted: false,
+            is_ghost: false
+        },
+        qt_id: -1
     }
 });
 
@@ -69,7 +58,7 @@ export const item_css_state = selectorFamily<ItemCSS, number>({
         const shapeUtil = CanvasUtil.get_shapeutil(item.type);
         const bd = shapeUtil?.get_bound(item.shape);
         if (bd) {
-            res = CanvasUtil.get_item_css(bd, item.shape, item.style);
+            res = CanvasUtil.get_item_css(bd, item.shape.r, item.style);
         }
         return res;
     }
@@ -80,17 +69,37 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
     get: (itemID: number) => ({ get }) => {
         return get(item_state(itemID));
     },
-    set: (itemID: number) => ({ set, reset }, new_CBItem: CBItem | DefaultValue) => {
+    set: (itemID: number) => ({ get, set, reset }, new_CBItem: CBItem | DefaultValue) => {
+        const qt = get(qt_state);
         if (new_CBItem instanceof DefaultValue) {
             reset(item_state(itemID));
             set(itemID_state, (prev) => prev.filter((id) => id !== itemID));
+            qt.remove(itemID);
+            qt.cleanup();
         } else {
-            set(item_state(itemID), new_CBItem);
+            set(item_state(itemID),
+                (prev) => {
+                    if (prev.qt_id !== -1) {
+                        qt.remove(prev.qt_id); 
+                    }
+                    return new_CBItem;
+                });
             set(itemID_state, (prev) => [...prev, itemID]);
+            const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape);
+            qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
         }
     }
 })
 
+export const selected_bound_state = selector<Bound>({
+    key: "selected_bound",
+    get: ({ get }) => {
+        const selected_IDs = get(selected_itemID_state);
+        if (!selected_IDs.length) { return empty_bd };
+        const items = selected_IDs.map((id) => get(item_state_accessor(id)))
+        return CanvasUtil.get_items_bound(...items);
+    }
+})
 
 
 /* -------------------------------------------------------------------------- */
@@ -108,7 +117,8 @@ export const style_state = atom<CBStyle>({
         color: CBCOLOR.RED,
         size: CBSTROKE_WIDTH.MEDIUM,
         fill: true,
-        dotted: false
+        dotted: false,
+        is_ghost: false
     }
 })
 
@@ -145,12 +155,15 @@ export const select_state = selector<Bound>({
             min_y = pointer.curr_point.y;
         }
 
-        return {
+        let bd = {
             min_x: min_x,
             max_x: max_x,
             min_y: min_y,
             max_y: max_y
         }
+        return bd;
+
+
     }
 })
 
@@ -164,10 +177,10 @@ const CANVAS_SIZE = 2147483648;
 export const camera_state = atom<Bound>({
     key: "camera",
     default: {
-        min_x: CANVAS_SIZE / 2,
-        min_y: CANVAS_SIZE / 2,
-        max_x: 0,
-        max_y: 0
+        min_x: 0,
+        min_y: 0,
+        max_x: CANVAS_SIZE / 2,
+        max_y: CANVAS_SIZE / 2
     }
 })
 
@@ -186,4 +199,6 @@ export const pointer_state = atom<CBPointer>({
         is_active: false
     }
 })
+
+
 
