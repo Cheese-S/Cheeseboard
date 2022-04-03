@@ -25,8 +25,8 @@ export const Canvas: React.FC = ({ }) => {
                 })
         }
     }
-    const on_mouse_down = (e: React.MouseEvent) => {
-        e.preventDefault();
+    const on_mouse_down = (e: React.MouseEvent<HTMLDivElement>) => {
+        // @ts-ignore
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
@@ -36,6 +36,8 @@ export const Canvas: React.FC = ({ }) => {
                     })
                 })
         }
+
+
     }
     const on_mouse_up = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -50,7 +52,7 @@ export const Canvas: React.FC = ({ }) => {
     }
 
     return (
-        <div className={`${styles.cbCanvas} ${styles.cbAbsolute}`} onMouseDown={on_mouse_down} onMouseMove={on_mouse_move} onMouseUp={on_mouse_up}>
+        <div id={'cbCanvas'} className={`${styles.cbCanvas} ${styles.cbAbsolute}`} onMouseDown={on_mouse_down} onMouseMove={on_mouse_move} onMouseUp={on_mouse_up}>
             <div> HELLO </div>
             <button className={styles.cbButton} onClick={addId}>
                 CLICK ME

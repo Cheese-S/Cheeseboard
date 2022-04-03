@@ -9,6 +9,7 @@ import { CB_HANDLE } from "../../constant";
 import { CB_EDGE_HANDLE } from "../../hook/useEdgeHandle";
 import { CB_CORNER_HANDLE } from "../../hook/useCornerHandle";
 import { CornerHandle } from "./CornerHandle";
+import { RotateHandle } from "./RotateHandle";
 
 const edge_handles: CB_EDGE_HANDLE[] = [CB_HANDLE.L_EDGE, CB_HANDLE.R_EDGE, CB_HANDLE.B_EDGE, CB_HANDLE.T_EDGE];
 
@@ -37,6 +38,7 @@ export const SelectedBound: React.FC = ({ }) => {
                 {corner_handles.map((handle) => {
                     return <CornerHandle width={width} height={height} handle={handle} />
                 })}
+                <RotateHandle width={width} height={height} />
             </SVGContainer>
         </Container>
     )

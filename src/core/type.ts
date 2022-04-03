@@ -48,7 +48,8 @@ export interface Bound {
     min_y: number
 }
 
-export interface CBItem { 
+export interface CBItem {
+    id: number, 
     type: CBTOOL,
     shape: Shape,
     style: CBStyle,

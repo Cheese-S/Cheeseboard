@@ -21,7 +21,8 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
     const style = useRecoilValue(style_state);
     const pointer = useRecoilValue(pointer_state);
     const nanoid = customAlphabet('1234567890', 9);
-    const set_shape = useSetRecoilState(item_state_accessor(parseInt(nanoid())));
+    const new_id = parseInt(nanoid()); 
+    const set_shape = useSetRecoilState(item_state_accessor(new_id));
 
     const shapeUtil = CanvasUtil.get_shapeutil(tool);
     let shape = CanvasUtil.get_default_shape(tool);
@@ -33,6 +34,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
         switch (e.button) {
             case LEFT_MOUSE:
                 set_shape({
+                    id: new_id, 
                     type: tool,
                     shape: shape,
                     style: {
@@ -41,7 +43,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
                     },
                     qt_id: -1
                 })
-                console.log(shape);
+                console.log(new_id);
         }
     }
 

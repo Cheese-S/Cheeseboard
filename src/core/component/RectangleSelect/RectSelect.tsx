@@ -10,25 +10,23 @@ import { Bound } from "../../type";
 
 export const RectSelect: React.FC = () => {
     const bd = useRecoilValue(select_state);
-    const test = useRecoilCallback(({snapshot, set}) => async (select_bd: Bound) => {
+    const test = useRecoilCallback(({ snapshot, set }) => async (select_bd: Bound) => {
         const tool = await snapshot.getPromise(tool_state);
         const qt = await snapshot.getPromise(qt_state);
         const camera = await snapshot.getPromise(camera_state);
         const candidateIDs = qt.query(select_bd);
-        const candidate_items = await Promise.all(candidateIDs.map(async (id) => {    
-            return {...await snapshot.getPromise(item_state_accessor(id)), id: id};  
+        const candidate_items = await Promise.all(candidateIDs.map(async (id) => {
+            return { ...await snapshot.getPromise(item_state_accessor(id)), id: id };
         }))
-        const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items); 
-        set(selected_itemID_state, intersectedIDs); 
-        
+        const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
+        set(selected_itemID_state, intersectedIDs);
     }, [])
-    
+
     useLayoutEffect(() => {
         if (bd == empty_bd) {
-            return; 
+            return;
         }
-        test(bd); 
-        
+        test(bd);
     }, [bd])
 
     return (

@@ -32,6 +32,7 @@ export const visible_itemID_state = selector<number[]>({
 export const item_state = atomFamily<CBItem, number>({
     key: "elements",
     default: {
+        id: -1, 
         type: CBTOOL.RECTANGLE,
         shape: {
             center: { x: Math.random() * 2000, y: Math.random() * 1400 },
@@ -84,9 +85,34 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
                     }
                     return new_CBItem;
                 });
-            set(itemID_state, (prev) => [...prev, itemID]);
+            set(itemID_state, (prev) => {
+                if (prev.indexOf(itemID) === -1) {
+                    return [...prev, itemID]
+                }
+                return prev; 
+            });
             const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape);
             qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
+        }
+    }
+})
+
+export const selected_items_state = selector<CBItem[]>({
+    key: "selected_items",
+    get: ({ get }) => {
+        const selected_IDs = get(selected_itemID_state);
+        if (!selected_IDs.length) { return [] };
+        const items = selected_IDs.map((id) => get(item_state_accessor(id)))
+        return items; 
+    },
+    set: ({get, set, reset}, new_selected_items: CBItem[] | DefaultValue) => {
+        if (new_selected_items instanceof DefaultValue) {
+            const selected_IDs = get(selected_itemID_state);
+            selected_IDs.forEach((id) => reset(item_state_accessor(id)))
+        } else {
+            new_selected_items.forEach((item) => {
+                set(item_state_accessor(item.id), item);
+            })
         }
     }
 })
@@ -94,10 +120,9 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
 export const selected_bound_state = selector<Bound>({
     key: "selected_bound",
     get: ({ get }) => {
-        const selected_IDs = get(selected_itemID_state);
-        if (!selected_IDs.length) { return empty_bd };
-        const items = selected_IDs.map((id) => get(item_state_accessor(id)))
-        return CanvasUtil.get_items_bound(...items);
+        const selected_items = get(selected_items_state);
+        if (!selected_items.length) { return empty_bd };
+        return CanvasUtil.get_items_bound(...selected_items);
     }
 })
 
@@ -186,7 +211,7 @@ export const camera_state = atom<Bound>({
 
 export const qt_state = atom<Quadtree>({
     key: "quadtree",
-    default: new Quadtree(CANVAS_SIZE, CANVAS_SIZE, 8, 10),
+    default: new Quadtree(CANVAS_SIZE, CANVAS_SIZE, 4, 10),
     dangerouslyAllowMutability: true
 })
 
