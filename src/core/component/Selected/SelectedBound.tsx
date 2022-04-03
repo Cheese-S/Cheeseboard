@@ -4,9 +4,20 @@ import { Container } from "../Container/Container";
 import { SVGContainer } from "../Container/SVGContainer";
 import styles from '../../../styles.module.css'
 import { selected_bound_state } from "../../state";
+import { EdgeHandle } from "./EdgeHandle";
+import { CB_HANDLE } from "../../constant";
+import { CB_EDGE_HANDLE } from "../../hook/useEdgeHandle";
+import { CB_CORNER_HANDLE } from "../../hook/useCornerHandle";
+import { CornerHandle } from "./CornerHandle";
 
-export const SelectedBound: React.FC = ({}) => {
+const edge_handles: CB_EDGE_HANDLE[] = [CB_HANDLE.L_EDGE, CB_HANDLE.R_EDGE, CB_HANDLE.B_EDGE, CB_HANDLE.T_EDGE];
+
+const corner_handles: CB_CORNER_HANDLE[] = [CB_HANDLE.TL_CORNER, CB_HANDLE.TR_CORNER, CB_HANDLE.BL_CORNER, CB_HANDLE.BR_CORNER];
+
+export const SelectedBound: React.FC = ({ }) => {
     const bd = useRecoilValue(selected_bound_state);
+    const width = bd.max_x - bd.min_x;
+    const height = bd.max_y - bd.min_y;
 
     return (
         <Container style={{
@@ -20,7 +31,12 @@ export const SelectedBound: React.FC = ({}) => {
                 `
         }}>
             <SVGContainer pointerEvents={'none'}>
-                <rect className={styles.cbSelectStroke} width={bd.max_x - bd.min_x} height={bd.max_y - bd.min_y} strokeWidth={16}/>
+                {edge_handles.map((handle) => {
+                    return <EdgeHandle width={width} height={height} handle={handle}/>
+                })}
+                {corner_handles.map((handle) => {
+                    return <CornerHandle width={width} height={height} handle={handle} />
+                })}
             </SVGContainer>
         </Container>
     )

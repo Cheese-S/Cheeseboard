@@ -8,6 +8,10 @@
   --cbPurple: #AD80DB; 
   --cbDutchWhite: #ede2bf; 
 
+  /* HANDLE ONLY */
+  --cbAzure: #3A86FF;
+  --cbTest: #00B4D8;
+
 
   --cbRed: #D00000;
   --cbYellow: #FFBA08;
@@ -184,6 +188,9 @@ html *{
   stroke-width: 1;
 }
 
-.test {
-  pointer-events: all;
+.cbHandleStroke {
+  stroke: var(--cbAzure);
+  fill: white;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }

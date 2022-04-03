@@ -1,5 +1,5 @@
 import { Bound } from "./type";
-export enum TRANSFORM_HANDLE {
+export enum CB_HANDLE {
     TL_CORNER,
     TR_CORNER,
     BL_CORNER,

@@ -1,15 +1,19 @@
 import React from "react"
-import { Point } from "../../type";
+import { useEdgeHandle, CB_EDGE_HANDLE } from "../../hook/useEdgeHandle"
+import styles from '../../../styles.module.css'
+import { HANDLE_PADDING } from './internal'
 
 interface EdgeHandleProps {
-    height: number,
+    // bound: number, 
+    handle: CB_EDGE_HANDLE,
     width: number,
-    center: Point,
-    onClick?: React.MouseEventHandler
+    height: number
+
 }
 
-export const EdgeHandle: React.FC<EdgeHandleProps> = ({height, width, center, onClick}) => {
+export const EdgeHandle: React.FC<EdgeHandleProps> = ({ width, height, handle }: EdgeHandleProps) => {
+    const { path } = useEdgeHandle(width, height, handle, HANDLE_PADDING);
     return (
-        <rect height={height} width={width} x={center.x} y={center.y} onClick={onClick}/>
-    ) 
+        <path className={styles.cbHandleStroke} d={path} strokeWidth={4} />
+    )
 }

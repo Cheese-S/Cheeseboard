@@ -1,16 +1,13 @@
-import * as React from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
-import { camera_state, itemID_state, pointer_state, visible_itemID_state } from '../../state'
-import { CanvasItem } from '../CanvasItem'
-import styles from '../../../styles.module.css'
-import { Point } from '../../type'
-import { RectSelect } from '../RectangleSelect'
-import { ToolbarWrapper } from '../Toolbar'
 import produce from 'immer'
-import { LEFT_MOUSE, MID_MOUSE, RIGHT_MOUSE } from '../../constant'
-import { customAlphabet } from 'nanoid'
+import * as React from 'react'
+import { useRecoilState, useSetRecoilState } from 'recoil'
+import styles from '../../../styles.module.css'
+import { LEFT_MOUSE } from '../../constant'
+import { camera_state, itemID_state, pointer_state } from '../../state'
+import { CanvasItem } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
+import { ToolbarWrapper } from '../Toolbar'
 
 export const Canvas: React.FC = ({ }) => {
     const [ids, setIds] = useRecoilState(itemID_state);
