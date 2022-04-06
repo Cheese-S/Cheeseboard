@@ -1,35 +1,38 @@
 import produce from 'immer'
 import * as React from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
 import { CB_HANDLE, LEFT_MOUSE } from '../../constant'
-import { camera_state, itemID_state, pointer_state, selected_items_state } from '../../state'
+import { camera_state, itemID_state, pointer_state, selected_bound_state, selected_items_state } from '../../state'
+import { Point } from '../../type'
 import { CanvasUtil } from '../../utils/CanvasUtil'
 import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
 import { ToolbarWrapper } from '../Toolbar'
-let count = 0; 
 let is_active = false; 
 export const Canvas: React.FC = ({ }) => {
 
     const set_pointer = useSetRecoilState(pointer_state);
     const set_selected_items = useSetRecoilState(selected_items_state);
+    const get_selected_bound = useRecoilCallback(({ snapshot }) => () => {
+        return snapshot.getLoadable(selected_bound_state).getValue(); 
+    })
     const on_mouse_move = (e: React.MouseEvent) => {
         e.preventDefault();
         let handle: CB_HANDLE; 
+        let init_point: Point; 
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     handle = prev.selected_handle;
+                    init_point = prev.init_point; 
                     return produce(prev, draft => {
                         draft.movement = { x: e.movementX, y: e.movementY };
                         draft.curr_point = { x: e.clientX, y: e.clientY };
                     })
                 })
                 if (is_active) {
-                    count++; 
-                    console.log(count);
                     // @ts-ignore
                     switch (handle) {
                         case CB_HANDLE.CENTER:
@@ -41,12 +44,14 @@ export const Canvas: React.FC = ({ }) => {
                             })
                             break; 
                         case CB_HANDLE.ROTATION:
-                            // set_selected_items(prev => {
-                            //     return produce(prev, draft => {
-                            //         CanvasUtil.rotate_items({ x: e.movementX, y: e.movementY }, draft);
-                            //         return draft;
-                            //     })
-                            // })
+                            set_selected_items(prev => {
+                                return produce(prev, draft => {
+                                    const bound = get_selected_bound(); 
+                                    console.log(bound);
+                                    CanvasUtil.rotate_items(bound, draft, init_point, {x: e.clientX, y: e.clientY}, {x: e.movementX, y: e.movementY});
+                                    return draft;
+                                })
+                            })
                             break;
                         default:
                     }   

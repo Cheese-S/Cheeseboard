@@ -18,7 +18,7 @@ export default class PencilShapeUtil extends ShapeUtil {
     rot_shape_about(p: Point, r: number, shape: Shape): void {
         throw new Error("Method not implemented.");
     }
-    get_bound(shape: Shape): Bound {
+    get_bound(shape: Shape, rotated: boolean = false): Bound {
         throw new Error("Method not implemented.");
     }
     intersect_bound(bd: Bound, shape: Shape): boolean {

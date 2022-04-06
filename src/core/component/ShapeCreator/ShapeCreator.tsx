@@ -26,6 +26,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
 
     const shapeUtil = CanvasUtil.get_shapeutil(tool);
     let shape = CanvasUtil.get_default_shape(tool);
+    shape.r = Math.PI / 4;
     shapeUtil!.set_shape_top_left(shape, pointer.curr_point);
     const bd = shapeUtil!.get_bound(shape);
     const item_style = CanvasUtil.get_item_css(bd, shape.r, { ...style, is_ghost: true });

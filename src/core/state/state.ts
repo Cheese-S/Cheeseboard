@@ -76,25 +76,31 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
             reset(item_state(itemID));
             set(itemID_state, (prev) => prev.filter((id) => id !== itemID));
             qt.remove(itemID);
-            qt.cleanup();
         } else {
             set(item_state(itemID),
                 (prev) => {
+
                     if (prev.qt_id !== -1) {
                         qt.remove(prev.qt_id);
+
                     }
-                    return new_CBItem;
+                    const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape, true);
+                    const qt_id = qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
+
+                    return {
+                        ...new_CBItem,
+                        qt_id: qt_id
+                    };
                 });
             set(itemID_state, (prev) => {
                 if (prev.indexOf(itemID) === -1) {
                     return [...prev, itemID]
                 }
-                console.log(prev);
                 return prev;
             });
-            const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape);
-            qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
+
         }
+        qt.cleanup();
     }
 })
 
@@ -118,23 +124,7 @@ export const selected_items_state = selector<CBItem[]>({
     }
 })
 
-export const selected_bound_state = selector<Bound & { r: number }>({
-    key: "selected_bound",
-    get: ({ get }) => {
-        const selected_items = get(selected_items_state);
-        const r = selected_items.length === 1 ? selected_items[0].shape.r : 0;
-        if (!selected_items.length) { return { ...empty_bd, r: 0 } };
-        return { ...CanvasUtil.get_items_bound(...selected_items), r: r };
-    },
-    set: ({ set }, new_selected_bound: Bound & { r: number } | DefaultValue) => {
-        if (DefaultValue) {
-            return; 
-        }
-        
 
-
-    }
-})
 
 
 /* -------------------------------------------------------------------------- */
@@ -168,7 +158,7 @@ export const select_state = selector<Bound>({
 
         const pointer = get(pointer_state);
 
-        if (!pointer.is_active) {
+        if (!pointer.is_active || pointer.selected_handle !== CB_HANDLE.IDLE) {
             return empty_bd;
         }
 
@@ -234,6 +224,17 @@ export const pointer_state = atom<CBPointer>({
         movement: { x: 0, y: 0 },
         is_active: false,
         selected_handle: CB_HANDLE.IDLE
+    }
+})
+
+export const selected_bound_state = selector<Bound & { r: number }>({
+    key: "selected_bound",
+    get: ({ get }) => {
+        const selected_items = get(selected_items_state);
+        const single_selected = selected_items.length === 1; 
+        const r = single_selected ? selected_items[0].shape.r : 0;
+        if (!selected_items.length) { return { ...empty_bd, r: 0 } };
+        return { ...CanvasUtil.get_items_bound(!single_selected, ...selected_items), r: r };
     }
 })
 

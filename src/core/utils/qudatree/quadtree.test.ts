@@ -69,7 +69,7 @@ describe('Query AABB in Quadtree', () => {
 
     test('Query After Deletion', () => {
         q.remove(1);
-        expect(q.query(getBound(0, 0, 1000, 1000)).sort()).toEqual([2, 3, 4]); 
+        expect(q.query(getBound(0, 0, 1000, 1000)).sort()).toEqual([1, 3, 4]); 
     })
 });
 

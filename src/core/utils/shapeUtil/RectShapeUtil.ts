@@ -11,8 +11,8 @@ export default class RectShapeUtil extends ShapeUtil {
         shape.center = Vec.add(shape.center, delta);
     }
     
-    get_bound(rect: Rect): Bound {
-        return get_rect_bound(rect);
+    get_bound(rect: Rect, rotated: boolean = false): Bound {
+        return get_rect_bound(rect, rotated);
     }
     
     intersect_bound(bd: Bound, r: Rect): boolean {
@@ -36,6 +36,7 @@ export default class RectShapeUtil extends ShapeUtil {
 
     rot_shape_about(p: Point, r: number, shape: Rect): void {
         shape.center = Vec.rot_about(shape.center, p, r);
-        shape.r = r; 
+        shape.r += r; 
+        shape.r %= 2 * Math.PI
     }
 }

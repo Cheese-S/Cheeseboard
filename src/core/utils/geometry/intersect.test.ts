@@ -74,17 +74,17 @@ describe('get bounds from shapes', () => {
     test('rotated rectangle', () => {
         let r = { center: { x: 0.5, y: 0.5 }, mx: 0.5, my: 0.5, r: Math.PI / 4 };
         let corner_dis = Math.sqrt(0.5 ** 2 + 0.5 ** 2);
-        expect(get_rect_bound(r)).toMatchCloseTo({ min_x: 0.5 - corner_dis, max_y: 0.5 + corner_dis, max_x: 0.5 + corner_dis, min_y: 0.5 - corner_dis });
+        expect(get_rect_bound(r, true)).toMatchCloseTo({ min_x: 0.5 - corner_dis, max_y: 0.5 + corner_dis, max_x: 0.5 + corner_dis, min_y: 0.5 - corner_dis });
     });
 
     test('unrotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: 0 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({ min_x: 0, max_y: 5, max_x: 2, min_y: -3 });
+        expect(get_ellipse_bound(e, true)).toMatchCloseTo({ min_x: 0, max_y: 5, max_x: 2, min_y: -3 });
     })
 
     test('rotated ellipse', () => {
         let e = { center: { x: 1, y: 1 }, rx: 1, ry: 4, r: Math.PI / 2 };
-        expect(get_ellipse_bound(e)).toMatchCloseTo({ min_x: -3, max_y: 2, max_x: 5, min_y: 0 });
+        expect(get_ellipse_bound(e, true)).toMatchCloseTo({ min_x: -3, max_y: 2, max_x: 5, min_y: 0 });
     })
 
     test('unrotated triangle', () => {
@@ -98,7 +98,7 @@ describe('get bounds from shapes', () => {
         let rotated_c = Vec.rot_about({ x: 0.5, y: 0.5 }, center, Math.PI);
         let rotated_a = Vec.rot_about({ x: 0, y: 0 }, center, Math.PI);
 
-        expect(get_triangle_bound(t)).toMatchCloseTo({ min_x: 0, max_y: rotated_a.y, max_x: 1, min_y: rotated_c.y });
+        expect(get_triangle_bound(t, true)).toMatchCloseTo({ min_x: 0, max_y: rotated_a.y, max_x: 1, min_y: rotated_c.y });
     })
 
     test('Get Common Bound', () => {

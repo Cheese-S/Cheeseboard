@@ -20,6 +20,7 @@ export const RotateHandle: React.FC<RotateHandleProps> = ({ width, height, on_se
                 cursor='grab'
                 onMouseDown={on_select_handle}
                 cx={center.x} cy={center.y} rx={ROTATE_HANDLE_SIZE} ry={ROTATE_HANDLE_SIZE}
+                pointerEvents='all'
             />
         </React.Fragment>
     )

@@ -24,7 +24,6 @@ export const SelectedWrapper: React.FC = ({ }) => {
     const set_pointer_state = useSetRecoilState(pointer_state);
     const on_select_handle = (handle: CB_HANDLE) => (e: React.MouseEvent) => {
         e.preventDefault();
-        e.stopPropagation();
         set_pointer_state((prev) => {
             return produce(prev, draft => {
                 draft.curr_point = { x: e.clientX, y: e.clientY };

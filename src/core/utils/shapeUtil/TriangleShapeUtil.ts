@@ -39,11 +39,11 @@ export default class TriangleShapeUtil extends ShapeUtil {
         shape.a = Vec.add(rot_center, a_diff);
         shape.b = Vec.add(rot_center, b_diff);
         shape.c = Vec.add(rot_center, c_diff);
-        shape.r = r; 
+        shape.r += r; 
     }
 
-    get_bound(t: Triangle): Bound {
-        return get_triangle_bound(t);
+    get_bound(t: Triangle, rotated: boolean = false): Bound {
+        return get_triangle_bound(t, rotated);
     }
 
     get_path(t: Triangle): string {

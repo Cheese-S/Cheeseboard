@@ -78,7 +78,7 @@ export class CanvasUtil {
             case CBTOOL.ELLIPSE:
                 return {
                     center: { x: 0, y: 0 },
-                    rx: 50,
+                    rx: 100,
                     ry: 50,
                     r: 0
                 }
@@ -104,17 +104,17 @@ export class CanvasUtil {
         }
     }
 
-    static get_items_bound(...items: CBItem[]) {
+    static get_items_bound(rotated: boolean = false, ...items: CBItem[]) {
         let bds = items.map((item) => {
             switch (item.type) {
                 case CBTOOL.RECTANGLE:
-                    return this.ShapeUtilMap.get(CBTOOL.RECTANGLE)!.get_bound(item.shape);
+                    return this.ShapeUtilMap.get(CBTOOL.RECTANGLE)!.get_bound(item.shape, rotated);
                 case CBTOOL.TRIANGLE:
-                    return this.ShapeUtilMap.get(CBTOOL.TRIANGLE)!.get_bound(item.shape);
+                    return this.ShapeUtilMap.get(CBTOOL.TRIANGLE)!.get_bound(item.shape, rotated);
                 case CBTOOL.ELLIPSE:
-                    return this.ShapeUtilMap.get(CBTOOL.ELLIPSE)!.get_bound(item.shape);
+                    return this.ShapeUtilMap.get(CBTOOL.ELLIPSE)!.get_bound(item.shape, rotated);
                 case CBTOOL.PENCIL:
-                    return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.get_bound(item.shape);
+                    return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.get_bound(item.shape, rotated);
                 case CBTOOL.TEXT:
                     throw new Error("Text Bound Not Implemented")
                 default:
@@ -156,7 +156,7 @@ export class CanvasUtil {
     }
 
     static get_bound_center(bd: Bound): Point {
-        return {x: (bd.max_x - bd.min_x) / 2, y: (bd.max_y - bd.min_y) / 2}
+        return {x: (bd.max_x + bd.min_x) / 2, y: (bd.max_y + bd.min_y) / 2}
     }
 
     static resize_bound(bd: Bound, delta: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE, is_locked: boolean = false): Bound {
@@ -210,13 +210,18 @@ export class CanvasUtil {
         return new_bd; 
     }
 
-    static rotate_items(bd: Bound, items: CBItem[], curr_point: Point, movement: Point): void {
+    static rotate_items(bd: Bound, items: CBItem[], init_point: Point, curr_point: Point, movement: Point): void {
         const prev_point = Vec.sub(curr_point, movement);
-        const r = Vec.get_angle(curr_point, prev_point);
         const bd_center = CanvasUtil.get_bound_center(bd); 
+        const curr_r = Vec.get_angle(curr_point, bd_center);
+        const init_r = Vec.get_angle(init_point, bd_center);
+        const prev_r = Vec.get_angle(prev_point, bd_center);
+        console.log(curr_r);
+        console.log(init_r);
+        console.log(curr_r - init_r);
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type); 
-            shapeutil?.rot_shape_about(bd_center, r, item.shape);
+            shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
         })
     }
 

@@ -143,10 +143,12 @@ export class Quadtree {
             if (current_index !== -1) {
                 const next_index = this.enodes.get(current_index, enode_idx_next);
                 if (prev_index === -1) {
-                    this.qnodes.set(current_index, qnode_idx_fc, next_index);
+                    this.qnodes.set(nd_index, qnode_idx_fc, next_index);
                 } else {
                     this.enodes.set(prev_index, enode_idx_next, next_index);
                 }
+                this.enodes.remove(current_index);
+                this.qnodes.set(nd_index, qnode_idx_num_children, this.qnodes.get(nd_index, qnode_idx_num_children) - 1); 
             }
         }
         this.elts.remove(element); 

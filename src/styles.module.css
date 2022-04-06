@@ -140,6 +140,7 @@ html *{
   justify-content: center;
   contain: layout style size;
   pointer-events: none;
+  transform-origin: center;
 }
 
 .cbPositionedSvg {

@@ -12,19 +12,18 @@ let count = 0;
 export const RectSelect: React.FC = () => {
     const bd = useRecoilValue(select_state);
     const container_css = CanvasUtil.get_container_css(bd);
-    count++; 
-    console.log("rect select", count);
     const test = useRecoilCallback(({ snapshot, set }) => async (select_bd: Bound) => {
+        count++; 
+        console.log("rect select", count);
         // const tool = await snapshot.getPromise(tool_state);
-        // const qt = await snapshot.getPromise(qt_state);
         // const camera = await snapshot.getPromise(camera_state);
-        // const candidateIDs = qt.query(select_bd);
-        // const candidate_items = await Promise.all(candidateIDs.map(async (id) => {
-        //     return { ...await snapshot.getPromise(item_state_accessor(id)), id: id };
-        // }))
-        // const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
-        const itemIDs = await snapshot.getPromise(itemID_state);
-        set(selected_itemID_state, itemIDs);
+        const qt = await snapshot.getPromise(qt_state);
+        const candidateIDs = qt.query(select_bd);
+        const candidate_items = await Promise.all(candidateIDs.map(async (id) => {
+            return { ...await snapshot.getPromise(item_state_accessor(id)), id: id };
+        }))
+        const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
+        set(selected_itemID_state, intersectedIDs);
     }, [])
 
     useLayoutEffect(() => {
