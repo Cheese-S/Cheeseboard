@@ -1,36 +1,41 @@
 import React from "react";
 import { Bound, Point, Rect, Shape } from "../../type";
 import { bound_rect_intersect, get_rect_bound } from "../geometry";
+import { Vec } from "../vec";
 import ShapeUtil from "./ShapeUtil";
 
 
 export default class RectShapeUtil extends ShapeUtil {
+
+    translate_shape(delta: Point, shape: Rect): void {
+        shape.center = Vec.add(shape.center, delta);
+    }
+    
     get_bound(rect: Rect): Bound {
         return get_rect_bound(rect);
     }
     
     intersect_bound(bd: Bound, r: Rect): boolean {
-        return bound_rect_intersect(bd, r); 
+        return bound_rect_intersect(bd, r);
     }
-
-    transform_shape(r: Rect, scale?: Point, trans?: Point, rot?: number): void {
-        if (scale !== undefined) {
-            r.mx += scale.x / 2; 
-            r.my += scale.y / 2; 
-            r.center.x += scale.x / 2;
-            r.center.y += scale.y / 2;
-        }
-        if (trans !== undefined) {
-            r.center.x += trans.x; 
-            r.center.y += trans.y;
-        }
-        if (rot !== undefined) {
-            r.r = rot; 
-        }
-    }
-
+    
     set_shape_top_left(shape: Rect, pt: Point): void {
-        shape.center =  {x: pt.x + shape.mx, y: pt.y + shape.my }
+        shape.center = { x: pt.x + shape.mx, y: pt.y + shape.my }
+    }
+    
+    get_shape_from_bound(bd: Bound): Rect {
+        const height = bd.max_y - bd.min_y;
+        const width = bd.max_x - bd.min_x;
+        return {
+            mx: width / 2,
+            my: height / 2,
+            center: {x: width / 2, y: height / 2},
+            r: 0
+        }
     }
 
+    rot_shape_about(p: Point, r: number, shape: Rect): void {
+        shape.center = Vec.rot_about(shape.center, p, r);
+        shape.r = r; 
+    }
 }

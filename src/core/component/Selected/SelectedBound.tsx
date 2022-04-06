@@ -6,10 +6,10 @@ import styles from '../../../styles.module.css'
 import { selected_bound_state } from "../../state";
 import { EdgeHandle } from "./EdgeHandle";
 import { CB_HANDLE } from "../../constant";
-import { CB_EDGE_HANDLE } from "../../hook/useEdgeHandle";
-import { CB_CORNER_HANDLE } from "../../hook/useCornerHandle";
 import { CornerHandle } from "./CornerHandle";
 import { RotateHandle } from "./RotateHandle";
+import { CenterHandle } from "./CenterHandle";
+import { CB_CORNER_HANDLE, CB_EDGE_HANDLE } from "../../type";
 
 const edge_handles: CB_EDGE_HANDLE[] = [CB_HANDLE.L_EDGE, CB_HANDLE.R_EDGE, CB_HANDLE.B_EDGE, CB_HANDLE.T_EDGE];
 
@@ -39,6 +39,7 @@ export const SelectedBound: React.FC = ({ }) => {
                     return <CornerHandle width={width} height={height} handle={handle} />
                 })}
                 <RotateHandle width={width} height={height} />
+                <CenterHandle width={width} height={height} />
             </SVGContainer>
         </Container>
     )

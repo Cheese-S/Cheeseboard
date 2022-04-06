@@ -15,15 +15,28 @@ export default abstract class ShapeUtil {
      */
     abstract intersect_bound(bd: Bound, shape: Shape): boolean;
 
-    /**
-     * Transform the geometry of a shape by the given input (SHOULD BE IN CARTESIAN SPACE)
-     * @param shape 
-     * @param scale Scale should be passed in as change in (x, y) rather than ratio
-     * @param trans 
-     * @param rot 
-     */
 
-    abstract transform_shape(shape: Shape, scale?: Point, trans?: Point, rot?: number): void;
+    /**
+     * Reconstruct the shape from a center ()
+     * NOTE: The shape constructed will **NOT** be rotated
+     * @param bd 
+     */
+    abstract get_shape_from_bound(bd: Bound): Shape;
+
+    /**
+     * Rotate the shape around a given point (rotate the center of the shape and reconstruct the shape)
+     * @param p 
+     * @param r 
+     * @param shape 
+     */
+    abstract rot_shape_about(p: Point, r: number, shape: Shape): void;  
+
+    /**
+     * Translate a shape in place
+     * @param delta 
+     * @param shape 
+     */
+    abstract translate_shape(delta: Point, shape: Shape): void;
 
     /**
      * Translate a shape to the point's position. (The point is treated as a top left anchor)
@@ -31,8 +44,4 @@ export default abstract class ShapeUtil {
      * @param pt 
      */
     abstract set_shape_top_left(shape: Shape, pt: Point): void; 
-
-    
-
-    
 }

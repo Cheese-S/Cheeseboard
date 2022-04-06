@@ -194,3 +194,8 @@ html *{
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+.cbCenterHandle {
+  cursor: move;
+  pointer-events: fill;
+}

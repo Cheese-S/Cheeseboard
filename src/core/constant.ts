@@ -11,7 +11,9 @@ export enum CB_HANDLE {
     R_EDGE,
 
     ROTATION,
-    CENTER
+    CENTER,
+
+    IDLE
 }
 
 export enum CBTOOL {
@@ -43,6 +45,8 @@ export enum CBSTROKE_WIDTH {
 export const LEFT_MOUSE = 0;
 export const MID_MOUSE = 1;
 export const RIGHT_MOUSE = 2;
+
+export const MIN_SIZE = 20; 
 
 export const empty_bd: Bound = {
     min_x: 0,

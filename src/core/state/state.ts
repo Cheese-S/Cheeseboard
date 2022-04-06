@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd } from "../constant";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd, CB_HANDLE } from "../constant";
 import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
@@ -32,7 +32,7 @@ export const visible_itemID_state = selector<number[]>({
 export const item_state = atomFamily<CBItem, number>({
     key: "elements",
     default: {
-        id: -1, 
+        id: -1,
         type: CBTOOL.RECTANGLE,
         shape: {
             center: { x: Math.random() * 2000, y: Math.random() * 1400 },
@@ -81,7 +81,7 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
             set(item_state(itemID),
                 (prev) => {
                     if (prev.qt_id !== -1) {
-                        qt.remove(prev.qt_id); 
+                        qt.remove(prev.qt_id);
                     }
                     return new_CBItem;
                 });
@@ -89,7 +89,8 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
                 if (prev.indexOf(itemID) === -1) {
                     return [...prev, itemID]
                 }
-                return prev; 
+                console.log(prev);
+                return prev;
             });
             const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape);
             qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
@@ -103,9 +104,9 @@ export const selected_items_state = selector<CBItem[]>({
         const selected_IDs = get(selected_itemID_state);
         if (!selected_IDs.length) { return [] };
         const items = selected_IDs.map((id) => get(item_state_accessor(id)))
-        return items; 
+        return items;
     },
-    set: ({get, set, reset}, new_selected_items: CBItem[] | DefaultValue) => {
+    set: ({ get, set, reset }, new_selected_items: CBItem[] | DefaultValue) => {
         if (new_selected_items instanceof DefaultValue) {
             const selected_IDs = get(selected_itemID_state);
             selected_IDs.forEach((id) => reset(item_state_accessor(id)))
@@ -117,12 +118,21 @@ export const selected_items_state = selector<CBItem[]>({
     }
 })
 
-export const selected_bound_state = selector<Bound>({
+export const selected_bound_state = selector<Bound & { r: number }>({
     key: "selected_bound",
     get: ({ get }) => {
         const selected_items = get(selected_items_state);
-        if (!selected_items.length) { return empty_bd };
-        return CanvasUtil.get_items_bound(...selected_items);
+        const r = selected_items.length === 1 ? selected_items[0].shape.r : 0;
+        if (!selected_items.length) { return { ...empty_bd, r: 0 } };
+        return { ...CanvasUtil.get_items_bound(...selected_items), r: r };
+    },
+    set: ({ set }, new_selected_bound: Bound & { r: number } | DefaultValue) => {
+        if (DefaultValue) {
+            return; 
+        }
+        
+
+
     }
 })
 
@@ -221,7 +231,9 @@ export const pointer_state = atom<CBPointer>({
     default: {
         init_point: { x: 0, y: 0 },
         curr_point: { x: 0, y: 0 },
-        is_active: false
+        movement: { x: 0, y: 0 },
+        is_active: false,
+        selected_handle: CB_HANDLE.IDLE
     }
 })
 

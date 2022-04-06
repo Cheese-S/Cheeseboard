@@ -19,22 +19,16 @@ interface CanvasItemProps {
 
 export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({id}: CanvasItemProps) => {
     const [CBItem, setCBItem] = useRecoilState(item_state(id));
-    const item_style = useRecoilValue(item_css_state(id)); 
-    const set_selectedIDs = useSetRecoilState(selected_itemID_state);
-    const append_id = (e: React.MouseEvent) => {
-        set_selectedIDs((prev) => [...prev, id]);
-    }
-
-    
+    const item_style = useRecoilValue(item_css_state(id));    
 
 
     switch (CBItem.type) {
         case CBTOOL.RECTANGLE:
-            return <RectComponent onClick={append_id} shape={CBItem.shape as Rect} item_css={item_style}/>
+            return <RectComponent  shape={CBItem.shape as Rect} item_css={item_style}/>
         case CBTOOL.ELLIPSE:
-            return <EllipseComponent onClick={append_id} shape={CBItem.shape as Ellipse} item_css={item_style}/>
+            return <EllipseComponent  shape={CBItem.shape as Ellipse} item_css={item_style}/>
         case CBTOOL.TRIANGLE:
-            return <TriangleComponent onClick={append_id} shape={CBItem.shape as Triangle} item_css={item_style}/>
+            return <TriangleComponent  shape={CBItem.shape as Triangle} item_css={item_style}/>
     }
     return <button> aaa </button>
     

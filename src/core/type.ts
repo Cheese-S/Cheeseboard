@@ -1,4 +1,4 @@
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH } from "./constant"
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, CB_HANDLE } from "./constant"
 import { CSSProperties } from "react"
 
 export type Shape = Rect | Ellipse | Triangle | Polyline
@@ -67,11 +67,17 @@ export interface CBStyle {
 export interface CBPointer {
     init_point: Point,
     curr_point: Point, 
-    is_active: boolean
+    movement: Point, 
+    is_active: boolean,
+    selected_handle: CB_HANDLE
 }
 
 export interface ItemCSS {
     container_css: CSSProperties,
     component_css: CSSProperties
 }
+
+export type CB_CORNER_HANDLE = CB_HANDLE.BR_CORNER | CB_HANDLE.BL_CORNER | CB_HANDLE.TR_CORNER | CB_HANDLE.TL_CORNER;
+export type CB_EDGE_HANDLE = CB_HANDLE.B_EDGE | CB_HANDLE.T_EDGE | CB_HANDLE.L_EDGE | CB_HANDLE.R_EDGE;
+
 
