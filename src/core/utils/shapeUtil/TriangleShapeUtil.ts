@@ -13,33 +13,36 @@ export default class TriangleShapeUtil extends ShapeUtil {
     }
 
     get_center(t: Triangle) {
-        return {
-            x: (t.a.x + t.b.x + t.c.x) / 3,
-            y: (t.a.y + t.b.y + t.c.y) / 3
+        let center = {
+            x: Math.abs(t.a.x + t.c.x) / 2,
+            y: Math.abs(t.b.y + t.a.y) / 2
         }
+        return center;
     }
 
-    
+
     get_shape_from_bound(bd: Bound): Shape {
         return {
-            a: {x: bd.min_x, y: bd.max_y},
-            b: {x: (bd.max_x + bd.min_x) / 2, y: bd.min_y},
-            c: {x: bd.max_x, y: bd.max_y},
+            a: { x: bd.min_x, y: bd.max_y },
+            b: { x: (bd.max_x + bd.min_x) / 2, y: bd.min_y },
+            c: { x: bd.max_x, y: bd.max_y },
             r: 0
         }
     }
 
-    rot_shape_about(p: Point, r: number, shape: Triangle): void {
-        const center = this.get_center(shape);
-        const rot_center = Vec.rot_about(center, p, r);
-        const a_diff = Vec.sub(center, shape.a);
-        const b_diff = Vec.sub(center, shape.b);
-        const c_diff = Vec.sub(center, shape.c);
-
-        shape.a = Vec.add(rot_center, a_diff);
-        shape.b = Vec.add(rot_center, b_diff);
-        shape.c = Vec.add(rot_center, c_diff);
-        shape.r += r; 
+    rot_shape_about(p: Point, r: number, shape: Triangle, is_alone: boolean = false): void {
+        if (!is_alone) {
+            const center = this.get_center(shape);
+            const rot_center = Vec.rot_about(center, p, r);
+            const a_diff = Vec.sub(shape.a, center);
+            const b_diff = Vec.sub(shape.b, center);
+            const c_diff = Vec.sub(shape.c, center);
+    
+            shape.a = Vec.add(rot_center, a_diff);
+            shape.b = Vec.add(rot_center, b_diff);
+            shape.c = Vec.add(rot_center, c_diff);
+        }
+        shape.r = (shape.r + r);
     }
 
     get_bound(t: Triangle, rotated: boolean = false): Bound {
@@ -47,8 +50,8 @@ export default class TriangleShapeUtil extends ShapeUtil {
     }
 
     get_path(t: Triangle): string {
-        const h = t.a.y - t.b.y;
-        const w = t.c.x - t.a.x;
+        const h = Math.abs(t.a.y - t.b.y);
+        const w = Math.abs(t.c.x - t.a.x);
         return `M 0 ${h} L ${w / 2} 0 L ${w} ${h} Z`;
     }
 

@@ -1,5 +1,5 @@
 import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE } from "../../constant";
-import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE } from "../../type";
+import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle } from "../../type";
 import { RectShapeUtil, EllipseShapeUtil, PencilShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
@@ -281,7 +281,7 @@ export class CanvasUtil {
             case CB_HANDLE.TL_CORNER:
             case CB_HANDLE.TR_CORNER:
                 new_bd.min_y += delta.y;
-                if (is_locked && new_bd.min_y >= new_bd.max_y) {
+                if (is_locked && (new_bd.max_y - new_bd.min_y) <= MIN_SIZE) {
                     new_bd.min_y = new_bd.max_y - MIN_SIZE;
                 }
                 break;
@@ -289,7 +289,7 @@ export class CanvasUtil {
             case CB_HANDLE.BL_CORNER:
             case CB_HANDLE.BR_CORNER:
                 new_bd.max_y += delta.y;
-                if (is_locked && new_bd.min_y >= new_bd.max_y) {
+                if (is_locked && (new_bd.max_y - new_bd.min_y) <= MIN_SIZE) {
                     new_bd.max_y = new_bd.min_y + MIN_SIZE;
                 }
                 break;
@@ -299,7 +299,7 @@ export class CanvasUtil {
             case CB_HANDLE.BL_CORNER:
             case CB_HANDLE.TL_CORNER:
                 new_bd.min_x += delta.x;
-                if (is_locked && new_bd.min_x >= new_bd.max_x) {
+                if (is_locked && (new_bd.max_x - new_bd.min_x) <= MIN_SIZE) {
                     new_bd.min_x = new_bd.max_x - MIN_SIZE;
                 }
                 break;
@@ -307,8 +307,8 @@ export class CanvasUtil {
             case CB_HANDLE.TR_CORNER:
             case CB_HANDLE.BR_CORNER:
                 new_bd.max_x += delta.x;
-                if (is_locked && new_bd.min_x >= new_bd.max_x) {
-                    new_bd.max_x = new_bd.min_x - MIN_SIZE;
+                if (is_locked && (new_bd.max_x - new_bd.min_x) <= MIN_SIZE) {
+                    new_bd.max_x = new_bd.min_x + MIN_SIZE;
                 }
                 break;
         }
@@ -330,10 +330,13 @@ export class CanvasUtil {
         const bd_center = CanvasUtil.get_bound_center(bd);
         const curr_r = Vec.get_ang(bd_center, curr_point);
         const prev_r = Vec.get_ang(bd_center, prev_point);
-        console.log(bd_center);
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
-            shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
+            if (item.type === CBTOOL.TRIANGLE) {
+                (shapeutil as TriangleShapeUtil)?.rot_shape_about(bd_center, curr_r - prev_r, item.shape as Triangle, items.length === 1);
+            } else {
+                shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
+            }
         })
     }
 
@@ -347,9 +350,7 @@ export class CanvasUtil {
     static resize_items(bd: Bound, items: CBItem[], movement: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE): void {
         const is_single_item = items.length === 1; 
         const r = is_single_item ? items[0].shape.r : 0;
-        const resized_common_bound = CanvasUtil.resize_bound(bd, movement, handle, is_single_item, r);
-
-        console.log("commonbd: %o, resized_common_bd: %o", bd, resized_common_bound);
+        const resized_common_bound = CanvasUtil.resize_bound(bd, movement, handle, true, r);
 
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
@@ -361,7 +362,7 @@ export class CanvasUtil {
             const resized_common_bound_length = resized_common_bound.max_x - resized_common_bound.min_x;
             const resized_common_bound_height = resized_common_bound.max_y - resized_common_bound.min_y;
 
-            console.log("length_ratio: %f\n height_ratio: %f\n offset_x_ratio: %f\n offset_y_ratio: %f\n", length_ratio, height_ratio, offset_x_ratio, offset_y_ratio);
+
 
             const min_x = resized_common_bound.min_x + offset_x_ratio * resized_common_bound_length;
             const max_x = min_x + length_ratio * resized_common_bound_length;
@@ -374,8 +375,6 @@ export class CanvasUtil {
                 min_y: min_y,
                 max_y: max_y
             }
-            console.log(item.shape);
-            console.log(resized_item_bd);
             if (is_single_item) {
                 resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle); 
             }

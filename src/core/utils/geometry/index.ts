@@ -225,12 +225,13 @@ export function rect_ellipse_intersect(r: Rect, e: Ellipse): boolean {
 
 export function rect_triangle_intersect(r: Rect, t: Triangle): boolean {
     let r_edges = get_rect_edges(r);
-    let t_edges = get_triangle_edges(t);
+    let t_pts = get_triangle_pts(t);
+    let t_edges = get_triangle_edges(t, t_pts);
     return r_edges.some((e1) => {
         return t_edges.some((e2) => {
             return seg_seg_intersect(e1[0], e1[1], e2[0], e2[1]);
         })
-    }) || pt_in_rect(t.a, r) || pt_in_rect(t.b, r) || pt_in_rect(t.c, r);
+    }) || pt_in_rect(t_pts[0], r) || pt_in_rect(t_pts[1], r) || pt_in_rect(t_pts[2], r);
 }
 
 /**
@@ -254,7 +255,10 @@ export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
 /* -------------------------------------------------------------------------- */
 
 function get_triangle_pts(t: Triangle): Point[] {
-    let center = Vec.mul_n(Vec.add_vecs(t.a, t.b, t.c), 1 / 3);
+    let center = {
+        x: Math.abs(t.a.x + t.c.x) / 2,
+        y: Math.abs(t.b.y + t.a.y) / 2
+    }
     return [
         Vec.rot_about(t.a, center, t.r),
         Vec.rot_about(t.b, center, t.r),
@@ -267,8 +271,10 @@ function get_triangle_pts(t: Triangle): Point[] {
  * @param t 
  * @returns [AB, AC, BC]
  */
-function get_triangle_edges(t: Triangle): Point[][] {
-    let pts = get_triangle_pts(t);
+function get_triangle_edges(t: Triangle, pts?: Point[]): Point[][] {
+    if (!pts) {
+        pts = get_triangle_pts(t);
+    }
     return [
         [pts[0], pts[1]],
         [pts[0], pts[2]],
@@ -349,13 +355,13 @@ export function get_ellipse_bound(e: Ellipse, rotated: boolean = false): Bound {
     const mx = Math.sqrt(ux * ux + vx * vx);
     const my = Math.sqrt(uy * uy + vy * vy);
     return {
-        
+
         min_x: e.center.x - mx,
-        
+
         max_y: e.center.y + my,
-        
+
         max_x: e.center.x + mx,
-        
+
         min_y: e.center.y - my
     }
 }

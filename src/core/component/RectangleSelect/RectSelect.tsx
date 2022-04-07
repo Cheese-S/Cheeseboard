@@ -22,6 +22,7 @@ export const RectSelect: React.FC = () => {
         const candidate_items = await Promise.all(candidateIDs.map(async (id) => {
             return { ...await snapshot.getPromise(item_state_accessor(id)), id: id };
         }))
+        console.log(candidate_items);
         const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
         set(selected_itemID_state, intersectedIDs);
     }, [])

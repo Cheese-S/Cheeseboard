@@ -22,7 +22,7 @@ export default class EllipseShapeUtil extends ShapeUtil {
 
     rot_shape_about(p: Point, r: number, shape: Ellipse): void {
         shape.center = Vec.rot_about(shape.center, p, r);
-        shape.r += r;
+        shape.r = (shape.r + r);
     }
 
     get_bound(e: Ellipse, rotated: boolean = false): Bound {

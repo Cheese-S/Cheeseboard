@@ -36,7 +36,6 @@ export default class RectShapeUtil extends ShapeUtil {
 
     rot_shape_about(p: Point, r: number, shape: Rect): void {
         shape.center = Vec.rot_about(shape.center, p, r);
-        shape.r += r; 
-        shape.r %= 2 * Math.PI
+        shape.r = (shape.r + r);
     }
 }
