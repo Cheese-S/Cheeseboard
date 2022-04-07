@@ -7,6 +7,7 @@ export default abstract class ShapeUtil {
      * @param shape 
      */
     abstract get_bound(shape: Shape, rotated?: boolean): Bound;
+    
 
     /**
      * Test to see if the given bound intersects / contains the shape

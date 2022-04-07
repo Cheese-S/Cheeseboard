@@ -1,4 +1,4 @@
-import {  CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE } from "../../constant";
+import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE } from "../../constant";
 import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE } from "../../type";
 import { RectShapeUtil, EllipseShapeUtil, PencilShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
@@ -45,7 +45,7 @@ export class CanvasUtil {
 
     static get_item_css(bd: Bound, r: number, style: CBStyle): ItemCSS {
         let container_css: CSSProperties, component_css: CSSProperties;
-        container_css = CanvasUtil.get_container_css(bd, r, style.is_ghost); 
+        container_css = CanvasUtil.get_container_css(bd, r, style.is_ghost);
         component_css = {
             stroke: `var(${style.color})`,
             strokeWidth: `var(${style.size})`,
@@ -104,6 +104,118 @@ export class CanvasUtil {
         }
     }
 
+    static match_bound_anchor(bd: Bound, to_be_matched_bd: Bound, r: number, handle: CB_CORNER_HANDLE | CB_EDGE_HANDLE): Bound {
+        const bd_center = CanvasUtil.get_bound_center(bd);
+        const to_be_matched_bd_center = CanvasUtil.get_bound_center(to_be_matched_bd);
+        let diff = {
+            x: 0,
+            y: 0
+        };
+        switch (handle) {
+            case CB_HANDLE.L_EDGE:
+                diff = Vec.sub(
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: to_be_matched_bd.max_x, y: to_be_matched_bd.min_y },
+                            { x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y }
+                        ),
+                        to_be_matched_bd_center,
+                        r),
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: bd.max_x, y: bd.min_y },
+                            { x: bd.max_x, y: bd.max_y }),
+                        bd_center,
+                        r),
+                )
+                break;
+            case CB_HANDLE.R_EDGE:
+                diff = Vec.sub(
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y },
+                            { x: to_be_matched_bd.min_x, y: to_be_matched_bd.max_y }
+                        ),
+                        to_be_matched_bd_center,
+                        r),
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: bd.min_x, y: bd.min_y },
+                            { x: bd.min_x, y: bd.max_y }),
+                        bd_center,
+                        r),
+                )
+                break;
+            case CB_HANDLE.B_EDGE:
+                diff = Vec.sub(
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y },
+                            { x: to_be_matched_bd.max_x, y: to_be_matched_bd.min_y }
+                        ),
+                        to_be_matched_bd_center,
+                        r),
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: bd.min_x, y: bd.min_y },
+                            { x: bd.max_x, y: bd.min_y }),
+                        bd_center,
+                        r),
+                )
+                break;
+            case CB_HANDLE.T_EDGE:
+                diff = Vec.sub(
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: to_be_matched_bd.min_x, y: to_be_matched_bd.max_y },
+                            { x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y }
+                        ),
+                        to_be_matched_bd_center,
+                        r),
+                    Vec.rot_about(
+                        Vec.med(
+                            { x: bd.min_x, y: bd.max_y },
+                            { x: bd.max_x, y: bd.max_y }),
+                        bd_center,
+                        r),
+                )
+                break;
+            case CB_HANDLE.TL_CORNER:
+                diff = Vec.sub(
+                    Vec.rot_about({ x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y }, to_be_matched_bd_center, r),
+                    Vec.rot_about({ x: bd.max_x, y: bd.max_y }, bd_center, r),
+                )
+                break;
+            case CB_HANDLE.TR_CORNER:
+                diff = Vec.sub(
+                    Vec.rot_about({ x: to_be_matched_bd.min_x, y: to_be_matched_bd.max_y }, to_be_matched_bd_center, r),
+                    Vec.rot_about({ x: bd.min_x, y: bd.max_y }, bd_center, r),
+                )
+                break;
+            case CB_HANDLE.BL_CORNER:
+                diff = Vec.sub(
+                    Vec.rot_about({ x: to_be_matched_bd.max_x, y: to_be_matched_bd.min_y }, to_be_matched_bd_center, r),
+                    Vec.rot_about({ x: bd.max_x, y: bd.min_y }, bd_center, r),
+                )
+                break;
+            case CB_HANDLE.BR_CORNER:
+                diff = Vec.sub(
+                    Vec.rot_about({ x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y }, to_be_matched_bd_center, r),
+                    Vec.rot_about({ x: bd.min_x, y: bd.min_y }, bd_center, r),
+                )
+                break;
+        }
+        const new_top_left = Vec.sub({x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y}, diff);
+        const new_bot_right = Vec.sub({x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y}, diff);
+
+        return {
+            min_x: new_top_left.x,
+            min_y: new_top_left.y,
+            max_x: new_bot_right.x,
+            max_y: new_bot_right.y,
+        }
+    }
+
     static get_items_bound(rotated: boolean = false, ...items: CBItem[]) {
         let bds = items.map((item) => {
             switch (item.type) {
@@ -121,11 +233,9 @@ export class CanvasUtil {
                     return empty_bd;
             }
         })
-
         return bds.reduce((prev, curr) => get_common_bound(prev, curr));
     }
 
-    
 
     static get_intersected_items(bd: Bound, items: CBItem[]): number[] {
         return items.filter((item) => {
@@ -139,11 +249,11 @@ export class CanvasUtil {
                 case CBTOOL.PENCIL:
                     return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.intersect_bound(bd, item.shape);
                 case CBTOOL.TEXT:
-                    throw new Error("NOT IMPLEMENTED"); 
+                    throw new Error("NOT IMPLEMENTED");
                 default:
                     return false;
             }
-        }).map((item) => item.id); 
+        }).map((item) => item.id);
     }
 
     static translate_bound(bd: Bound, delta: Point): Bound {
@@ -155,72 +265,74 @@ export class CanvasUtil {
         }
     }
 
+
     static get_bound_center(bd: Bound): Point {
-        return {x: (bd.max_x + bd.min_x) / 2, y: (bd.max_y + bd.min_y) / 2}
+        return { x: (bd.max_x + bd.min_x) / 2, y: (bd.max_y + bd.min_y) / 2 }
     }
 
-    static resize_bound(bd: Bound, delta: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE, is_locked: boolean = false): Bound {
-        let new_bd = {...bd}; 
-        switch(handle) {
+    static resize_bound(bd: Bound, delta: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE, is_locked: boolean = false, r: number = 0): Bound {
+        if (r) {
+            delta = Vec.rot(delta, -r);
+        }
+        let new_bd = { ...bd };
+
+        switch (handle) {
             case CB_HANDLE.T_EDGE:
             case CB_HANDLE.TL_CORNER:
             case CB_HANDLE.TR_CORNER:
                 new_bd.min_y += delta.y;
                 if (is_locked && new_bd.min_y >= new_bd.max_y) {
-                    new_bd.min_y = new_bd.max_y - MIN_SIZE; 
+                    new_bd.min_y = new_bd.max_y - MIN_SIZE;
                 }
-                break; 
+                break;
             case CB_HANDLE.B_EDGE:
             case CB_HANDLE.BL_CORNER:
             case CB_HANDLE.BR_CORNER:
                 new_bd.max_y += delta.y;
                 if (is_locked && new_bd.min_y >= new_bd.max_y) {
-                    new_bd.max_y = new_bd.min_y + MIN_SIZE; 
+                    new_bd.max_y = new_bd.min_y + MIN_SIZE;
                 }
-                break; 
+                break;
         }
-        switch(handle) {
+        switch (handle) {
             case CB_HANDLE.L_EDGE:
             case CB_HANDLE.BL_CORNER:
             case CB_HANDLE.TL_CORNER:
                 new_bd.min_x += delta.x;
                 if (is_locked && new_bd.min_x >= new_bd.max_x) {
-                    new_bd.min_x = new_bd.max_x - MIN_SIZE; 
+                    new_bd.min_x = new_bd.max_x - MIN_SIZE;
                 }
-                break; 
+                break;
             case CB_HANDLE.R_EDGE:
             case CB_HANDLE.TR_CORNER:
             case CB_HANDLE.BR_CORNER:
-                new_bd.min_x += delta.x;
+                new_bd.max_x += delta.x;
                 if (is_locked && new_bd.min_x >= new_bd.max_x) {
-                    new_bd.max_x = new_bd.min_x - MIN_SIZE; 
+                    new_bd.max_x = new_bd.min_x - MIN_SIZE;
                 }
-                break; 
+                break;
         }
         if (new_bd.min_x > new_bd.max_x) {
             let temp = new_bd.min_x;
-            new_bd.min_x = new_bd.max_x; 
-            new_bd.max_x = temp; 
+            new_bd.min_x = new_bd.max_x;
+            new_bd.max_x = temp;
         }
         if (new_bd.min_y > new_bd.max_y) {
             let temp = new_bd.min_y;
-            new_bd.min_y = new_bd.max_y; 
-            new_bd.max_y = temp; 
+            new_bd.min_y = new_bd.max_y;
+            new_bd.max_y = temp;
         }
-        return new_bd; 
+        return new_bd;
     }
 
-    static rotate_items(bd: Bound, items: CBItem[], init_point: Point, curr_point: Point, movement: Point): void {
+    static rotate_items(bd: Bound, items: CBItem[], curr_point: Point, movement: Point): void {
         const prev_point = Vec.sub(curr_point, movement);
-        const bd_center = CanvasUtil.get_bound_center(bd); 
-        const curr_r = Vec.get_angle(curr_point, bd_center);
-        const init_r = Vec.get_angle(init_point, bd_center);
-        const prev_r = Vec.get_angle(prev_point, bd_center);
-        console.log(curr_r);
-        console.log(init_r);
-        console.log(curr_r - init_r);
+        const bd_center = CanvasUtil.get_bound_center(bd);
+        const curr_r = Vec.get_ang(bd_center, curr_point);
+        const prev_r = Vec.get_ang(bd_center, prev_point);
+        console.log(bd_center);
         items.forEach((item) => {
-            const shapeutil = CanvasUtil.get_shapeutil(item.type); 
+            const shapeutil = CanvasUtil.get_shapeutil(item.type);
             shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
         })
     }
@@ -230,10 +342,46 @@ export class CanvasUtil {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
             shapeutil?.translate_shape(delta, item.shape);
         })
-    } 
+    }
 
-    static resize_items(new_bd: Bound, items: CBItem[], handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE): void {
-        
+    static resize_items(bd: Bound, items: CBItem[], movement: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE): void {
+        const is_single_item = items.length === 1; 
+        const r = is_single_item ? items[0].shape.r : 0;
+        const resized_common_bound = CanvasUtil.resize_bound(bd, movement, handle, is_single_item, r);
+
+        console.log("commonbd: %o, resized_common_bd: %o", bd, resized_common_bound);
+
+        items.forEach((item) => {
+            const shapeutil = CanvasUtil.get_shapeutil(item.type);
+            const item_bd = shapeutil!.get_bound(item.shape);
+            const length_ratio = (item_bd.max_x - item_bd.min_x) / (bd.max_x - bd.min_x);
+            const height_ratio = (item_bd.max_y - item_bd.min_y) / (bd.max_y - bd.min_y);
+            const offset_x_ratio = (item_bd.min_x - bd.min_x) / (bd.max_x - bd.min_x);
+            const offset_y_ratio = (item_bd.min_y - bd.min_y) / (bd.max_y - bd.min_y);
+            const resized_common_bound_length = resized_common_bound.max_x - resized_common_bound.min_x;
+            const resized_common_bound_height = resized_common_bound.max_y - resized_common_bound.min_y;
+
+            console.log("length_ratio: %f\n height_ratio: %f\n offset_x_ratio: %f\n offset_y_ratio: %f\n", length_ratio, height_ratio, offset_x_ratio, offset_y_ratio);
+
+            const min_x = resized_common_bound.min_x + offset_x_ratio * resized_common_bound_length;
+            const max_x = min_x + length_ratio * resized_common_bound_length;
+            const min_y = resized_common_bound.min_y + offset_y_ratio * resized_common_bound_height;
+            const max_y = min_y + height_ratio * resized_common_bound_height;
+
+            let resized_item_bd = {
+                min_x: min_x,
+                max_x: max_x,
+                min_y: min_y,
+                max_y: max_y
+            }
+            console.log(item.shape);
+            console.log(resized_item_bd);
+            if (is_single_item) {
+                resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle); 
+            }
+            item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
+        })
+
     }
 
 

@@ -13,7 +13,7 @@ export default class EllipseShapeUtil extends ShapeUtil {
         const width = bd.max_x - bd.min_x;
         const height = bd.max_y - bd.min_y;
         return {
-            center: { x: width / 2, y: height / 2 },
+            center: {x: (bd.max_x + bd.min_x) / 2, y: (bd.min_y + bd.max_y) / 2},
             rx: width / 2,
             ry: height / 2,
             r: 0

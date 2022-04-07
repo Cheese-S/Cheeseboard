@@ -11,7 +11,7 @@ export default class RectShapeUtil extends ShapeUtil {
         shape.center = Vec.add(shape.center, delta);
     }
     
-    get_bound(rect: Rect, rotated: boolean = false): Bound {
+    get_bound(rect: Rect, rotated: boolean): Bound {
         return get_rect_bound(rect, rotated);
     }
     
@@ -29,7 +29,7 @@ export default class RectShapeUtil extends ShapeUtil {
         return {
             mx: width / 2,
             my: height / 2,
-            center: {x: width / 2, y: height / 2},
+            center: {x: (bd.max_x + bd.min_x) / 2, y: (bd.min_y + bd.max_y) / 2},
             r: 0
         }
     }

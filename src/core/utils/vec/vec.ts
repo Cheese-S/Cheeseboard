@@ -73,6 +73,10 @@ export class Vec {
         };
     }
 
+    static med = (v1: Point, v2: Point): Point => {
+        return Vec.mul_n(Vec.add(v1, v2), 0.5);
+    }
+
     /**
      * Find the slope between two points 
      * @param p1 
@@ -126,6 +130,17 @@ export class Vec {
 
     static get_angle = (p1: Point, p2: Point): number => {
         return Math.atan2(Vec.crp(p1, p2), Vec.dot(p1, p2));
+    }
+
+    /**
+     * Get the angle (radian) between two vectors
+     * @param p1 
+     * @param p2 
+     * @returns The angle in radian
+     */
+
+    static get_ang = (p1: Point, p2: Point): number => {
+        return Math.atan2(p2.y - p1.y, p2.x - p1.x);
     }
 
     /**

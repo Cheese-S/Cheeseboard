@@ -23,7 +23,7 @@ export default class TriangleShapeUtil extends ShapeUtil {
     get_shape_from_bound(bd: Bound): Shape {
         return {
             a: {x: bd.min_x, y: bd.max_y},
-            b: {x: (bd.max_x - bd.min_x) / 2, y: bd.min_y},
+            b: {x: (bd.max_x + bd.min_x) / 2, y: bd.min_y},
             c: {x: bd.max_x, y: bd.max_y},
             r: 0
         }

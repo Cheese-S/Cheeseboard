@@ -4,29 +4,26 @@ import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
 import { CB_HANDLE, LEFT_MOUSE } from '../../constant'
 import { camera_state, itemID_state, pointer_state, selected_bound_state, selected_items_state } from '../../state'
-import { Point } from '../../type'
+import { CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point } from '../../type'
 import { CanvasUtil } from '../../utils/CanvasUtil'
 import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
 import { ToolbarWrapper } from '../Toolbar'
-let is_active = false; 
+let is_active = false;
 export const Canvas: React.FC = ({ }) => {
 
     const set_pointer = useSetRecoilState(pointer_state);
     const set_selected_items = useSetRecoilState(selected_items_state);
-    const get_selected_bound = useRecoilCallback(({ snapshot }) => () => {
-        return snapshot.getLoadable(selected_bound_state).getValue(); 
-    })
     const on_mouse_move = (e: React.MouseEvent) => {
         e.preventDefault();
-        let handle: CB_HANDLE; 
-        let init_point: Point; 
+        let handle: CB_HANDLE;
+        let init_point: Point;
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     handle = prev.selected_handle;
-                    init_point = prev.init_point; 
+                    init_point = prev.init_point;
                     return produce(prev, draft => {
                         draft.movement = { x: e.movementX, y: e.movementY };
                         draft.curr_point = { x: e.clientX, y: e.clientY };
@@ -42,24 +39,39 @@ export const Canvas: React.FC = ({ }) => {
                                     return draft;
                                 })
                             })
-                            break; 
+                            break;
                         case CB_HANDLE.ROTATION:
                             set_selected_items(prev => {
                                 return produce(prev, draft => {
-                                    const bound = get_selected_bound(); 
-                                    console.log(bound);
-                                    CanvasUtil.rotate_items(bound, draft, init_point, {x: e.clientX, y: e.clientY}, {x: e.movementX, y: e.movementY});
+                                    const bd = CanvasUtil.get_items_bound(false, ...prev);
+                                    CanvasUtil.rotate_items(bd, draft, { x: e.clientX, y: e.clientY }, { x: e.movementX, y: e.movementY });
                                     return draft;
                                 })
                             })
                             break;
+                        case CB_HANDLE.L_EDGE:
+                        case CB_HANDLE.R_EDGE:
+                        case CB_HANDLE.B_EDGE:
+                        case CB_HANDLE.T_EDGE:
+                        case CB_HANDLE.TL_CORNER:
+                        case CB_HANDLE.BL_CORNER:
+                        case CB_HANDLE.TR_CORNER:
+                        case CB_HANDLE.BR_CORNER:
+                            set_selected_items(prev => {
+                                return produce(prev, draft => {
+                                    const bd = CanvasUtil.get_items_bound(false, ...prev);
+                                    CanvasUtil.resize_items(bd, draft, { x: e.movementX, y: e.movementY }, handle as CB_CORNER_HANDLE | CB_EDGE_HANDLE);
+                                })
+                            })
+                            break;
                         default:
-                    }   
+                            break;
+                    }
                 }
         }
     }
     const on_mouse_down = (e: React.MouseEvent<HTMLDivElement>) => {
-        is_active = true; 
+        is_active = true;
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
