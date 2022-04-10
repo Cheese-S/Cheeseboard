@@ -8,6 +8,7 @@ import {
     EllipseComponent,
     TriangleComponent 
 } from "../ShapeComponent";
+import { TextComponent } from "../ShapeComponent/TextComponent";
 
 
 
@@ -23,17 +24,19 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({id}: CanvasIte
     const set_selectedIDs = useSetRecoilState(selected_itemID_state);
     const on_select = (e: React.MouseEvent) => {
         e.stopPropagation();
-        set_selectedIDs(prev => [...prev, id]); 
+        set_selectedIDs(prev => [id]); 
     }
 
 
     switch (CBItem.type) {
         case CBTOOL.RECTANGLE:
-            return <RectComponent  shape={CBItem.shape as Rect} item_css={item_style}  onMouseDown={on_select}/>
+            return <RectComponent  _shape={CBItem.shape as Rect} item_css={item_style}  onMouseDown={on_select}/>
         case CBTOOL.ELLIPSE:
-            return <EllipseComponent  shape={CBItem.shape as Ellipse} item_css={item_style} onMouseDown={on_select}/>
+            return <EllipseComponent  _shape={CBItem.shape as Ellipse} item_css={item_style} onMouseDown={on_select}/>
         case CBTOOL.TRIANGLE:
-            return <TriangleComponent  shape={CBItem.shape as Triangle} item_css={item_style} onMouseDown={on_select}/>
+            return <TriangleComponent  _shape={CBItem.shape as Triangle} item_css={item_style} onMouseDown={on_select}/>
+        case CBTOOL.TEXT:
+            return <TextComponent _shape={CBItem.shape as Rect} item_css={item_style} onMouseDown={on_select} />
     }
     return <button> aaa </button>
     

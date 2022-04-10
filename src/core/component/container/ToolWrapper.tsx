@@ -14,6 +14,7 @@ export const ToolWrapper: React.FC = () => {
         case CBTOOL.RECTANGLE:
         case CBTOOL.ELLIPSE:
         case CBTOOL.TRIANGLE:
+        case CBTOOL.TEXT:
             return <ShapeCreator tool={tool} />
         case CBTOOL.SELECT:
             return <RectSelect />

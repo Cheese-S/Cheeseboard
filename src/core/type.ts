@@ -53,7 +53,8 @@ export interface CBItem {
     type: CBTOOL,
     shape: Shape,
     style: CBStyle,
-    qt_id: number
+    qt_id: number,
+    text: string
 }
 
 export interface CBStyle {

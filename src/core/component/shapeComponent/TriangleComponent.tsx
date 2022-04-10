@@ -12,7 +12,7 @@ import { useIndicator } from "../../hook/useIndicator";
 interface TriangleComponentProps extends ComponentProps<Triangle>{
 }
 
-export const TriangleComponent: React.FC<TriangleComponentProps> = ({shape, item_css, ...rest}: TriangleComponentProps) => {
+export const TriangleComponent: React.FC<TriangleComponentProps> = ({_shape: shape, item_css, ...rest}: TriangleComponentProps) => {
     const [indicator_ref, event_reciever_ref] = useIndicator<SVGPathElement>(); 
     const path = (CanvasUtil.get_shapeutil(CBTOOL.TRIANGLE) as TriangleShapeUtil).get_path(shape);
     const {container_css, component_css} = item_css; 

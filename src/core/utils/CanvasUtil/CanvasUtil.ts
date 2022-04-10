@@ -5,6 +5,7 @@ import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
 import { get_common_bound } from "../geometry";
 import { Vec } from "../vec";
+import TextShapeUtil from "../shapeUtil/TextShapeUtil";
 
 export class CanvasUtil {
 
@@ -12,7 +13,8 @@ export class CanvasUtil {
         [CBTOOL.RECTANGLE, new RectShapeUtil()],
         [CBTOOL.ELLIPSE, new EllipseShapeUtil()],
         [CBTOOL.PENCIL, new PencilShapeUtil()],
-        [CBTOOL.TRIANGLE, new TriangleShapeUtil()]
+        [CBTOOL.TRIANGLE, new TriangleShapeUtil()],
+        [CBTOOL.TEXT, new TextShapeUtil()]
     ])
 
     /**
@@ -68,6 +70,7 @@ export class CanvasUtil {
 
     static get_default_shape(type: CBTOOL): Shape {
         switch (type) {
+            case CBTOOL.TEXT:
             case CBTOOL.RECTANGLE:
                 return {
                     center: { x: 0, y: 0 },
@@ -205,8 +208,8 @@ export class CanvasUtil {
                 )
                 break;
         }
-        const new_top_left = Vec.sub({x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y}, diff);
-        const new_bot_right = Vec.sub({x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y}, diff);
+        const new_top_left = Vec.sub({ x: to_be_matched_bd.min_x, y: to_be_matched_bd.min_y }, diff);
+        const new_bot_right = Vec.sub({ x: to_be_matched_bd.max_x, y: to_be_matched_bd.max_y }, diff);
 
         return {
             min_x: new_top_left.x,
@@ -228,7 +231,7 @@ export class CanvasUtil {
                 case CBTOOL.PENCIL:
                     return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.get_bound(item.shape, rotated);
                 case CBTOOL.TEXT:
-                    throw new Error("Text Bound Not Implemented")
+                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.get_bound(item.shape, rotated); 
                 default:
                     return empty_bd;
             }
@@ -249,7 +252,7 @@ export class CanvasUtil {
                 case CBTOOL.PENCIL:
                     return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.intersect_bound(bd, item.shape);
                 case CBTOOL.TEXT:
-                    throw new Error("NOT IMPLEMENTED");
+                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.intersect_bound(bd, item.shape); 
                 default:
                     return false;
             }
@@ -348,7 +351,7 @@ export class CanvasUtil {
     }
 
     static resize_items(bd: Bound, items: CBItem[], movement: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE): void {
-        const is_single_item = items.length === 1; 
+        const is_single_item = items.length === 1;
         const r = is_single_item ? items[0].shape.r : 0;
         const resized_common_bound = CanvasUtil.resize_bound(bd, movement, handle, true, r);
 
@@ -376,7 +379,7 @@ export class CanvasUtil {
                 max_y: max_y
             }
             if (is_single_item) {
-                resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle); 
+                resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle);
             }
             item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
         })

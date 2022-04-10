@@ -10,7 +10,7 @@ import { useIndicator } from "../../hook/useIndicator";
 interface EllipseComponentProps extends ComponentProps<Ellipse> {
 }
 
-export const EllipseComponent: React.FC<EllipseComponentProps> = ({ shape, item_css, ...rest }: EllipseComponentProps) => {
+export const EllipseComponent: React.FC<EllipseComponentProps> = ({ _shape: shape, item_css, ...rest }: EllipseComponentProps) => {
     const [indicator_ref, event_reciever_ref] = useIndicator<SVGEllipseElement>(); 
     const {container_css, component_css} = item_css; 
     const pointer_events_type = (component_css.fill && component_css.fill === 'none') ? 'stroke' : 'all'; 

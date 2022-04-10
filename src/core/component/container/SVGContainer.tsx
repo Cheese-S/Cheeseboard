@@ -6,7 +6,7 @@ interface SVGContainerProp extends React.SVGProps<SVGSVGElement> {
     children: React.ReactNode;
 }
 
-export const SVGContainer = ({children, className="", ...rest}: SVGContainerProp) => {
+export const SVGContainer: React.FC<SVGContainerProp> = ({children, className="", ...rest}: SVGContainerProp) => {
     return (
         <svg className={`${styles.cbPositionedSvg} ${className}`} {...rest}>
             <g className = {styles.cbCenteredG}>

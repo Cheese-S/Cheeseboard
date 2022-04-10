@@ -150,6 +150,16 @@ html *{
   contain: layout style size;
 }
 
+.cbPositionedDiv {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: var(--cbPadding);
+  overflow: hidden;
+  contain: layout style size;
+}
+
 .cbCenteredG {
   transform: translate(var(--cbPadding), var(--cbPadding));
 }
@@ -199,4 +209,20 @@ html *{
 .cbCenterHandle {
   cursor: move;
   pointer-events: fill;
+}
+
+.cbTextWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 4px;
+  z-index: 1;
+  min-height: 1;
+  min-width: 1;
+  line-height: 1;
+  outline: 0;
+  user-select: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  text-align: center;
 }

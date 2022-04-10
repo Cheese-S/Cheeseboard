@@ -93,12 +93,12 @@ describe('get bounds from shapes', () => {
     })
 
     test('rotated triangle', () => {
-        let t = { a: { x: 0, y: 0 }, b: { x: 1, y: 0 }, c: { x: 0.5, y: 0.5 }, r: Math.PI };
-        let center = Vec.mul_n(Vec.add_vecs(t.a, t.b, t.c), 1 / 3);
-        let rotated_c = Vec.rot_about({ x: 0.5, y: 0.5 }, center, Math.PI);
-        let rotated_a = Vec.rot_about({ x: 0, y: 0 }, center, Math.PI);
-
-        expect(get_triangle_bound(t, true)).toMatchCloseTo({ min_x: 0, max_y: rotated_a.y, max_x: 1, min_y: rotated_c.y });
+        let t = { a: { x: 0, y: 1 }, b: { x: 0.5, y: 0.5 }, c: { x: 1, y: 1 }, r: Math.PI };
+        let center = {x: 0.5, y: 0.75};
+        let rotated_a = Vec.rot_about({ x: 0, y: 1 }, center, Math.PI);
+        let rotated_b = Vec.rot_about({ x: 0.5, y: 0.5 }, center, Math.PI);
+        let rotated_c = Vec.rot_about({x: 1, y: 1}, center, Math.PI);
+        expect(get_triangle_bound(t, true)).toMatchCloseTo({ min_x: rotated_c.x, max_y: rotated_b.y, max_x: rotated_a.x, min_y: rotated_a.y });
     })
 
     test('Get Common Bound', () => {

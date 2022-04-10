@@ -9,7 +9,7 @@ import { ComponentProps } from './internal'
 interface RectComponentProps extends ComponentProps<Rect> {
 }
 
-export const RectComponent: React.FC<RectComponentProps> = ({ shape, item_css, ...rest }: RectComponentProps) => {
+export const RectComponent: React.FC<RectComponentProps> = ({ _shape: shape, item_css, ...rest }: RectComponentProps) => {
     const [indicator_ref, event_reciever_ref] = useIndicator<SVGRectElement>();
     const { container_css, component_css } = item_css;
     const pointer_events_type = (component_css.fill && component_css.fill === 'none') ? 'stroke' : 'all';

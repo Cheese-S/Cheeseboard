@@ -47,7 +47,8 @@ export const item_state = atomFamily<CBItem, number>({
             dotted: false,
             is_ghost: false
         },
-        qt_id: -1
+        qt_id: -1,
+        text: 'aa'
     }
 });
 

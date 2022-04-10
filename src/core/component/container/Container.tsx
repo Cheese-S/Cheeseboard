@@ -8,7 +8,7 @@ interface ContainerProps extends HTMLProps<HTMLDivElement> {
 
 export const Container: React.FC<ContainerProps> = ({children, ...rest}: ContainerProps) => {
     return (
-        <div className={`${styles.cbPositioned}`} {...rest}>
+        <div className={styles.cbPositioned} {...rest}>
             {children}
         </div>
     )
