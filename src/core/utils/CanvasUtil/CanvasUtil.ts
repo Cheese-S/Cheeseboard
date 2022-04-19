@@ -8,9 +8,9 @@ import { Vec } from "../vec";
 import TextShapeUtil from "../shapeUtil/TextShapeUtil";
 
 const font_size = {
-    [CBSTROKE_WIDTH.SMALL]: 24,
-    [CBSTROKE_WIDTH.MEDIUM]: 48,
-    [CBSTROKE_WIDTH.LARGE]: 64,
+    [CBSTROKE_WIDTH.SMALL]: 12,
+    [CBSTROKE_WIDTH.MEDIUM]: 24,
+    [CBSTROKE_WIDTH.LARGE]: 36,
 }
 
 export class CanvasUtil {
@@ -403,7 +403,13 @@ export class CanvasUtil {
             if (item.type === CBTOOL.TEXT) {
                 let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
                 let y_scale = (resized_item_bd.max_y - resized_item_bd.min_y) / (item_bd.max_y - item_bd.min_y);
-                let new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
+                let new_scale: number;
+                if (x_scale >= 1 && y_scale >= 1) {
+                    new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
+                } else {
+                    new_scale = (item.shape as Text).scale * Math.min(x_scale, y_scale);
+                }
+                console.log(`x_scale: ${x_scale}, y_scale: ${y_scale}, new_scale: ${new_scale}`);
                 
                 item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r, scale: new_scale };
             } else {

@@ -5,6 +5,7 @@ import { CanvasItem } from "./CanvasItem"
 
 export const CanvasItemsWrapper: React.FC = ({ }) => {
     const ids = useRecoilValue(itemID_state);
+    console.log(ids);
     return (
         <React.Fragment>
             {ids.map((id) => {

@@ -247,4 +247,7 @@ html *{
   overflow: hidden;
   display: inline-block;
   pointer-events: all;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  text-align: center;
 }

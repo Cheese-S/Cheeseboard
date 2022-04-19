@@ -1,8 +1,9 @@
+import produce from "immer";
 import { customAlphabet } from "nanoid";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { CBTOOL, LEFT_MOUSE } from "../../constant";
-import { item_state_accessor, pointer_state, style_state } from "../../state";
+import { CBTOOL, CB_HANDLE, LEFT_MOUSE } from "../../constant";
+import { item_state_accessor, pointer_state, selected_itemID_state, style_state, tool_state } from "../../state";
 import { Rect, Ellipse, Triangle, Text } from "../../type"
 import { CanvasUtil } from "../../utils/CanvasUtil";
 import {
@@ -24,7 +25,9 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
     const nanoid = customAlphabet('1234567890', 9);
     const new_id = parseInt(nanoid());
     const set_shape = useSetRecoilState(item_state_accessor(new_id));
-
+    const set_pointer = useSetRecoilState(pointer_state);
+    const set_selected_item = useSetRecoilState(selected_itemID_state); 
+    const set_tool = useSetRecoilState(tool_state); 
     const shapeUtil = CanvasUtil.get_shapeutil(tool);
     let shape = CanvasUtil.get_default_shape(tool);
     shapeUtil!.set_shape_top_left(shape, pointer.curr_point);
@@ -32,6 +35,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
     const item_style = CanvasUtil.get_item_css(bd, shape.r, { ...style, is_ghost: true });
 
     const on_create_shape = (e: React.MouseEvent) => {
+        console.log("aaa");
         switch (e.button) {
             case LEFT_MOUSE:
                 set_shape({
@@ -43,9 +47,18 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
                         is_ghost: false
                     },
                     qt_id: -1,
-                    text: "aa"
+                    text: "placeholder"
                 })
-                console.log(new_id);
+                set_pointer(prev => {
+                    return produce(prev, draft => {
+                        draft.is_active = true;
+                        draft.selected_handle = CB_HANDLE.BR_CORNER;
+                        draft.init_point = { x: e.clientX, y: e.clientY };
+                    })
+                })
+                set_selected_item([new_id])
+                set_tool(CBTOOL.SELECT);
+                
         }
     }
 
@@ -61,12 +74,12 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
             shape_component = <TriangleComponent _shape={shape as Triangle} item_css={item_style} pointerEvents="all" />
             break;
         case CBTOOL.TEXT:
-            shape_component = <TextComponent _shape={shape as Text} item_css={item_style} style={{pointerEvents:"all"}}/>
+            shape_component = <TextComponent _shape={shape as Text} _text={'placeholder'} item_css={item_style} style={{pointerEvents:"all"}}/>
             break; 
     }
 
     return (
-        <div onClick={on_create_shape}>
+        <div onMouseDown={on_create_shape}>
             {shape_component}
         </div>
     )

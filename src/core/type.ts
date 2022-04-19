@@ -78,7 +78,7 @@ export interface CBPointer {
     curr_point: Point, 
     movement: Point, 
     is_active: boolean,
-    selected_handle: CB_HANDLE
+    selected_handle: CB_HANDLE,
 }
 
 export interface ItemCSS {

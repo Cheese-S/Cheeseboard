@@ -31,15 +31,14 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasI
     
     
 
-    switch (CBItem.type) {
-        case CBTOOL.RECTANGLE:
+    switch (CBItem.type) {        case CBTOOL.RECTANGLE:
             return <RectComponent _shape={CBItem.shape as Rect} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.ELLIPSE:
             return <EllipseComponent _shape={CBItem.shape as Ellipse} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.TRIANGLE:
             return <TriangleComponent _shape={CBItem.shape as Triangle} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.TEXT:
-            return <TextComponent _id={id}  _shape={CBItem.shape as Text} item_css={item_style} onMouseDown={on_select} />
+            return <TextComponent _id={id}  _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} onMouseDown={on_select} />
     }
     return <button> aaa </button>
 

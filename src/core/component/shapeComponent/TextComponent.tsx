@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CBItem, ItemCSS, Rect, Text } from "../../type";
 import { HTMLContainer } from "../Container/HTMLContainer";
 import { ComponentProps } from './internal'
@@ -15,11 +15,12 @@ import produce from "immer";
 interface TextComponentProps extends React.HTMLProps<HTMLDivElement> {
     _id?: number
     _shape: Text,
+    _text: string,
     item_css: ItemCSS
 }
 let timer: NodeJS.Timeout; 
 
-export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_css, ...rest }: TextComponentProps) => {
+export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text, item_css, ...rest }: TextComponentProps) => {
     const { ref, is_editing, set_is_editing } = useTextArea(); 
     const { container_css, component_css } = item_css;
     const div_ref = useDivIndicator();
@@ -32,8 +33,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
     }
 
     const scaled_font_size = (component_css.fontSize as number) * _shape.scale;
-    console.log(component_css.fontSize);
-    console.log(_shape.scale);
 
     
 
@@ -49,6 +48,23 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
         console.log('dbclick'); 
         set_is_editing(true);
     }
+
+    useLayoutEffect(() => {
+        if (!(ref && ref.current)) {
+            return;
+        }
+        const element = ref.current;
+
+        if (!!set_item) {
+            set_item((prev) => {
+                console.log("useLayoutEffect scroll height: %d", element.scrollHeight)
+                element.style.height = element.scrollHeight + 'px';
+                return produce(prev, draft => {
+                    (draft.shape as Rect).my = (element.scrollHeight + 4) / 2; 
+                })
+            })
+        }
+    }, [scaled_font_size])
     return (
         <Container style={container_css}>
             <HTMLContainer>
@@ -61,7 +77,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
                     }}
                     onClick={on_click}
                     onDoubleClick={on_dbclick}
-                    onMouseDown={(e) => {e.stopPropagation()}}
                 >
                     <textarea
                         ref={ref}
@@ -71,8 +86,9 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
                             color: component_css.stroke, 
                             pointerEvents: 'none', 
                         }}
-                        defaultValue={"THIS IS AN EXTREMELY LONG TEXT"}
-                        // onMouseDown={(e) => { e.stopPropagation() }}
+                        defaultValue={_text}
+
+                        onMouseDown={(e) => { e.stopPropagation() }}
                         onMouseMove={(e) => { e.stopPropagation() }}
                         onBlur={() => set_is_editing(false)}
                         onClick={(e) => {e.stopPropagation()}}
@@ -81,8 +97,10 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
                             let target = e.currentTarget; 
                             if (!!set_item) {
                                 set_item((prev) => {
+                                    console.log("scroll height: %d", target.scrollHeight)
                                     return produce(prev, draft => {
-                                        (draft.shape as Rect).my = (target.scrollHeight + 8) / 2; 
+                                        (draft.shape as Rect).my = (target.scrollHeight + 4) / 2; 
+                                        draft.text = target.value; 
                                     })
                                 })
                             }
@@ -90,7 +108,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, item_
                         
 
 
-                    // datatype="wysiwyg"
                     // onInput={() => on_input(this)}
                     />
                 </div>

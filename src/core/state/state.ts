@@ -74,9 +74,10 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
     set: (itemID: number) => ({ get, set, reset }, new_CBItem: CBItem | DefaultValue) => {
         const qt = get(qt_state);
         if (new_CBItem instanceof DefaultValue) {
+            const item = get(item_state(itemID));
             reset(item_state(itemID));
             set(itemID_state, (prev) => prev.filter((id) => id !== itemID));
-            qt.remove(itemID);
+            qt.remove(item.qt_id);
         } else {
             set(item_state(itemID),
                 (prev) => {
@@ -224,7 +225,8 @@ export const pointer_state = atom<CBPointer>({
         curr_point: { x: 0, y: 0 },
         movement: { x: 0, y: 0 },
         is_active: false,
-        selected_handle: CB_HANDLE.IDLE
+        selected_handle: CB_HANDLE.IDLE,
+        
     }
 })
 
