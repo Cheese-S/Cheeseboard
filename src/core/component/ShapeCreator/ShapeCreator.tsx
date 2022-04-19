@@ -3,7 +3,7 @@ import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { CBTOOL, LEFT_MOUSE } from "../../constant";
 import { item_state_accessor, pointer_state, style_state } from "../../state";
-import { Rect, Ellipse, Triangle } from "../../type"
+import { Rect, Ellipse, Triangle, Text } from "../../type"
 import { CanvasUtil } from "../../utils/CanvasUtil";
 import {
     RectComponent,
@@ -32,10 +32,8 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
     const item_style = CanvasUtil.get_item_css(bd, shape.r, { ...style, is_ghost: true });
 
     const on_create_shape = (e: React.MouseEvent) => {
-        console.log("hello");
         switch (e.button) {
             case LEFT_MOUSE:
-                console.log("hello");
                 set_shape({
                     id: new_id,
                     type: tool,
@@ -63,7 +61,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
             shape_component = <TriangleComponent _shape={shape as Triangle} item_css={item_style} pointerEvents="all" />
             break;
         case CBTOOL.TEXT:
-            shape_component = <TextComponent _shape={shape as Rect} item_css={item_style} style={{pointerEvents:"all"}}/>
+            shape_component = <TextComponent _shape={shape as Text} item_css={item_style} style={{pointerEvents:"all"}}/>
             break; 
     }
 

@@ -100,10 +100,16 @@ export const Canvas: React.FC = ({ }) => {
     }
 
     return (
-        <div id={'cbCanvas'} className={`${styles.cbCanvas} ${styles.cbAbsolute}`} onMouseDown={on_mouse_down} onMouseMove={on_mouse_move} onMouseUp={on_mouse_up}>
+        <div id={'cbCanvas'}
+            className={`${styles.cbCanvas} ${styles.cbAbsolute}`}
+            onMouseDown={on_mouse_down}
+            onMouseMove={on_mouse_move}
+            onMouseUp={on_mouse_up}
+        >
             <div> HELLO </div>
             <CanvasItemsWrapper />
             <SelectedWrapper />
+            <textarea defaultValue={"hello"} />
             <div style={{ backgroundColor: 'var(--cbRed)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbYellow)', width: 100, height: 100 }} />
             <div style={{ backgroundColor: 'var(--cbBlue)', width: 100, height: 100 }} />

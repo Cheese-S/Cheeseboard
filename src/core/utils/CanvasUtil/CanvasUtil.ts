@@ -1,11 +1,17 @@
-import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE } from "../../constant";
-import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle } from "../../type";
+import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
+import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text } from "../../type";
 import { RectShapeUtil, EllipseShapeUtil, PencilShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
 import { get_common_bound } from "../geometry";
 import { Vec } from "../vec";
 import TextShapeUtil from "../shapeUtil/TextShapeUtil";
+
+const font_size = {
+    [CBSTROKE_WIDTH.SMALL]: 24,
+    [CBSTROKE_WIDTH.MEDIUM]: 48,
+    [CBSTROKE_WIDTH.LARGE]: 64,
+}
 
 export class CanvasUtil {
 
@@ -44,16 +50,21 @@ export class CanvasUtil {
         }
     }
 
+    static get_component_css(style: CBStyle): CSSProperties {
+        return {
+            stroke: `var(${style.color})`,
+            strokeWidth: `var(${style.size})`,
+            fill: style.fill ? `var(${style.color}Fill)` : 'none',
+            strokeDasharray: style.dotted ? 'var(--cbDotted)' : 0,
+            fontSize: font_size[style.size]
+        }
+    }
+
 
     static get_item_css(bd: Bound, r: number, style: CBStyle): ItemCSS {
         let container_css: CSSProperties, component_css: CSSProperties;
         container_css = CanvasUtil.get_container_css(bd, r, style.is_ghost);
-        component_css = {
-            stroke: `var(${style.color})`,
-            strokeWidth: `var(${style.size})`,
-            fill: style.fill ? `var(${style.color}Fill)` : 'none',
-            strokeDasharray: style.dotted ? 'var(--cbDotted)' : 0
-        }
+        component_css = CanvasUtil.get_component_css(style);
         return {
             container_css: container_css,
             component_css: component_css
@@ -71,6 +82,13 @@ export class CanvasUtil {
     static get_default_shape(type: CBTOOL): Shape {
         switch (type) {
             case CBTOOL.TEXT:
+                return {
+                    center: { x: 0, y: 0 },
+                    mx: 50,
+                    my: 50,
+                    r: 0,
+                    scale: 1
+                }
             case CBTOOL.RECTANGLE:
                 return {
                     center: { x: 0, y: 0 },
@@ -231,7 +249,7 @@ export class CanvasUtil {
                 case CBTOOL.PENCIL:
                     return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.get_bound(item.shape, rotated);
                 case CBTOOL.TEXT:
-                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.get_bound(item.shape, rotated); 
+                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.get_bound(item.shape, rotated);
                 default:
                     return empty_bd;
             }
@@ -252,7 +270,7 @@ export class CanvasUtil {
                 case CBTOOL.PENCIL:
                     return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.intersect_bound(bd, item.shape);
                 case CBTOOL.TEXT:
-                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.intersect_bound(bd, item.shape); 
+                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.intersect_bound(bd, item.shape);
                 default:
                     return false;
             }
@@ -378,10 +396,19 @@ export class CanvasUtil {
                 min_y: min_y,
                 max_y: max_y
             }
+
             if (is_single_item) {
                 resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle);
             }
-            item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
+            if (item.type === CBTOOL.TEXT) {
+                let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
+                let y_scale = (resized_item_bd.max_y - resized_item_bd.min_y) / (item_bd.max_y - item_bd.min_y);
+                let new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
+                
+                item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r, scale: new_scale };
+            } else {
+                item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
+            }
         })
 
     }
