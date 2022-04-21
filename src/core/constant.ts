@@ -20,7 +20,7 @@ export enum CBTOOL {
     RECTANGLE,
     ELLIPSE,
     TRIANGLE,
-    PENCIL,
+    PEN,
     TEXT,
 
     SELECT,
@@ -47,6 +47,8 @@ export const MID_MOUSE = 1;
 export const RIGHT_MOUSE = 2;
 
 export const MIN_SIZE = 20; 
+
+export const EMTPY_ID = -1; 
 
 export const empty_bd: Bound = {
     min_x: 0,

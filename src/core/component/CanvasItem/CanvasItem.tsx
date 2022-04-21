@@ -2,12 +2,13 @@ import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { CBTOOL } from "../../constant";
 import { item_state, item_css_state, selected_itemID_state } from "../../state";
-import { Ellipse, Rect, Text, Triangle, } from "../../type";
+import { Ellipse, Polyline, Rect, Text, Triangle, } from "../../type";
 import {
     RectComponent,
     EllipseComponent,
     TriangleComponent
 } from "../ShapeComponent";
+import { PenComponent } from "../ShapeComponent/PenComponent";
 import { TextComponent } from "../ShapeComponent/TextComponent";
 
 
@@ -17,7 +18,7 @@ interface CanvasItemProps {
     id: number
 };
 
-let timer: NodeJS.Timeout; 
+let timer: NodeJS.Timeout;
 
 export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasItemProps) => {
     const [CBItem, setCBItem] = useRecoilState(item_state(id));
@@ -28,17 +29,20 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasI
         console.log("YOU TRRIGERD?")
         set_selectedIDs(prev => [id]);
     }
-    
-    
 
-    switch (CBItem.type) {        case CBTOOL.RECTANGLE:
+
+
+    switch (CBItem.type) {
+        case CBTOOL.RECTANGLE:
             return <RectComponent _shape={CBItem.shape as Rect} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.ELLIPSE:
             return <EllipseComponent _shape={CBItem.shape as Ellipse} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.TRIANGLE:
             return <TriangleComponent _shape={CBItem.shape as Triangle} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.TEXT:
-            return <TextComponent _id={id}  _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} onMouseDown={on_select} />
+            return <TextComponent _id={id} _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} onMouseDown={on_select} />
+        case CBTOOL.PEN:
+            return <PenComponent _shape={CBItem.shape as Polyline} item_css={item_style} onMouseDown={on_select} />
     }
     return <button> aaa </button>
 

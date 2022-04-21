@@ -18,11 +18,11 @@ export default abstract class ShapeUtil {
 
 
     /**
-     * Reconstruct the shape from a center ()
+     * Reconstruct the shape from a new bd.
      * NOTE: The shape constructed will **NOT** be rotated
      * @param bd 
      */
-    abstract get_shape_from_bound(bd: Bound): Shape;
+    abstract get_shape_from_bound(bd: Bound, old_shape?: Shape): Shape;
 
     /**
      * Rotate the shape around a given point (rotate the center of the shape and reconstruct the shape)

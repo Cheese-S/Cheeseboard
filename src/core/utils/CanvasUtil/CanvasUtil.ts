@@ -1,6 +1,6 @@
 import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
 import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text } from "../../type";
-import { RectShapeUtil, EllipseShapeUtil, PencilShapeUtil, ShapeUtil } from "../shapeUtil";
+import { RectShapeUtil, EllipseShapeUtil, PenShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
 import { get_common_bound } from "../geometry";
@@ -18,7 +18,7 @@ export class CanvasUtil {
     private static ShapeUtilMap = new Map<number, ShapeUtil>([
         [CBTOOL.RECTANGLE, new RectShapeUtil()],
         [CBTOOL.ELLIPSE, new EllipseShapeUtil()],
-        [CBTOOL.PENCIL, new PencilShapeUtil()],
+        [CBTOOL.PEN, new PenShapeUtil()],
         [CBTOOL.TRIANGLE, new TriangleShapeUtil()],
         [CBTOOL.TEXT, new TextShapeUtil()]
     ])
@@ -110,9 +110,9 @@ export class CanvasUtil {
                     c: { x: 200, y: 150 },
                     r: 0
                 }
-            case CBTOOL.PENCIL:
+            case CBTOOL.PEN:
                 return {
-                    points: [],
+                    points: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
                     r: 0
                 }
             default:
@@ -246,8 +246,8 @@ export class CanvasUtil {
                     return this.ShapeUtilMap.get(CBTOOL.TRIANGLE)!.get_bound(item.shape, rotated);
                 case CBTOOL.ELLIPSE:
                     return this.ShapeUtilMap.get(CBTOOL.ELLIPSE)!.get_bound(item.shape, rotated);
-                case CBTOOL.PENCIL:
-                    return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.get_bound(item.shape, rotated);
+                case CBTOOL.PEN:
+                    return this.ShapeUtilMap.get(CBTOOL.PEN)!.get_bound(item.shape, rotated);
                 case CBTOOL.TEXT:
                     return this.ShapeUtilMap.get(CBTOOL.TEXT)!.get_bound(item.shape, rotated);
                 default:
@@ -267,8 +267,8 @@ export class CanvasUtil {
                     return this.ShapeUtilMap.get(CBTOOL.TRIANGLE)!.intersect_bound(bd, item.shape);
                 case CBTOOL.ELLIPSE:
                     return this.ShapeUtilMap.get(CBTOOL.ELLIPSE)!.intersect_bound(bd, item.shape);
-                case CBTOOL.PENCIL:
-                    return this.ShapeUtilMap.get(CBTOOL.PENCIL)!.intersect_bound(bd, item.shape);
+                case CBTOOL.PEN:
+                    return this.ShapeUtilMap.get(CBTOOL.PEN)!.intersect_bound(bd, item.shape);
                 case CBTOOL.TEXT:
                     return this.ShapeUtilMap.get(CBTOOL.TEXT)!.intersect_bound(bd, item.shape);
                 default:
@@ -353,10 +353,18 @@ export class CanvasUtil {
         const prev_r = Vec.get_ang(bd_center, prev_point);
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
-            if (item.type === CBTOOL.TRIANGLE) {
-                (shapeutil as TriangleShapeUtil)?.rot_shape_about(bd_center, curr_r - prev_r, item.shape as Triangle, items.length === 1);
-            } else {
-                shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
+            switch(item.type) {
+                case CBTOOL.ELLIPSE:
+                case CBTOOL.RECTANGLE:
+                case CBTOOL.TEXT:
+                    shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape);
+                    break;
+                case CBTOOL.TRIANGLE:
+                case CBTOOL.PEN:
+                    //@ts-ignore
+                    shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape , items.length === 1); 
+                    break;
+                
             }
         })
     }
@@ -400,20 +408,28 @@ export class CanvasUtil {
             if (is_single_item) {
                 resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle);
             }
-            if (item.type === CBTOOL.TEXT) {
-                let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
-                let y_scale = (resized_item_bd.max_y - resized_item_bd.min_y) / (item_bd.max_y - item_bd.min_y);
-                let new_scale: number;
-                if (x_scale >= 1 && y_scale >= 1) {
-                    new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
-                } else {
-                    new_scale = (item.shape as Text).scale * Math.min(x_scale, y_scale);
-                }
-                console.log(`x_scale: ${x_scale}, y_scale: ${y_scale}, new_scale: ${new_scale}`);
-                
-                item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r, scale: new_scale };
-            } else {
-                item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
+
+            switch (item.type) {
+                case CBTOOL.ELLIPSE:
+                case CBTOOL.RECTANGLE:
+                case CBTOOL.TRIANGLE:
+                    item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
+                    break;
+                case CBTOOL.PEN:
+                    item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd, item.shape), r: item.shape.r}; 
+                    break;
+                case CBTOOL.TEXT:
+                    let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
+                    let y_scale = (resized_item_bd.max_y - resized_item_bd.min_y) / (item_bd.max_y - item_bd.min_y);
+                    let new_scale: number;
+                    if (x_scale >= 1 && y_scale >= 1) {
+                        new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
+                    } else {
+                        new_scale = (item.shape as Text).scale * Math.min(x_scale, y_scale);
+                    }
+
+                    item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r, scale: new_scale };
+                    break;
             }
         })
 

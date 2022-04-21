@@ -1,4 +1,4 @@
-import { Point, Rect, Ellipse, Triangle, Bound } from "../../type";
+import { Point, Rect, Ellipse, Triangle, Bound, Polyline } from "../../type";
 import { Vec } from "../vec/vec";
 
 /* -------------------------------------------------------------------------- */
@@ -45,6 +45,67 @@ export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): b
 
     return false;
 }
+
+/* -------------------------------------------------------------------------- */
+/*                                  POLYLINE                                  */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Check to see if a line segment intersect with a polyline
+ * @param p1 Start of Line Segment 
+ * @param p2 End of Line Segment
+ * @param poly 
+ * @returns True if the line segment intersect with a polyline, false otherwise
+ */
+
+export function seg_polyseg_intersect(p1: Point, p2: Point, poly: Point[]): boolean {
+    for (let i = 1; i < poly.length; i++) {
+        if (seg_seg_intersect(p1, p2, poly[i - 1], poly[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Get the center of a polyline
+ * @param poly polyseg
+ * @returns The center of the polyline
+ */
+
+export function get_polyseg_center(poly: Point[]): Point {
+    let t: number, l:number, b: number, r: number;
+
+    if (poly.length === 0) {
+        throw new Error("Passed in an empty array"); 
+    }
+    if (poly.length === 1) {
+        return { x: poly[0].x, y: poly[0].y }; 
+    }
+
+    poly.forEach((pt) => {
+        if (t === undefined || t < pt.y) t = pt.y;
+        if (b === undefined || b > pt.y) b = pt.y;
+        if (l === undefined || l > pt.x) l = pt.x;
+        if (r === undefined || r < pt.x) r = pt.x;
+    })
+    return {
+        //@ts-ignore
+        x: (r + l) / 2,
+        //@ts-ignore
+        y: (b + t) / 2,
+    }
+}
+
+export function get_rotated_polyseg(poly: Point[], r: number): Point[] {
+    if (poly.length === 1 || poly.length === 0) {
+        return poly.map((pt) => pt);
+    }
+    const center = get_polyseg_center(poly);
+    console.log("center", center);
+    return poly.map((pt) => Vec.rot_about(pt, center, r)); 
+}
+
 
 /* -------------------------------------------------------------------------- */
 /*                                   ELLIPSE                                  */
@@ -107,22 +168,6 @@ export function seg_ellipse_intersect(p1: Point, p2: Point, e: Ellipse): boolean
     return !!int_pts.length;
 }
 
-/**
- * Check to see if a line segment intersect with a polyline
- * @param p1 Start of Line Segment 
- * @param p2 End of Line Segment
- * @param poly 
- * @returns True if the line segment intersect with a polyline, false otherwise
- */
-
-export function seg_polyseg_intersect(p1: Point, p2: Point, poly: Point[]): boolean {
-    for (let i = 1; i < poly.length; i++) {
-        if (seg_seg_intersect(p1, p2, poly[i - 1], poly[i])) {
-            return true;
-        }
-    }
-    return false;
-}
 
 
 /* -------------------------------------------------------------------------- */
@@ -241,10 +286,11 @@ export function rect_triangle_intersect(r: Rect, t: Triangle): boolean {
  * @returns True if the rectangle intersect (or enclose) with the polyline, false otherwsie. 
  */
 
-export function rect_poly_intersect(r: Rect, poly: Point[]): boolean {
+export function rect_polyseg_intersect(r: Rect, poly: Polyline): boolean {
     let r_edges = get_rect_edges(r);
-    return poly.some((p) => pt_in_rect(p, r)) ||
-        r_edges.some((e) => seg_polyseg_intersect(e[0], e[1], poly));
+    let rot_pts = get_rotated_polyseg(poly.points, poly.r); 
+    return rot_pts.some((p) => pt_in_rect(p, r)) ||
+        r_edges.some((e) => seg_polyseg_intersect(e[0], e[1], rot_pts));
 }
 
 
@@ -398,6 +444,34 @@ export function get_triangle_bound(tri: Triangle, rotated: boolean = false): Bou
     }
 }
 
+export function get_polyseg_bound(line: Polyline, rotated: boolean = false): Bound {
+    let pts: Point[];
+    let t: number, l:number, b: number, r: number;
+    if (rotated) {
+        pts = get_rotated_polyseg(line.points, line.r); 
+        console.log(pts); 
+        console.log(line.r); 
+    } else {
+        pts = line.points;
+    }
+    pts.forEach((pt) => {
+        if (t === undefined || t < pt.y) t = pt.y;
+        if (b === undefined || b > pt.y) b = pt.y;
+        if (l === undefined || l > pt.x) l = pt.x;
+        if (r === undefined || r < pt.x) r = pt.x;
+    })
+    return {
+        //@ts-ignore
+        min_x: l,
+        //@ts-ignore
+        max_y: t,
+        //@ts-ignore
+        max_x: r,
+        //@ts-ignore
+        min_y: b
+    }
+}
+
 /**
  * Get a common bounding box
  * @param bd1 
@@ -476,8 +550,8 @@ export function bound_triangle_intersect(bd: Bound, t: Triangle): boolean {
  * @param poly 
  * @returns True if a bound intersects / contains poly line segments, false otherwise
  */
-export function bound_poly_intersect(bd: Bound, poly: Point[]): boolean {
-    return rect_poly_intersect(get_bound_rect(bd), poly);
+export function bound_poly_intersect(bd: Bound, poly: Polyline): boolean {
+    return rect_polyseg_intersect(get_bound_rect(bd), poly);
 }
 
 /**

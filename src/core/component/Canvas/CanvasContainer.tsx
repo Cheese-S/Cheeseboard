@@ -1,6 +1,6 @@
 import React, { HTMLProps, useLayoutEffect, useRef }from "react";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { camera_state, selected_items_state } from "../../state";
+import { camera_state, itemID_state, selected_itemID_state, selected_items_state } from "../../state";
 import produce from "immer";
 
 interface CanvasContainerProps extends HTMLProps<HTMLDivElement> {
@@ -11,6 +11,7 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({children, ...re
     const ref = useRef<HTMLDivElement>(null);
     const set_camera = useSetRecoilState(camera_state);
     const reset_selected_items = useResetRecoilState(selected_items_state); 
+    const reset_selected_ids = useResetRecoilState(selected_itemID_state); 
     useLayoutEffect(() => {
 
         const handleResize = () => {
@@ -28,6 +29,7 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({children, ...re
             console.log(e.key);
             if (e.key === 'Backspace' || e.key === 'Delete') {
                 reset_selected_items();
+                reset_selected_ids();
             }
         } 
 

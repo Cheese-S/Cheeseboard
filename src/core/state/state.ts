@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd, CB_HANDLE } from "../constant";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd, CB_HANDLE, EMTPY_ID } from "../constant";
 import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
@@ -76,7 +76,6 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
         if (new_CBItem instanceof DefaultValue) {
             const item = get(item_state(itemID));
             reset(item_state(itemID));
-            set(itemID_state, (prev) => prev.filter((id) => id !== itemID));
             qt.remove(item.qt_id);
         } else {
             set(item_state(itemID),
@@ -118,6 +117,7 @@ export const selected_items_state = selector<CBItem[]>({
         if (new_selected_items instanceof DefaultValue) {
             const selected_IDs = get(selected_itemID_state);
             selected_IDs.forEach((id) => reset(item_state_accessor(id)))
+            set(itemID_state, prev => prev.filter((e) => selected_IDs.indexOf(e) === -1));
         } else {
             new_selected_items.forEach((item) => {
                 set(item_state_accessor(item.id), item);
@@ -225,8 +225,8 @@ export const pointer_state = atom<CBPointer>({
         curr_point: { x: 0, y: 0 },
         movement: { x: 0, y: 0 },
         is_active: false,
+        is_drawing: EMTPY_ID, 
         selected_handle: CB_HANDLE.IDLE,
-        
     }
 })
 

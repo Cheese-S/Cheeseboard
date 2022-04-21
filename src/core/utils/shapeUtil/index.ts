@@ -1,11 +1,11 @@
 import EllipseShapeUtil from "./EllipseShapeUtil";
-import PencilShapeUtil from "./PencilShapeUtil";
+import PenShapeUtil from "./PenShapeUtil";
 import RectShapeUtil from "./RectShapeUtil";
 import ShapeUtil from "./ShapeUtil";
 
 export {
     EllipseShapeUtil,
-    PencilShapeUtil,
+    PenShapeUtil,
     RectShapeUtil,
     ShapeUtil 
 }

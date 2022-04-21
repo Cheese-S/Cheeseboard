@@ -28,9 +28,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text
     if (_id) {
         set_item = useSetRecoilState(item_state_accessor(_id)); 
     }
-    let on_input = () => {
-
-    }
 
     const scaled_font_size = (component_css.fontSize as number) * _shape.scale;
 
@@ -54,7 +51,7 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text
             return;
         }
         const element = ref.current;
-
+        element.style.height = 'auto';
         if (!!set_item) {
             set_item((prev) => {
                 console.log("useLayoutEffect scroll height: %d", element.scrollHeight)
@@ -87,7 +84,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text
                             pointerEvents: 'none', 
                         }}
                         defaultValue={_text}
-
                         onMouseDown={(e) => { e.stopPropagation() }}
                         onMouseMove={(e) => { e.stopPropagation() }}
                         onBlur={() => set_is_editing(false)}
@@ -105,10 +101,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text
                                 })
                             }
                         }}
-                        
-
-
-                    // onInput={() => on_input(this)}
                     />
                 </div>
             </HTMLContainer>

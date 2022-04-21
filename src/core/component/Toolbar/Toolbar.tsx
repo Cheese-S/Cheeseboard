@@ -27,8 +27,8 @@ export const Toolbar: React.FC = () => {
                     <MousePointer />
                 </div>
             </button>
-            <button data-id={CBTOOL.PENCIL} className={styles.cbToolButton} onClick={onClick}>
-                <div className={styles.cbToolButtonHighlight} style={ get_bgcolor(CBTOOL.PENCIL)}>
+            <button data-id={CBTOOL.PEN} className={styles.cbToolButton} onClick={onClick}>
+                <div className={styles.cbToolButtonHighlight} style={ get_bgcolor(CBTOOL.PEN)}>
                     <PenTool />
                 </div>
             </button>

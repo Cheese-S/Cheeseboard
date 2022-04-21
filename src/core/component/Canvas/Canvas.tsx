@@ -2,9 +2,9 @@ import produce from 'immer'
 import * as React from 'react'
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
-import { CB_HANDLE, LEFT_MOUSE } from '../../constant'
-import { camera_state, itemID_state, pointer_state, selected_bound_state, selected_items_state } from '../../state'
-import { CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point } from '../../type'
+import { CB_HANDLE, EMTPY_ID, LEFT_MOUSE } from '../../constant'
+import { camera_state, itemID_state, item_state, item_state_accessor, pointer_state, selected_bound_state, selected_items_state } from '../../state'
+import { CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point, Polyline } from '../../type'
 import { CanvasUtil } from '../../utils/CanvasUtil'
 import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
@@ -15,20 +15,34 @@ export const Canvas: React.FC = ({ }) => {
 
     const set_pointer = useSetRecoilState(pointer_state);
     const set_selected_items = useSetRecoilState(selected_items_state);
+    const set_drawing_polyline = useRecoilCallback(({ set }) => (is_drawing: number, pt: Point) => {
+        set(item_state_accessor(is_drawing),
+            (prev) => {
+                return produce(prev, draft => {
+                    (draft.shape as Polyline).points = [...(draft.shape as Polyline).points, pt];
+                })
+            })
+    })
+
     const on_mouse_move = (e: React.MouseEvent) => {
         e.preventDefault();
         let handle: CB_HANDLE;
         let init_point: Point;
+        let is_drawing: number = EMTPY_ID;
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
                     handle = prev.selected_handle;
                     init_point = prev.init_point;
+                    is_drawing = prev.is_drawing;
                     return produce(prev, draft => {
                         draft.movement = { x: e.movementX, y: e.movementY };
                         draft.curr_point = { x: e.clientX, y: e.clientY };
                     })
                 })
+                if (is_drawing !== EMTPY_ID) {
+                    set_drawing_polyline(is_drawing, { x: e.clientX, y: e.clientY }); 
+                }
                 if (is_active) {
                     // @ts-ignore
                     switch (handle) {
@@ -94,6 +108,7 @@ export const Canvas: React.FC = ({ }) => {
                         draft.movement = { x: 0, y: 0 };
                         draft.is_active = false;
                         draft.selected_handle = CB_HANDLE.IDLE;
+                        draft.is_drawing = EMTPY_ID;
                     })
                 })
         }
