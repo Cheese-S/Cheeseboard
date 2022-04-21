@@ -73,6 +73,12 @@ export class Vec {
         };
     }
 
+    /**
+     * Get the median of two vectors
+     * @param v1 
+     * @param v2 
+     * @returns the median
+     */
     static med = (v1: Point, v2: Point): Point => {
         return Vec.mul_n(Vec.add(v1, v2), 0.5);
     }
@@ -170,6 +176,11 @@ export class Vec {
             x: trans_vec.x * Math.cos(r) - trans_vec.y * Math.sin(r) + pt.x,
             y: trans_vec.x * Math.sin(r) + trans_vec.y * Math.cos(r) + pt.y
         }
+    }
+
+    static sqdis_to = (v1: Point, v2: Point): number => {
+        const diff = Vec.sub(v1, v2);
+        return diff.x * diff.x + diff.y * diff.y; 
     }
 
 

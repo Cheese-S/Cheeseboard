@@ -2,7 +2,7 @@ import produce from "immer";
 import { customAlphabet } from "nanoid";
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CBTOOL, CB_HANDLE, EMTPY_ID, LEFT_MOUSE } from "../../constant";
+import { CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from "../../constant";
 import { item_state_accessor, pointer_state, selected_itemID_state, style_state, tool_state } from "../../state";
 import { Rect, Ellipse, Triangle, Text, Polyline } from "../../type"
 import { CanvasUtil } from "../../utils/CanvasUtil";
@@ -83,7 +83,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
             shape_component = <TextComponent _shape={shape as Text} _text={'placeholder'} item_css={item_style} style={{ pointerEvents: "all" }} />
             break;
         case CBTOOL.PEN:
-            if (pointer.is_drawing === EMTPY_ID) {
+            if (pointer.is_drawing === EMPTY_ID) {
                 shape_component = <PenComponent _shape={shape as Polyline} item_css={item_style} style={{ pointerEvents: "all" }} />
             }
             break;

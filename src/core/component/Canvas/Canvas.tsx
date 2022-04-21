@@ -2,15 +2,19 @@ import produce from 'immer'
 import * as React from 'react'
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
-import { CB_HANDLE, EMTPY_ID, LEFT_MOUSE } from '../../constant'
+import { CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from '../../constant'
 import { camera_state, itemID_state, item_state, item_state_accessor, pointer_state, selected_bound_state, selected_items_state } from '../../state'
 import { CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point, Polyline } from '../../type'
 import { CanvasUtil } from '../../utils/CanvasUtil'
+import { PenShapeUtil } from '../../utils/shapeUtil'
 import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
 import { ToolbarWrapper } from '../Toolbar'
 let is_active = false;
+
+const pen_util = CanvasUtil.get_shapeutil(CBTOOL.PEN) as PenShapeUtil; 
+
 export const Canvas: React.FC = ({ }) => {
 
     const set_pointer = useSetRecoilState(pointer_state);
@@ -24,11 +28,26 @@ export const Canvas: React.FC = ({ }) => {
             })
     })
 
+    const simplify_polyline = useRecoilCallback(({ set }) => (is_drawing: number) => {
+        const tolerance = 0.4;
+        set(item_state_accessor(is_drawing),
+            (prev) => {
+                return produce(prev, draft => {
+                    const prev_length = (draft.shape as Polyline).points.length;
+                    // (draft.shape as Polyline).points =pen_util.simplify(pen_util.smoothing((draft.shape as Polyline).points), tolerance, true); 
+                    (draft.shape as Polyline).points = pen_util.smoothing(pen_util.simplify(((draft.shape as Polyline).points), tolerance, true)); 
+                    const after_length = (draft.shape as Polyline).points.length;
+                    console.log('Prev simiplify: %d, After simplify: %d', prev_length, after_length);
+                })
+            }
+        )
+    })
+
     const on_mouse_move = (e: React.MouseEvent) => {
         e.preventDefault();
         let handle: CB_HANDLE;
         let init_point: Point;
-        let is_drawing: number = EMTPY_ID;
+        let is_drawing: number = EMPTY_ID;
         switch (e.button) {
             case LEFT_MOUSE:
                 set_pointer(prev => {
@@ -40,7 +59,7 @@ export const Canvas: React.FC = ({ }) => {
                         draft.curr_point = { x: e.clientX, y: e.clientY };
                     })
                 })
-                if (is_drawing !== EMTPY_ID) {
+                if (is_drawing !== EMPTY_ID) {
                     set_drawing_polyline(is_drawing, { x: e.clientX, y: e.clientY }); 
                 }
                 if (is_active) {
@@ -103,14 +122,19 @@ export const Canvas: React.FC = ({ }) => {
         is_active = false;
         switch (e.button) {
             case LEFT_MOUSE:
+                let is_drawing = EMPTY_ID; 
                 set_pointer(prev => {
+                    is_drawing = prev.is_drawing;
                     return produce(prev, draft => {
                         draft.movement = { x: 0, y: 0 };
                         draft.is_active = false;
                         draft.selected_handle = CB_HANDLE.IDLE;
-                        draft.is_drawing = EMTPY_ID;
+                        draft.is_drawing = EMPTY_ID;
                     })
                 })
+                if (is_drawing !== EMPTY_ID) {
+                    simplify_polyline(is_drawing); 
+                }
         }
     }
 

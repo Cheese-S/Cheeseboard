@@ -19,6 +19,32 @@ function pt_on_seg(lp1: Point, lp2: Point, p: Point): boolean {
 }
 
 /**
+ * Get the squared distance between a pt and a line segment
+ * @param lp1 Start of the line segement
+ * @param lp2 End of the line segement
+ * @param p 
+ * @returns The squared distance from p to the line segment
+ */
+export function sqdis_to_seg(lp1: Point, lp2: Point, p: Point): number {
+    const diff = Vec.sub(lp2, lp1); 
+    let close_pt: Point = lp1;
+    if (diff.x || diff.y) {
+        const t = ((p.x - lp1.x) * diff.x + (p.y - lp1.y) * diff.y) / (diff.x * diff.x + diff.y * diff.y);
+
+        if (t > 1) {
+            close_pt = lp2;
+        } else if (t > 0) {
+            close_pt = {
+                x: lp1.x + diff.x * t,
+                y: lp1.y + diff.y * t
+            }
+        }
+    }
+    const d = Vec.sub(p, close_pt);
+    return d.x * d.x + d.y * d.y;
+}
+
+/**
  * Check if line segment p1p2 intersects with line segment p3p4 
  * @param p1 Start of line1 
  * @param p2 End of line1
@@ -45,6 +71,8 @@ export function seg_seg_intersect(p1: Point, p2: Point, p3: Point, p4: Point): b
 
     return false;
 }
+
+
 
 /* -------------------------------------------------------------------------- */
 /*                                  POLYLINE                                  */
@@ -331,6 +359,20 @@ function get_triangle_edges(t: Triangle, pts?: Point[]): Point[][] {
 /* -------------------------------------------------------------------------- */
 /*                                    BOUND                                   */
 /* -------------------------------------------------------------------------- */
+
+export function rotate_bound(bd: Bound, r: number): Bound {
+    const top_left = {x: bd.min_x, y: bd.min_y};
+    const btm_right = {x: bd.max_x, y: bd.max_y};
+    const bd_center = Vec.med(top_left, btm_right); 
+    const r_top_left = Vec.rot_about(top_left, bd_center, r);
+    const r_btm_right = Vec.rot_about(btm_right, bd_center, r);
+    return {
+        min_x: r_top_left.x,
+        min_y: r_top_left.y,
+        max_x: r_btm_right.x,
+        max_y: r_btm_right.y
+    }
+}
 
 
 
