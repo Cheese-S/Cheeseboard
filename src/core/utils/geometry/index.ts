@@ -374,6 +374,13 @@ export function rotate_bound(bd: Bound, r: number): Bound {
     }
 }
 
+export function is_bound_equal(bd1: Bound, bd2: Bound): boolean {
+    return bd1.min_x === bd2.min_x &&
+        bd2.max_x === bd2.max_x &&
+        bd2.min_y === bd2.min_y &&
+        bd2.max_y === bd2.max_y 
+}
+
 
 
 /**

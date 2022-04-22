@@ -3,7 +3,7 @@ import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNE
 import { RectShapeUtil, EllipseShapeUtil, PenShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
-import { get_common_bound } from "../geometry";
+import { get_common_bound, is_bound_equal } from "../geometry";
 import { Vec } from "../vec";
 import TextShapeUtil from "../shapeUtil/TextShapeUtil";
 
@@ -130,6 +130,10 @@ export class CanvasUtil {
                     r: 0
                 }
         }
+    }
+
+    static is_bound_equal(bd1: Bound, bd2: Bound) {
+        return is_bound_equal(bd1, bd2); 
     }
 
     static match_bound_anchor(bd: Bound, to_be_matched_bd: Bound, r: number, handle: CB_CORNER_HANDLE | CB_EDGE_HANDLE): Bound {

@@ -1,7 +1,7 @@
 import produce from "immer";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { CB_HANDLE } from "../../constant";
+import { CB_HANDLE, empty_bd } from "../../constant";
 import { pointer_state, selected_bound_state } from "../../state";
 import { CB_CORNER_HANDLE, CB_EDGE_HANDLE } from "../../type";
 import { CanvasUtil } from "../../utils/CanvasUtil";
@@ -32,6 +32,8 @@ export const SelectedWrapper: React.FC = ({ }) => {
         })
 
     }
+    
+    if (CanvasUtil.is_bound_equal(bd, empty_bd)) return null;
 
     return (
         <Container style={container_css}>
