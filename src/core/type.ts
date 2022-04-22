@@ -1,7 +1,7 @@
 import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, CB_HANDLE } from "./constant"
 import { CSSProperties } from "react"
 
-export type Shape = Rect | Ellipse | Triangle | Polyline | Text
+export type Shape = Rect | Ellipse | Triangle | Polyline | Text | Image
 
 export interface Point {
     x: number,
@@ -45,6 +45,14 @@ export interface Triangle {
 
 export interface Polyline {
     points: Point[],
+    r: number
+}
+
+export interface Image {
+    src: string,
+    center: Point,
+    mx: number,
+    my: number,
     r: number
 }
 

@@ -10,6 +10,7 @@ import { PenShapeUtil } from '../../utils/shapeUtil'
 import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
+import { ImageComponent } from '../ShapeComponent/ImageComponent'
 import { ToolbarWrapper } from '../Toolbar'
 let is_active = false;
 

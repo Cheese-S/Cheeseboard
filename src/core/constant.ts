@@ -22,6 +22,7 @@ export enum CBTOOL {
     TRIANGLE,
     PEN,
     TEXT,
+    IMAGE, 
 
     SELECT,
     ERASER

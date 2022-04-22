@@ -87,7 +87,7 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
                     }
                     const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape, true);
                     const qt_id = qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
-                    console.log(bd);
+                    // console.log(bd);
                     return {
                         ...new_CBItem,
                         qt_id: qt_id

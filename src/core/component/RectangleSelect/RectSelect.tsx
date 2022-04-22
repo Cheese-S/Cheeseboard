@@ -24,6 +24,7 @@ export const RectSelect: React.FC = () => {
         }))
         console.log(candidate_items);
         const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
+        console.log(`intersected IDs: ${intersectedIDs}`);
         set(selected_itemID_state, intersectedIDs);
     }, [])
 

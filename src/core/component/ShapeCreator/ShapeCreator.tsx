@@ -1,5 +1,5 @@
 import produce from "immer";
-import { customAlphabet } from "nanoid";
+
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from "../../constant";
@@ -23,8 +23,7 @@ interface ShapeCreatorProps {
 export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreatorProps) => {
     const style = useRecoilValue(style_state);
     const [pointer, set_pointer] = useRecoilState(pointer_state);
-    const nanoid = customAlphabet('1234567890', 9);
-    const new_id = parseInt(nanoid());
+    const new_id = CanvasUtil.uuid();
     const set_shape = useSetRecoilState(item_state_accessor(new_id));
     const set_selected_item = useSetRecoilState(selected_itemID_state);
     const set_tool = useSetRecoilState(tool_state);

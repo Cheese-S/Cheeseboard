@@ -2,12 +2,13 @@ import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { CBTOOL } from "../../constant";
 import { item_state, item_css_state, selected_itemID_state } from "../../state";
-import { Ellipse, Polyline, Rect, Text, Triangle, } from "../../type";
+import { Ellipse, Image, Polyline, Rect, Text, Triangle, } from "../../type";
 import {
     RectComponent,
     EllipseComponent,
     TriangleComponent
 } from "../ShapeComponent";
+import { ImageComponent } from "../ShapeComponent/ImageComponent";
 import { PenComponent } from "../ShapeComponent/PenComponent";
 import { TextComponent } from "../ShapeComponent/TextComponent";
 
@@ -18,7 +19,6 @@ interface CanvasItemProps {
     id: number
 };
 
-let timer: NodeJS.Timeout;
 
 export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasItemProps) => {
     const [CBItem, setCBItem] = useRecoilState(item_state(id));
@@ -43,6 +43,8 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasI
             return <TextComponent _id={id} _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.PEN:
             return <PenComponent _shape={CBItem.shape as Polyline} item_css={item_style} onMouseDown={on_select} />
+        case CBTOOL.IMAGE:
+            return <ImageComponent _id={id} _shape={CBItem.shape as Image} item_css={item_style} onMouseDown={on_select} />
     }
     return <button> aaa </button>
 

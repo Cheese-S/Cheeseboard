@@ -1,5 +1,5 @@
 import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
-import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text } from "../../type";
+import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text, Image } from "../../type";
 import { RectShapeUtil, EllipseShapeUtil, PenShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
 import React, { CSSProperties } from "react";
@@ -7,11 +7,17 @@ import { get_common_bound } from "../geometry";
 import { Vec } from "../vec";
 import TextShapeUtil from "../shapeUtil/TextShapeUtil";
 
+import { customAlphabet } from "nanoid";
+import ImageShapeUtil from "../shapeUtil/ImageShapeUtil";
+const nanoid = customAlphabet('1234567890', 9);
+
 const font_size = {
     [CBSTROKE_WIDTH.SMALL]: 12,
     [CBSTROKE_WIDTH.MEDIUM]: 24,
     [CBSTROKE_WIDTH.LARGE]: 36,
 }
+
+
 
 export class CanvasUtil {
 
@@ -20,7 +26,8 @@ export class CanvasUtil {
         [CBTOOL.ELLIPSE, new EllipseShapeUtil()],
         [CBTOOL.PEN, new PenShapeUtil()],
         [CBTOOL.TRIANGLE, new TriangleShapeUtil()],
-        [CBTOOL.TEXT, new TextShapeUtil()]
+        [CBTOOL.TEXT, new TextShapeUtil()],
+        [CBTOOL.IMAGE, new ImageShapeUtil()]
     ])
 
     /**
@@ -250,6 +257,8 @@ export class CanvasUtil {
                     return this.ShapeUtilMap.get(CBTOOL.PEN)!.get_bound(item.shape, rotated);
                 case CBTOOL.TEXT:
                     return this.ShapeUtilMap.get(CBTOOL.TEXT)!.get_bound(item.shape, rotated);
+                case CBTOOL.IMAGE:
+                    return this.ShapeUtilMap.get(CBTOOL.IMAGE)!.get_bound(item.shape, rotated);
                 default:
                     return empty_bd;
             }
@@ -260,20 +269,7 @@ export class CanvasUtil {
 
     static get_intersected_items(bd: Bound, items: CBItem[]): number[] {
         return items.filter((item) => {
-            switch (item.type) {
-                case CBTOOL.RECTANGLE:
-                    return this.ShapeUtilMap.get(CBTOOL.RECTANGLE)!.intersect_bound(bd, item.shape);
-                case CBTOOL.TRIANGLE:
-                    return this.ShapeUtilMap.get(CBTOOL.TRIANGLE)!.intersect_bound(bd, item.shape);
-                case CBTOOL.ELLIPSE:
-                    return this.ShapeUtilMap.get(CBTOOL.ELLIPSE)!.intersect_bound(bd, item.shape);
-                case CBTOOL.PEN:
-                    return this.ShapeUtilMap.get(CBTOOL.PEN)!.intersect_bound(bd, item.shape);
-                case CBTOOL.TEXT:
-                    return this.ShapeUtilMap.get(CBTOOL.TEXT)!.intersect_bound(bd, item.shape);
-                default:
-                    return false;
-            }
+            return CanvasUtil.get_shapeutil(item.type)!.intersect_bound(bd, item.shape);
         }).map((item) => item.id);
     }
 
@@ -353,7 +349,8 @@ export class CanvasUtil {
         const prev_r = Vec.get_ang(bd_center, prev_point);
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
-            switch(item.type) {
+            switch (item.type) {
+                case CBTOOL.IMAGE:
                 case CBTOOL.ELLIPSE:
                 case CBTOOL.RECTANGLE:
                 case CBTOOL.TEXT:
@@ -362,9 +359,9 @@ export class CanvasUtil {
                 case CBTOOL.TRIANGLE:
                 case CBTOOL.PEN:
                     //@ts-ignore
-                    shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape , items.length === 1); 
+                    shapeutil?.rot_shape_about(bd_center, curr_r - prev_r, item.shape, items.length === 1);
                     break;
-                
+
             }
         })
     }
@@ -376,7 +373,78 @@ export class CanvasUtil {
         })
     }
 
+    static get_aspect_ratio_param(image: Image, movement: Point, handle: CB_CORNER_HANDLE | CB_EDGE_HANDLE): {
+        movement: Point,
+        handle: CB_CORNER_HANDLE | CB_EDGE_HANDLE
+    } {
+        const xy_ratio = image.mx / image.my;
+        const abs_deltay = Math.max(Math.abs(movement.x), Math.abs(movement.y));
+        const abs_deltax = xy_ratio * abs_deltay;
+        let res = {
+            movement: {
+                x: movement.x >= 0 ? abs_deltax : -abs_deltax,
+                y: movement.y >= 0 ? abs_deltay : -abs_deltay
+            },
+            handle: handle
+        };
+        if (handle < 4) {
+            res.handle = handle;
+        } else if (handle < 6) {
+            // T_EDGE & L_EDGE
+            res.handle = CB_HANDLE.TL_CORNER;
+        } else {
+            // B_EDGE & R_EDGE
+            res.handle = CB_HANDLE.BR_CORNER;
+        }
+
+        switch (handle) {
+            case CB_HANDLE.B_EDGE:
+            case CB_HANDLE.T_EDGE:
+            case CB_HANDLE.BR_CORNER:
+            case CB_HANDLE.TL_CORNER:
+                res.movement.y = movement.y >= 0 ? abs_deltay : -abs_deltay;
+                break;
+            case CB_HANDLE.L_EDGE:
+            case CB_HANDLE.R_EDGE:
+                res.movement.y = movement.x >= 0 ? abs_deltay : -abs_deltay;
+                break;
+            case CB_HANDLE.BL_CORNER:
+            case CB_HANDLE.TR_CORNER:
+                break;
+        }
+        return res;
+    }
+
+    static get_resized_item_bd(item_bd: Bound, common_bd: Bound, resized_common_bd: Bound): Bound {
+        const length_ratio = (item_bd.max_x - item_bd.min_x) / (common_bd.max_x - common_bd.min_x);
+        const height_ratio = (item_bd.max_y - item_bd.min_y) / (common_bd.max_y - common_bd.min_y);
+        const offset_x_ratio = (item_bd.min_x - common_bd.min_x) / (common_bd.max_x - common_bd.min_x);
+        const offset_y_ratio = (item_bd.min_y - common_bd.min_y) / (common_bd.max_y - common_bd.min_y);
+        const resized_common_bound_length = resized_common_bd.max_x - resized_common_bd.min_x;
+        const resized_common_bound_height = resized_common_bd.max_y - resized_common_bd.min_y;
+
+        const min_x = resized_common_bd.min_x + offset_x_ratio * resized_common_bound_length;
+        const max_x = min_x + length_ratio * resized_common_bound_length;
+        const min_y = resized_common_bd.min_y + offset_y_ratio * resized_common_bound_height;
+        const max_y = min_y + height_ratio * resized_common_bound_height;
+
+        return {
+            min_x: min_x,
+            max_x: max_x,
+            min_y: min_y,
+            max_y: max_y
+        }
+    }
+
     static resize_items(bd: Bound, items: CBItem[], movement: Point, handle: CB_EDGE_HANDLE | CB_CORNER_HANDLE): void {
+        const image_found = items.find((e) => e.type === CBTOOL.IMAGE);
+        if (image_found) {
+            console.log("pre locked", movement, handle);
+            const res = CanvasUtil.get_aspect_ratio_param(image_found.shape as Image, movement, handle);
+            movement = res.movement;
+            handle = res.handle;
+            console.log("aspect ratio locked: ", res);
+        }
         const is_single_item = items.length === 1;
         const r = is_single_item ? items[0].shape.r : 0;
         const resized_common_bound = CanvasUtil.resize_bound(bd, movement, handle, true, r);
@@ -384,26 +452,7 @@ export class CanvasUtil {
         items.forEach((item) => {
             const shapeutil = CanvasUtil.get_shapeutil(item.type);
             const item_bd = shapeutil!.get_bound(item.shape);
-            const length_ratio = (item_bd.max_x - item_bd.min_x) / (bd.max_x - bd.min_x);
-            const height_ratio = (item_bd.max_y - item_bd.min_y) / (bd.max_y - bd.min_y);
-            const offset_x_ratio = (item_bd.min_x - bd.min_x) / (bd.max_x - bd.min_x);
-            const offset_y_ratio = (item_bd.min_y - bd.min_y) / (bd.max_y - bd.min_y);
-            const resized_common_bound_length = resized_common_bound.max_x - resized_common_bound.min_x;
-            const resized_common_bound_height = resized_common_bound.max_y - resized_common_bound.min_y;
-
-
-
-            const min_x = resized_common_bound.min_x + offset_x_ratio * resized_common_bound_length;
-            const max_x = min_x + length_ratio * resized_common_bound_length;
-            const min_y = resized_common_bound.min_y + offset_y_ratio * resized_common_bound_height;
-            const max_y = min_y + height_ratio * resized_common_bound_height;
-
-            let resized_item_bd = {
-                min_x: min_x,
-                max_x: max_x,
-                min_y: min_y,
-                max_y: max_y
-            }
+            let resized_item_bd = CanvasUtil.get_resized_item_bd(item_bd, bd, resized_common_bound);
 
             if (is_single_item) {
                 resized_item_bd = CanvasUtil.match_bound_anchor(bd, resized_item_bd, r, handle);
@@ -415,8 +464,9 @@ export class CanvasUtil {
                 case CBTOOL.TRIANGLE:
                     item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd), r: item.shape.r };
                     break;
+                case CBTOOL.IMAGE:
                 case CBTOOL.PEN:
-                    item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd, item.shape), r: item.shape.r}; 
+                    item.shape = { ...shapeutil!.get_shape_from_bound(resized_item_bd, item.shape), r: item.shape.r };
                     break;
                 case CBTOOL.TEXT:
                     let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
@@ -433,6 +483,10 @@ export class CanvasUtil {
             }
         })
 
+    }
+
+    static uuid(): number {
+        return parseInt(nanoid());
     }
 
 
