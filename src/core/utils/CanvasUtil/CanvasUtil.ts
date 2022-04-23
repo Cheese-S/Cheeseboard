@@ -476,7 +476,10 @@ export class CanvasUtil {
                     let x_scale = (resized_item_bd.max_x - resized_item_bd.min_x) / (item_bd.max_x - item_bd.min_x);
                     let y_scale = (resized_item_bd.max_y - resized_item_bd.min_y) / (item_bd.max_y - item_bd.min_y);
                     let new_scale: number;
-                    if (x_scale >= 1 && y_scale >= 1) {
+                    if (y_scale === 1) {
+                        new_scale = (item.shape as Text).scale;
+                    }
+                    else if (x_scale >= 1 && y_scale >= 1) {
                         new_scale = (item.shape as Text).scale * Math.max(x_scale, y_scale);
                     } else {
                         new_scale = (item.shape as Text).scale * Math.min(x_scale, y_scale);

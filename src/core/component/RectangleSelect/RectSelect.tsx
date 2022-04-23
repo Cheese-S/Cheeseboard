@@ -14,7 +14,6 @@ export const RectSelect: React.FC = () => {
     const container_css = CanvasUtil.get_container_css(bd);
     const test = useRecoilCallback(({ snapshot, set }) => async (select_bd: Bound) => {
         count++; 
-        console.log("rect select", count);
         // const tool = await snapshot.getPromise(tool_state);
         // const camera = await snapshot.getPromise(camera_state);
         const qt = await snapshot.getPromise(qt_state);
@@ -22,9 +21,7 @@ export const RectSelect: React.FC = () => {
         const candidate_items = await Promise.all(candidateIDs.map(async (id) => {
             return { ...await snapshot.getPromise(item_state_accessor(id)), id: id };
         }))
-        console.log(candidate_items);
         const intersectedIDs = CanvasUtil.get_intersected_items(select_bd, candidate_items);
-        console.log(`intersected IDs: ${intersectedIDs}`);
         set(selected_itemID_state, intersectedIDs);
     }, [])
 

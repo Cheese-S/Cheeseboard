@@ -89,6 +89,7 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({ children, ...r
                 await navigator.clipboard.writeText(JSON.stringify({ type: 'CB/Shapes', shapes: selected_items }));
 
             } catch (e) {
+                //@ts-ignore
                 console.log(e.message);
             }
         }
@@ -112,6 +113,7 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({ children, ...r
                 }
 
             } catch (e) {
+                //@ts-ignore
                 console.log(e.message);
             }
         }

@@ -5,6 +5,7 @@ import { Container } from "../Container/Container";
 import styles from '../../../styles.module.css'
 import { useIndicator } from "../../hook/useIndicator";
 import { ComponentProps } from './internal'
+import { HTMLContainer } from "../Container/HTMLContainer";
 
 interface RectComponentProps extends ComponentProps<Rect> {
 }

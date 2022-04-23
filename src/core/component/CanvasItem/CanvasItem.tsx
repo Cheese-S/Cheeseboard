@@ -40,7 +40,7 @@ export const CanvasItem: React.FC<CanvasItemProps> = React.memo(({ id }: CanvasI
         case CBTOOL.TRIANGLE:
             return <TriangleComponent _shape={CBItem.shape as Triangle} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.TEXT:
-            return <TextComponent _id={id} _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} onMouseDown={on_select} />
+            return <TextComponent _id={id} _shape={CBItem.shape as Text} _text={CBItem.text} item_css={item_style} set_selectID={set_selectedIDs} />
         case CBTOOL.PEN:
             return <PenComponent _shape={CBItem.shape as Polyline} item_css={item_style} onMouseDown={on_select} />
         case CBTOOL.IMAGE:
