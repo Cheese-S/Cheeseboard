@@ -120,9 +120,12 @@ export const Canvas: React.FC = ({ }) => {
     }
     const on_mouse_up = (e: React.MouseEvent) => {
         e.preventDefault();
+        console.log(e.target);
+        console.log(e.currentTarget);
         is_active = false;
         switch (e.button) {
             case LEFT_MOUSE:
+                console.log("You called?");
                 let is_drawing = EMPTY_ID; 
                 set_pointer(prev => {
                     is_drawing = prev.is_drawing;

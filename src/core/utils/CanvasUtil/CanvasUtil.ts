@@ -1,4 +1,4 @@
-import { CBTOOL, CB_HANDLE, empty_bd, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
+import { CBTOOL, CB_HANDLE, EMPTY_BD, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
 import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text, Image } from "../../type";
 import { RectShapeUtil, EllipseShapeUtil, PenShapeUtil, ShapeUtil } from "../shapeUtil";
 import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
@@ -264,7 +264,7 @@ export class CanvasUtil {
                 case CBTOOL.IMAGE:
                     return this.ShapeUtilMap.get(CBTOOL.IMAGE)!.get_bound(item.shape, rotated);
                 default:
-                    return empty_bd;
+                    return EMPTY_BD;
             }
         })
         return bds.reduce((prev, curr) => get_common_bound(prev, curr));

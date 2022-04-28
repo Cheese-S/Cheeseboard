@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, empty_bd, CB_HANDLE, EMPTY_ID } from "../constant";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID } from "../constant";
 import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
@@ -155,13 +155,13 @@ export const select_state = selector<Bound>({
         const tool = get(tool_state);
 
         if (tool !== CBTOOL.SELECT) {
-            return empty_bd;
+            return EMPTY_BD;
         }
 
         const pointer = get(pointer_state);
 
         if (!pointer.is_active || pointer.selected_handle !== CB_HANDLE.IDLE) {
-            return empty_bd;
+            return EMPTY_BD;
         }
 
         let min_x, min_y, max_x, max_y;
@@ -236,7 +236,7 @@ export const selected_bound_state = selector<Bound & { r: number }>({
         const selected_items = get(selected_items_state);
         const single_selected = selected_items.length === 1; 
         const r = single_selected ? selected_items[0].shape.r : 0;
-        if (!selected_items.length) { return { ...empty_bd, r: 0 } };
+        if (!selected_items.length) { return { ...EMPTY_BD, r: 0 } };
         return { ...CanvasUtil.get_items_bound(!single_selected, ...selected_items), r: r };
     }
 })

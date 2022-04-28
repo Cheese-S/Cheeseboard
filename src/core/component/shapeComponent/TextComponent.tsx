@@ -33,8 +33,6 @@ export const TextComponent: React.FC<TextComponentProps> = ({ _id, _shape, _text
 
     const scaled_font_size = (component_css.fontSize as number) * _shape.scale;
 
-
-
     const on_click = (e: React.MouseEvent) => {
         if (e.detail === 1) {
             timer = setTimeout(() => {

@@ -51,7 +51,7 @@ export const MIN_SIZE = 20;
 
 export const EMPTY_ID = -1; 
 
-export const empty_bd: Bound = {
+export const EMPTY_BD: Bound = {
     min_x: 0,
     min_y: 0,
     max_x: 0,

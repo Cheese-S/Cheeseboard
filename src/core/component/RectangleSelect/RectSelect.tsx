@@ -5,7 +5,7 @@ import { Container } from "../Container/Container";
 import { SVGContainer } from "../Container/SVGContainer";
 import styles from '../../../styles.module.css'
 import { CanvasUtil } from "../../utils/CanvasUtil";
-import { CBTOOL, empty_bd } from "../../constant";
+import { CBTOOL, EMPTY_BD } from "../../constant";
 import { Bound } from "../../type";
 let count = 0;
 
@@ -26,7 +26,7 @@ export const RectSelect: React.FC = () => {
     }, [])
 
     useLayoutEffect(() => {
-        if (bd == empty_bd) {
+        if (bd == EMPTY_BD) {
             return;
         }
         test(bd);
