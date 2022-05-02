@@ -43,6 +43,15 @@ export enum CBSTROKE_WIDTH {
     LARGE = '--cbStrokeWidthL'
 }
 
+export enum CBACTION_STATE {
+    TRANSLATING = 'Translating',
+    ROTATING = 'Rotating',
+    RESIZING = 'Resizing',
+    CREATING = 'Creating',
+    DRAWING = 'Drawing',
+    IDLE = 'Idle'
+}
+
 export const LEFT_MOUSE = 0;
 export const MID_MOUSE = 1;
 export const RIGHT_MOUSE = 2;

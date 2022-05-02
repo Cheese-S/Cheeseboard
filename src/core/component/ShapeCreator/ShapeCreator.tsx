@@ -2,7 +2,7 @@ import produce from "immer";
 
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from "../../constant";
+import { CBACTION_STATE, CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from "../../constant";
 import { item_state_accessor, pointer_state, selected_itemID_state, style_state, tool_state } from "../../state";
 import { Rect, Ellipse, Triangle, Text, Polyline } from "../../type"
 import { CanvasUtil } from "../../utils/CanvasUtil";
@@ -51,6 +51,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
                     set_pointer(prev => {
                         return produce(prev, draft => {
                             draft.is_drawing = new_id;
+                            draft.action = CBACTION_STATE.DRAWING;
                         })
                     })
                 } else {
@@ -59,6 +60,7 @@ export const ShapeCreator: React.FC<ShapeCreatorProps> = ({ tool }: ShapeCreator
                             draft.is_active = true;
                             draft.selected_handle = CB_HANDLE.BR_CORNER;
                             draft.init_point = { x: e.clientX, y: e.clientY };
+                            draft.action = CBACTION_STATE.CREATING; 
                         })
                     })
                     set_selected_item([new_id])

@@ -6,7 +6,6 @@ import React, { CSSProperties } from "react";
 import { get_common_bound, is_bound_equal } from "../geometry";
 import { Vec } from "../vec";
 import TextShapeUtil from "../shapeUtil/TextShapeUtil";
-
 import { customAlphabet } from "nanoid";
 import ImageShapeUtil from "../shapeUtil/ImageShapeUtil";
 const nanoid = customAlphabet('1234567890', 9);

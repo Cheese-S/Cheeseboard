@@ -387,7 +387,7 @@ export class Quadtree {
             this.qnodes.insert();
             this.qnodes.set(node, qnode_idx_fc, fc); 
             
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 4; ++i) {
                 this.qnodes.set(fc+i, qnode_idx_fc, -1); 
                 this.qnodes.set(fc+i, qnode_idx_num_children, 0);
             }

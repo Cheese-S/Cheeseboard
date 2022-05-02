@@ -130,7 +130,6 @@ export function get_rotated_polyseg(poly: Point[], r: number): Point[] {
         return poly.map((pt) => pt);
     }
     const center = get_polyseg_center(poly);
-    console.log("center", center);
     return poly.map((pt) => Vec.rot_about(pt, center, r)); 
 }
 
@@ -498,8 +497,6 @@ export function get_polyseg_bound(line: Polyline, rotated: boolean = false): Bou
     let t: number, l:number, b: number, r: number;
     if (rotated) {
         pts = get_rotated_polyseg(line.points, line.r); 
-        console.log(pts); 
-        console.log(line.r); 
     } else {
         pts = line.points;
     }

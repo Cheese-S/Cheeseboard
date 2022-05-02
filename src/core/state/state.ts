@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
-import { atomFamily, atom, selectorFamily, selector, DefaultValue } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID } from "../constant";
-import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS } from "../type";
+import { atomFamily, atom, selectorFamily, selector, DefaultValue, Snapshot } from "recoil";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID, CBACTION_STATE } from "../constant";
+import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS, CBAction } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
 
@@ -76,6 +76,7 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
         if (new_CBItem instanceof DefaultValue) {
             const item = get(item_state(itemID));
             reset(item_state(itemID));
+            set(itemID_state, prev => prev.filter((e) => e !== itemID)); 
             qt.remove(item.qt_id);
         } else {
             set(item_state(itemID),
@@ -83,7 +84,6 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
 
                     if (prev.qt_id !== -1) {
                         qt.remove(prev.qt_id);
-
                     }
                     const bd = CanvasUtil.get_shapeutil(new_CBItem.type)!.get_bound(new_CBItem.shape, true);
                     const qt_id = qt.insert(itemID, bd.min_x, bd.min_y, bd.max_x, bd.max_y);
@@ -227,6 +227,7 @@ export const pointer_state = atom<CBPointer>({
         is_active: false,
         is_drawing: EMPTY_ID, 
         selected_handle: CB_HANDLE.IDLE,
+        action: CBACTION_STATE.IDLE
     }
 })
 
@@ -241,5 +242,25 @@ export const selected_bound_state = selector<Bound & { r: number }>({
     }
 })
 
+/* -------------------------------------------------------------------------- */
+/*                                   ACTION                                   */
+/* -------------------------------------------------------------------------- */
+
+export const action_stack_state = atom<{stack: CBAction[], pointer: number}>({
+    key: "action stack",
+    default: {
+        stack: [],
+        pointer: -1
+    }
+})
+
+export const snapshot_stack = atom<{stack: Snapshot[], pointer: number }>({
+    key: "snapshot stack",
+    default: {
+        stack: [],
+        pointer: -1
+    },
+    dangerouslyAllowMutability: true
+})
 
 
