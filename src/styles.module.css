@@ -249,6 +249,7 @@ html *{
   white-space: pre-wrap;
   overflow-wrap: break-word;
   text-align: center;
+  background: transparent;
 }
 
 .cbImage {

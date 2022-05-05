@@ -1,7 +1,7 @@
 import produce from "immer"
 import { current } from "immer"
 import { useRecoilCallback } from "recoil"
-import { CBACTION_STATE } from "../constant"
+import { CBACTION_TYPE } from "../constant"
 import { action_stack_state, itemID_state, item_state_accessor, selected_itemID_state, selected_items_state } from "../state"
 import { CBAction, CBItem } from "../type"
 
@@ -27,7 +27,7 @@ export function useActionStack() {
         set(item_state_accessor(id), item);
     })
 
-    const redo = useRecoilCallback(({ snapshot, set }) => async () => {
+    const redo = useRecoilCallback(({ snapshot, reset, set }) => async () => {
         const action_stack = await snapshot.getPromise(action_stack_state);
         const action = action_stack.stack[action_stack.pointer + 1];
         if (!action) return;
@@ -38,14 +38,20 @@ export function useActionStack() {
             })
         })
         switch (action.type) {
-            case CBACTION_STATE.CREATING:
+            case CBACTION_TYPE.CREATING:
                 action.targets.forEach((item) => {
                     set_item_state(item.id, item);
                 })
                 break;
-            case CBACTION_STATE.RESIZING:
-            case CBACTION_STATE.ROTATING:
-            case CBACTION_STATE.TRANSLATING:
+            case CBACTION_TYPE.DELETING:
+                action.targets.forEach((item) => {
+                    reset_item_state(item.id);
+                })
+                reset(selected_itemID_state);
+                break;
+            case CBACTION_TYPE.RESIZING:
+            case CBACTION_TYPE.ROTATING:
+            case CBACTION_TYPE.TRANSLATING:
                 action.targets.forEach((item) => {
                     set(item_state_accessor(item.id), (prev) => {
                         return produce(prev, draft => {
@@ -65,17 +71,22 @@ export function useActionStack() {
                 --draft.pointer;
             })
         })
-        
+
         switch (action.type) {
-            case CBACTION_STATE.CREATING:
+            case CBACTION_TYPE.CREATING:
                 action.targets.forEach((item) => {
                     reset_item_state(item.id);
                 })
                 reset(selected_itemID_state);
                 break;
-            case CBACTION_STATE.RESIZING:
-            case CBACTION_STATE.ROTATING:
-            case CBACTION_STATE.TRANSLATING:
+            case CBACTION_TYPE.DELETING:
+                action.targets.forEach((item) => {
+                    set_item_state(item.id, item);
+                })
+                break;
+            case CBACTION_TYPE.RESIZING:
+            case CBACTION_TYPE.ROTATING:
+            case CBACTION_TYPE.TRANSLATING:
                 action.before?.forEach((item) => {
                     set(item_state_accessor(item.id), (prev) => {
                         return produce(prev, draft => {

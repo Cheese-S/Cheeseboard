@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 import { atomFamily, atom, selectorFamily, selector, DefaultValue, Snapshot } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID, CBACTION_STATE } from "../constant";
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID, CBACTION_TYPE } from "../constant";
 import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS, CBAction } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
@@ -227,7 +227,7 @@ export const pointer_state = atom<CBPointer>({
         is_active: false,
         is_drawing: EMPTY_ID, 
         selected_handle: CB_HANDLE.IDLE,
-        action: CBACTION_STATE.IDLE
+        action: CBACTION_TYPE.IDLE
     }
 })
 

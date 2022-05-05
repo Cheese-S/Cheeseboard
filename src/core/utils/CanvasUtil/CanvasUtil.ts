@@ -105,7 +105,7 @@ export class CanvasUtil {
             case CBTOOL.ELLIPSE:
                 return {
                     center: { x: 0, y: 0 },
-                    rx: 100,
+                    rx: 50,
                     ry: 50,
                     r: 0
                 }

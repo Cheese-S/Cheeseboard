@@ -43,12 +43,13 @@ export enum CBSTROKE_WIDTH {
     LARGE = '--cbStrokeWidthL'
 }
 
-export enum CBACTION_STATE {
+export enum CBACTION_TYPE {
     TRANSLATING = 'Translating',
     ROTATING = 'Rotating',
     RESIZING = 'Resizing',
     CREATING = 'Creating',
     DRAWING = 'Drawing',
+    DELETING = 'Deleting',
     IDLE = 'Idle'
 }
 

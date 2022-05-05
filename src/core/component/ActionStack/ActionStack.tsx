@@ -8,10 +8,11 @@ export const ActionStack: React.FC = ({ }) => {
 
     useEffect(() => {
         const handleUndoRedo = (e: KeyboardEvent) => {
-            if (e.ctrlKey) {
+            if (e.ctrlKey || e.metaKey) {
                 if (e.key === 'z') {
                     undo();
                 } else if (e.key === 'y') {
+                    e.preventDefault();
                     redo();
                 }
             }

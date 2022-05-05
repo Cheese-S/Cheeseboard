@@ -1,4 +1,4 @@
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, CB_HANDLE, CBACTION_STATE } from "./constant"
+import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, CB_HANDLE, CBACTION_TYPE } from "./constant"
 import { CSSProperties } from "react"
 
 export type Shape = Rect | Ellipse | Triangle | Polyline | Text | Image
@@ -88,11 +88,11 @@ export interface CBPointer {
     selected_handle: CB_HANDLE,
     is_active: boolean,
     is_drawing: number,
-    action: CBACTION_STATE
+    action: CBACTION_TYPE
 }
 
 export interface CBAction {
-    type: CBACTION_STATE,
+    type: CBACTION_TYPE,
     targets: CBItem[],
     before?: CBItem[]
 }

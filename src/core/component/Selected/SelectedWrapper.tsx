@@ -1,7 +1,7 @@
 import produce from "immer";
 import React from "react";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { CBACTION_STATE, CB_HANDLE, EMPTY_BD } from "../../constant";
+import { CBACTION_TYPE, CB_HANDLE, EMPTY_BD } from "../../constant";
 import { pointer_state, selected_bound_state } from "../../state";
 import { CB_CORNER_HANDLE, CB_EDGE_HANDLE } from "../../type";
 import { CanvasUtil } from "../../utils/CanvasUtil";
@@ -22,7 +22,7 @@ export const SelectedWrapper: React.FC = ({ }) => {
     const height = bd.max_y - bd.min_y;
     const container_css = CanvasUtil.get_container_css(bd, bd.r);
     const set_pointer_state = useSetRecoilState(pointer_state);
-    const on_select_handle = (handle: CB_HANDLE, action: CBACTION_STATE) => (e: React.MouseEvent) => {
+    const on_select_handle = (handle: CB_HANDLE, action: CBACTION_TYPE) => (e: React.MouseEvent) => {
         e.preventDefault();
         set_pointer_state((prev) => {
             return produce(prev, draft => {
@@ -40,13 +40,13 @@ export const SelectedWrapper: React.FC = ({ }) => {
         <Container style={container_css}>
             <SVGContainer pointerEvents={'none'}>
                 {edge_handles.map((handle) => {
-                    return <EdgeHandle width={width} height={height} handle={handle} on_select_handle={on_select_handle(handle, CBACTION_STATE.RESIZING)}/>
+                    return <EdgeHandle width={width} height={height} handle={handle} on_select_handle={on_select_handle(handle, CBACTION_TYPE.RESIZING)}/>
                 })}
                 {corner_handles.map((handle) => {
-                    return <CornerHandle width={width} height={height} handle={handle}  on_select_handle={on_select_handle(handle, CBACTION_STATE.RESIZING)}/>
+                    return <CornerHandle width={width} height={height} handle={handle}  on_select_handle={on_select_handle(handle, CBACTION_TYPE.RESIZING)}/>
                 })}
-                <RotateHandle width={width} height={height}  on_select_handle={on_select_handle(CB_HANDLE.ROTATION, CBACTION_STATE.ROTATING)}/>
-                <CenterHandle width={width} height={height}  on_select_handle={on_select_handle(CB_HANDLE.CENTER, CBACTION_STATE.TRANSLATING)}/>
+                <RotateHandle width={width} height={height}  on_select_handle={on_select_handle(CB_HANDLE.ROTATION, CBACTION_TYPE.ROTATING)}/>
+                <CenterHandle width={width} height={height}  on_select_handle={on_select_handle(CB_HANDLE.CENTER, CBACTION_TYPE.TRANSLATING)}/>
             </SVGContainer>
         </Container>
     )

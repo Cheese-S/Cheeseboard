@@ -2,7 +2,7 @@ import produce from 'immer'
 import * as React from 'react'
 import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
-import { CBACTION_STATE, CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from '../../constant'
+import { CBACTION_TYPE, CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from '../../constant'
 import { useActionStack } from '../../hook/useActionStack'
 import { camera_state, itemID_state, item_state, item_state_accessor, pointer_state, selected_bound_state, selected_items_state } from '../../state'
 import { CBItem, CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point, Polyline } from '../../type'
@@ -14,6 +14,7 @@ import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
 import { ImageComponent } from '../ShapeComponent/ImageComponent'
+import { ShortCutHandler } from '../ShortCutHandler'
 import { ToolbarWrapper } from '../Toolbar'
 let is_active = false;
 let before_action: CBItem[] | null = null;
@@ -24,29 +25,29 @@ const pen_util = CanvasUtil.get_shapeutil(CBTOOL.PEN) as PenShapeUtil;
 export const Canvas: React.FC = ({ }) => {
     const { push_action } = useActionStack();
 
-    const add_new_action = useRecoilCallback(({ snapshot }) => async (type: CBACTION_STATE, drawingID?: number) => {
+    const add_new_action = useRecoilCallback(({ snapshot }) => async (type: CBACTION_TYPE, drawingID?: number) => {
         switch (type) {
-            case CBACTION_STATE.CREATING: {
+            case CBACTION_TYPE.CREATING: {
                 const item = await snapshot.getPromise(selected_items_state);
                 push_action({
                     type: type,
                     targets: item
                 })
             } break;
-            case CBACTION_STATE.DRAWING: {
+            case CBACTION_TYPE.DRAWING: {
                 const item = await snapshot.getPromise(item_state_accessor(drawingID!));
                 push_action({
-                    type: CBACTION_STATE.CREATING,
+                    type: CBACTION_TYPE.CREATING,
                     targets: [item]
                 })
             } break;
-            case CBACTION_STATE.RESIZING:
-            case CBACTION_STATE.ROTATING:
-            case CBACTION_STATE.TRANSLATING: {
+            case CBACTION_TYPE.RESIZING:
+            case CBACTION_TYPE.ROTATING:
+            case CBACTION_TYPE.TRANSLATING: {
                 const item = await snapshot.getPromise(selected_items_state);
                 console.log(item, before_action);
                 push_action({
-                    type: CBACTION_STATE.TRANSLATING,
+                    type: CBACTION_TYPE.TRANSLATING,
                     targets: item,
                     before: before_action!
                 })
@@ -167,15 +168,15 @@ export const Canvas: React.FC = ({ }) => {
                 set_pointer(prev => {
                     is_drawing = prev.is_drawing;
                     switch (prev.action) {
-                        case CBACTION_STATE.DRAWING:
+                        case CBACTION_TYPE.DRAWING:
                             add_new_action(prev.action, is_drawing);
                             break;
-                        case CBACTION_STATE.CREATING:
+                        case CBACTION_TYPE.CREATING:
                             add_new_action(prev.action);
                             break;
-                        case CBACTION_STATE.RESIZING:
-                        case CBACTION_STATE.ROTATING:
-                        case CBACTION_STATE.TRANSLATING:
+                        case CBACTION_TYPE.RESIZING:
+                        case CBACTION_TYPE.ROTATING:
+                        case CBACTION_TYPE.TRANSLATING:
                             add_new_action(prev.action);
                             break;
 
@@ -186,7 +187,7 @@ export const Canvas: React.FC = ({ }) => {
                         draft.is_active = false;
                         draft.selected_handle = CB_HANDLE.IDLE;
                         draft.is_drawing = EMPTY_ID;
-                        draft.action = CBACTION_STATE.IDLE;
+                        draft.action = CBACTION_TYPE.IDLE;
                     })
                 })
                 if (is_drawing !== EMPTY_ID) {
@@ -202,18 +203,12 @@ export const Canvas: React.FC = ({ }) => {
             onMouseMove={on_mouse_move}
             onMouseUp={on_mouse_up}
         >
-            <div> HELLO </div>
             <CanvasItemsWrapper />
             <SelectedWrapper />
-            <textarea defaultValue={"hello"} />
-            <div style={{ backgroundColor: 'var(--cbRed)', width: 100, height: 100 }} />
-            <div style={{ backgroundColor: 'var(--cbYellow)', width: 100, height: 100 }} />
-            <div style={{ backgroundColor: 'var(--cbBlue)', width: 100, height: 100 }} />
-            <div style={{ backgroundColor: 'var(--cbDarkBlue)', width: 100, height: 100 }} />
-            <div style={{ backgroundColor: 'var(--cbGreen)', width: 100, height: 100 }} />
             <ToolWrapper />
             <ToolbarWrapper />
             <ActionStack />
+            <ShortCutHandler />
         </ div>
     )
 }
