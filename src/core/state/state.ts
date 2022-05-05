@@ -99,7 +99,6 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
                 }
                 return prev;
             });
-
         }
         qt.cleanup();
     }
@@ -122,6 +121,7 @@ export const selected_items_state = selector<CBItem[]>({
             new_selected_items.forEach((item) => {
                 set(item_state_accessor(item.id), item);
             })
+            
         }
     }
 })
@@ -253,14 +253,4 @@ export const action_stack_state = atom<{stack: CBAction[], pointer: number}>({
         pointer: -1
     }
 })
-
-export const snapshot_stack = atom<{stack: Snapshot[], pointer: number }>({
-    key: "snapshot stack",
-    default: {
-        stack: [],
-        pointer: -1
-    },
-    dangerouslyAllowMutability: true
-})
-
 

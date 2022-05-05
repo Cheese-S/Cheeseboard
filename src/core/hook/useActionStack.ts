@@ -39,7 +39,9 @@ export function useActionStack() {
         })
         switch (action.type) {
             case CBACTION_STATE.CREATING:
-                set_item_state(action.targets[0].id, action.targets[0]);
+                action.targets.forEach((item) => {
+                    set_item_state(item.id, item);
+                })
                 break;
             case CBACTION_STATE.RESIZING:
             case CBACTION_STATE.ROTATING:
@@ -66,7 +68,9 @@ export function useActionStack() {
         
         switch (action.type) {
             case CBACTION_STATE.CREATING:
-                reset_item_state(action.targets[0].id);
+                action.targets.forEach((item) => {
+                    reset_item_state(item.id);
+                })
                 reset(selected_itemID_state);
                 break;
             case CBACTION_STATE.RESIZING:

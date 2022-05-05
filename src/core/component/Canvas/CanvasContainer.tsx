@@ -3,8 +3,9 @@ import { useRecoilCallback, useResetRecoilState, useSetRecoilState } from "recoi
 import { camera_state, itemID_state, item_state_accessor, selected_itemID_state, selected_items_state, style_state } from "../../state";
 import produce from "immer";
 import { CBItem, Image } from "../../type"
-import { CBTOOL } from "../../constant";
+import { CBACTION_STATE, CBTOOL } from "../../constant";
 import { CanvasUtil } from "../../utils/CanvasUtil";
+import { useActionStack } from "../../hook/useActionStack";
 
 
 interface CanvasContainerProps extends HTMLProps<HTMLDivElement> {
@@ -13,6 +14,7 @@ interface CanvasContainerProps extends HTMLProps<HTMLDivElement> {
 
 export const CanvasContainer: React.FC<CanvasContainerProps> = ({ children, ...rest }) => {
     const ref = useRef<HTMLDivElement>(null);
+    const { push_action } = useActionStack(); 
     const set_camera = useSetRecoilState(camera_state);
     const reset_selected_items = useResetRecoilState(selected_items_state);
     const reset_selected_ids = useResetRecoilState(selected_itemID_state);
@@ -50,9 +52,20 @@ export const CanvasContainer: React.FC<CanvasContainerProps> = ({ children, ...r
             item.qt_id = -1;
             CanvasUtil.get_shapeutil(item.type)?.translate_shape({x: 10, y: 10}, item.shape);
         })
+        push_action({
+            type: CBACTION_STATE.CREATING,
+            targets: items
+        })
+
+        
         set(selected_items_state, items); 
         set(selected_itemID_state, [...new_ids]);
-        set(itemID_state, prev => [...prev, ...new_ids]); 
+        set(itemID_state, prev => {
+            return [
+                ...prev,
+                ...new_ids.filter((id) => prev.indexOf(id) === -1)
+            ]
+        });
     })
 
     const get_copy_shapes = useRecoilCallback(({ snapshot }) => async () => {
