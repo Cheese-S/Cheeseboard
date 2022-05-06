@@ -1,14 +1,11 @@
-import React, { Component, useLayoutEffect, useRef, useEffect } from "react";
-import { Image, ItemCSS, Rect } from "../../type";
+import React from "react";
+import { useSetRecoilState } from "recoil";
+import styles from '../../../styles.module.css';
+import { useDivIndicator } from "../../hook/useDivIndicator";
+import { item_state_accessor } from "../../state";
+import { Image, ItemCSS } from "../../type";
 import { Container } from "../Container/Container";
 import { HTMLContainer } from "../Container/HTMLContainer";
-import { ComponentProps } from "./internal";
-import styles from '../../../styles.module.css'
-import { useSetRecoilState } from "recoil";
-import { item_state_accessor } from "../../state";
-import produce from "immer";
-import { Vec } from "../../utils/vec";
-import { useDivIndicator } from "../../hook/useDivIndicator";
 
 
 interface ImageComponentProps extends React.HTMLProps<HTMLDivElement> {

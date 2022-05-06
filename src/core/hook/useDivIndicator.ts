@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect, useRef } from "react"
+import { RefObject, useLayoutEffect, useRef } from "react";
 
 export function useDivIndicator(): RefObject<HTMLDivElement> {
     let indicator_ref = useRef<HTMLDivElement>(null); 

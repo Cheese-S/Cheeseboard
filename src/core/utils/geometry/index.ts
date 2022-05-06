@@ -1,4 +1,4 @@
-import { Point, Rect, Ellipse, Triangle, Bound, Polyline } from "../../type";
+import { Bound, Ellipse, Point, Polyline, Rect, Triangle } from "../../type";
 import { Vec } from "../vec/vec";
 
 /* -------------------------------------------------------------------------- */

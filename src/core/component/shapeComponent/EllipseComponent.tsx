@@ -1,10 +1,10 @@
 import React from "react";
-import { Ellipse, ItemCSS } from "../../type";
-import { SVGContainer } from "../Container/SVGContainer";
-import { Container } from "../Container/Container";
-import styles from '../../../styles.module.css'
-import { ComponentProps } from './internal'
+import styles from '../../../styles.module.css';
 import { useIndicator } from "../../hook/useIndicator";
+import { Ellipse } from "../../type";
+import { Container } from "../Container/Container";
+import { SVGContainer } from "../Container/SVGContainer";
+import { ComponentProps } from './internal';
 
 
 interface EllipseComponentProps extends ComponentProps<Ellipse> {

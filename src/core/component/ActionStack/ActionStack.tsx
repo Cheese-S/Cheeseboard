@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
 import { useActionStack } from "../../hook/useActionStack";
-import { action_stack_state } from "../../state";
 
 export const ActionStack: React.FC = ({ }) => {
     const { redo, undo } = useActionStack();

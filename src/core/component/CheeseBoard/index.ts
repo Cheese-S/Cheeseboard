@@ -1,1 +1,1 @@
-export * from './CheeseBoard'
+export * from './CheeseBoard';

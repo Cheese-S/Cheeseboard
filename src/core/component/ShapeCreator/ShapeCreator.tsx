@@ -1,18 +1,16 @@
 import produce from "immer";
-
 import React from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CBACTION_TYPE, CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from "../../constant";
 import { item_state_accessor, pointer_state, selected_itemID_state, style_state, tool_state } from "../../state";
-import { Rect, Ellipse, Triangle, Text, Polyline } from "../../type"
+import { Ellipse, Polyline, Rect, Text, Triangle } from "../../type";
 import { CanvasUtil } from "../../utils/CanvasUtil";
 import {
-    RectComponent,
-    EllipseComponent,
-    TriangleComponent
+    EllipseComponent, RectComponent, TriangleComponent
 } from "../ShapeComponent";
 import { PenComponent } from "../ShapeComponent/PenComponent";
 import { TextComponent } from "../ShapeComponent/TextComponent";
+
 
 
 

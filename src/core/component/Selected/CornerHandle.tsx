@@ -1,8 +1,8 @@
-import React from "react"
-import { useCornerHandle } from '../../hook/useCornerHandle'
-import styles from '../../../styles.module.css'
-import { CORNER_HANDLE_SIZE, HANDLE_PADDING } from './internal'
+import React from "react";
+import styles from '../../../styles.module.css';
+import { useCornerHandle } from '../../hook/useCornerHandle';
 import { CB_CORNER_HANDLE } from "../../type";
+import { CORNER_HANDLE_SIZE, HANDLE_PADDING } from './internal';
 
 interface CornerHandleProps {
     width: number,

@@ -1,5 +1,5 @@
 import { Quadtree } from ".";
-import { Bound } from "../../type"
+import { Bound } from "../../type";
 
 
 let getBound = (a: number, b: number, c: number, d: number): Bound => {

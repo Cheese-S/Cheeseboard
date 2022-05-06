@@ -1,11 +1,11 @@
+import { faDroplet, faFillDrip } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDroplet, faFillDrip } from '@fortawesome/free-solid-svg-icons'
-import React from "react"
-import { useRecoilState, useSetRecoilState } from "recoil"
-import { selected_items_state, style_state } from "../../state"
-import { CBCOLOR, CBSTROKE_WIDTH } from "../../constant";
-import styles from '../../../styles.module.css'
 import produce from "immer";
+import React from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styles from '../../../styles.module.css';
+import { CBCOLOR, CBSTROKE_WIDTH } from "../../constant";
+import { selected_items_state, style_state } from "../../state";
 import { CBStyle } from "../../type";
 
 export const Stylebar: React.FC = () => {

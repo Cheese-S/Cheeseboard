@@ -1,7 +1,7 @@
-import { RectComponent } from './RectComponent'
 import { EllipseComponent } from './EllipseComponent'
-import { TriangleComponent } from './TriangleComponent'
+import { RectComponent } from './RectComponent'
 import { TextComponent } from './TextComponent'
+import { TriangleComponent } from './TriangleComponent'
 
 export {
     RectComponent,

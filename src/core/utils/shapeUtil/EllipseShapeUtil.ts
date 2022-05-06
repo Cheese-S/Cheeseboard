@@ -1,4 +1,4 @@
-import { Shape, Ellipse, Point, Bound } from "../../type";
+import { Bound, Ellipse, Point } from "../../type";
 import { bound_ellipse_intersect, get_ellipse_bound } from "../geometry";
 import { Vec } from "../vec";
 import ShapeUtil from "./ShapeUtil";

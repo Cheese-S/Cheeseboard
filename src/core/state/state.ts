@@ -1,7 +1,6 @@
-import { CSSProperties } from "react";
-import { atomFamily, atom, selectorFamily, selector, DefaultValue, Snapshot } from "recoil";
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, EMPTY_BD, CB_HANDLE, EMPTY_ID, CBACTION_TYPE } from "../constant";
-import { CBItem, Shape, CBStyle, Bound, CBPointer, ItemCSS, CBAction } from "../type";
+import { atom, atomFamily, DefaultValue, selector, selectorFamily } from "recoil";
+import { CBACTION_TYPE, CBCOLOR, CBSTROKE_WIDTH, CBTOOL, CB_HANDLE, EMPTY_BD, EMPTY_ID } from "../constant";
+import { Bound, CBAction, CBItem, CBPointer, CBStyle, ItemCSS } from "../type";
 import { CanvasUtil } from "../utils/CanvasUtil";
 import { Quadtree } from "../utils/qudatree";
 

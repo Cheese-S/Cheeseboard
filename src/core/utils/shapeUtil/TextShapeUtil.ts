@@ -1,4 +1,4 @@
-import { Shape, Bound, Point, Rect, Text } from "../../type";
+import { Bound, Point, Shape, Text } from "../../type";
 import { bound_rect_intersect, get_rect_bound } from "../geometry";
 import { Vec } from "../vec";
 import ShapeUtil from "./ShapeUtil";

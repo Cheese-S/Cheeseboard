@@ -1,9 +1,9 @@
 import React from "react";
-import { tool_state } from "../../state";
-import styles from '../../../styles.module.css'
-import { Type, Circle, Triangle, PenTool, XCircle, Square, MousePointer } from 'react-feather'
-import { CBTOOL } from "../../constant";
+import { Circle, MousePointer, PenTool, Square, Triangle, Type, XCircle } from 'react-feather';
 import { useRecoilState } from "recoil";
+import styles from '../../../styles.module.css';
+import { CBTOOL } from "../../constant";
+import { tool_state } from "../../state";
 
 
 export const Toolbar: React.FC = () => {

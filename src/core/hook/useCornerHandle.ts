@@ -1,6 +1,5 @@
-import { useCallback } from "react";
-import { CB_HANDLE } from "../constant"
-import { Point, CB_CORNER_HANDLE } from "../type";
+import { CB_HANDLE } from "../constant";
+import { CB_CORNER_HANDLE, Point } from "../type";
 
 export function useCornerHandle(width: number, height: number, handle: CB_CORNER_HANDLE, handle_hsize: number, hpadding: number) {
     let center: Point;

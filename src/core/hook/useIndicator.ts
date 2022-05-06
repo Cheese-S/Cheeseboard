@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect, useRef } from "react"
+import { RefObject, useLayoutEffect, useRef } from "react";
 
 type IndicatorRefType = SVGRectElement | SVGEllipseElement | SVGPathElement;
 

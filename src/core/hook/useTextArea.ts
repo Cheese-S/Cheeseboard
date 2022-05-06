@@ -1,4 +1,4 @@
-import { RefObject, useLayoutEffect, useRef, useState } from "react"
+import { RefObject, useLayoutEffect, useRef, useState } from "react";
 
 export function useTextArea(): 
 {

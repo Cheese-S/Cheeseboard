@@ -1,12 +1,10 @@
 import React from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { CBTOOL } from "../../constant";
-import { item_state, item_css_state, selected_itemID_state } from "../../state";
-import { Ellipse, Image, Polyline, Rect, Text, Triangle, } from "../../type";
+import { item_css_state, item_state, selected_itemID_state } from "../../state";
+import { Ellipse, Image, Polyline, Rect, Text, Triangle } from "../../type";
 import {
-    RectComponent,
-    EllipseComponent,
-    TriangleComponent
+    EllipseComponent, RectComponent, TriangleComponent
 } from "../ShapeComponent";
 import { ImageComponent } from "../ShapeComponent/ImageComponent";
 import { PenComponent } from "../ShapeComponent/PenComponent";

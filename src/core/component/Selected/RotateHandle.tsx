@@ -1,6 +1,6 @@
 import React from "react";
+import styles from '../../../styles.module.css';
 import { useRotateHandle } from "../../hook/useRotateHandle";
-import styles from '../../../styles.module.css'
 const ROTATE_HANDLE_PADDING = 20;
 const ROTATE_HANDLE_SIZE = 8;
 

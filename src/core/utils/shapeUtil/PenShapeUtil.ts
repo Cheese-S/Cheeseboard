@@ -1,4 +1,4 @@
-import { Shape, Bound, Point, Polyline } from "../../type";
+import { Bound, Point, Polyline } from "../../type";
 import { bound_poly_intersect, get_polyseg_bound, get_polyseg_center, sqdis_to_seg } from "../geometry";
 import { Vec } from "../vec";
 import ShapeUtil from "./ShapeUtil";

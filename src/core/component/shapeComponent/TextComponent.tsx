@@ -1,15 +1,13 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CBItem, ItemCSS, Rect, Text } from "../../type";
-import { HTMLContainer } from "../Container/HTMLContainer";
-import { ComponentProps } from './internal'
-import styles from '../../../styles.module.css'
-import { Container } from "../Container/Container";
-import { SVGContainer } from "../Container/SVGContainer";
-import { useDivIndicator } from "../../hook/useDivIndicator";
-import { SetterOrUpdater, useSetRecoilState } from "recoil";
-import { item_state_accessor, selected_itemID_state } from "../../state";
-import { useTextArea } from "../../hook/useTextArea";
 import produce from "immer";
+import React, { useLayoutEffect } from "react";
+import { SetterOrUpdater, useSetRecoilState } from "recoil";
+import styles from '../../../styles.module.css';
+import { useDivIndicator } from "../../hook/useDivIndicator";
+import { useTextArea } from "../../hook/useTextArea";
+import { item_state_accessor } from "../../state";
+import { CBItem, ItemCSS, Rect, Text } from "../../type";
+import { Container } from "../Container/Container";
+import { HTMLContainer } from "../Container/HTMLContainer";
 
 
 interface TextComponentProps extends React.HTMLProps<HTMLDivElement> {

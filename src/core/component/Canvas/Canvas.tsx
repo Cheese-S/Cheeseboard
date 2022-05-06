@@ -1,20 +1,18 @@
 import produce from 'immer'
 import * as React from 'react'
-import { useRecoilCallback, useRecoilState, useSetRecoilState } from 'recoil'
+import { useRecoilCallback, useSetRecoilState } from 'recoil'
 import styles from '../../../styles.module.css'
 import { CBACTION_TYPE, CBTOOL, CB_HANDLE, EMPTY_ID, LEFT_MOUSE } from '../../constant'
 import { useActionStack } from '../../hook/useActionStack'
-import { camera_state, itemID_state, item_state, item_state_accessor, pointer_state, selected_bound_state, selected_items_state } from '../../state'
+import { item_state_accessor, pointer_state, selected_items_state } from '../../state'
 import { CBItem, CB_CORNER_HANDLE, CB_EDGE_HANDLE, Point, Polyline } from '../../type'
 import { CanvasUtil } from '../../utils/CanvasUtil'
 import { PenShapeUtil } from '../../utils/shapeUtil'
-import { Vec } from '../../utils/vec'
 import { ActionStack } from '../ActionStack/ActionStack'
-import { CanvasItem, CanvasItemsWrapper } from '../CanvasItem'
+import { CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
-import { ImageComponent } from '../ShapeComponent/ImageComponent'
-import { ShortCutHandler } from '../ShortCutHandler'
+import { ShortCutHandler } from '../ShortcutHandler'
 import { ToolbarWrapper } from '../Toolbar'
 let is_active = false;
 let before_action: CBItem[] | null = null;
@@ -172,16 +170,12 @@ export const Canvas: React.FC = ({ }) => {
                             add_new_action(prev.action, is_drawing);
                             break;
                         case CBACTION_TYPE.CREATING:
-                            add_new_action(prev.action);
-                            break;
                         case CBACTION_TYPE.RESIZING:
                         case CBACTION_TYPE.ROTATING:
                         case CBACTION_TYPE.TRANSLATING:
                             add_new_action(prev.action);
                             break;
-
                     }
-                    console.log("CANVAS ON MOUSE UP, STATE = %s", prev.action);
                     return produce(prev, draft => {
                         draft.movement = { x: 0, y: 0 };
                         draft.is_active = false;

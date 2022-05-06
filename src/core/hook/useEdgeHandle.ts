@@ -1,4 +1,4 @@
-import { CB_HANDLE } from "../constant"
+import { CB_HANDLE } from "../constant";
 import { CB_EDGE_HANDLE } from "../type";
 
 

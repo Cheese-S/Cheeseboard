@@ -1,6 +1,5 @@
-import React from "react";
-import { HTMLProps } from "react";
-import styles from '../../../styles.module.css'
+import React, { HTMLProps } from "react";
+import styles from '../../../styles.module.css';
 
 interface ContainerProps extends HTMLProps<HTMLDivElement> {
     children: React.ReactNode

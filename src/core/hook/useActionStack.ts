@@ -1,8 +1,7 @@
-import produce from "immer"
-import { current } from "immer"
+import produce, { current } from "immer"
 import { useRecoilCallback } from "recoil"
 import { CBACTION_TYPE } from "../constant"
-import { action_stack_state, itemID_state, item_state_accessor, selected_itemID_state, selected_items_state } from "../state"
+import { action_stack_state, itemID_state, item_state_accessor, selected_itemID_state } from "../state"
 import { CBAction, CBItem } from "../type"
 
 export function useActionStack() {

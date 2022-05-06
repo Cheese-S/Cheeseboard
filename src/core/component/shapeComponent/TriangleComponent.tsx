@@ -1,13 +1,13 @@
 import React from "react";
+import styles from '../../../styles.module.css';
 import { CBTOOL } from "../../constant";
+import { useIndicator } from "../../hook/useIndicator";
 import { Triangle } from "../../type";
 import { CanvasUtil } from "../../utils/CanvasUtil";
 import TriangleShapeUtil from "../../utils/shapeUtil/TriangleShapeUtil";
 import { Container } from "../Container/Container";
 import { SVGContainer } from "../Container/SVGContainer";
-import styles from '../../../styles.module.css'
-import { ComponentProps } from './internal'
-import { useIndicator } from "../../hook/useIndicator";
+import { ComponentProps } from './internal';
 
 interface TriangleComponentProps extends ComponentProps<Triangle>{
 }

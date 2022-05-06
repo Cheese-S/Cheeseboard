@@ -1,8 +1,8 @@
-import React from "react"
-import { useEdgeHandle } from "../../hook/useEdgeHandle"
-import styles from '../../../styles.module.css'
-import { HANDLE_PADDING, CORNER_HANDLE_SIZE } from './internal'
+import React from "react";
+import styles from '../../../styles.module.css';
+import { useEdgeHandle } from "../../hook/useEdgeHandle";
 import { CB_EDGE_HANDLE } from "../../type";
+import { HANDLE_PADDING } from './internal';
 
 interface EdgeHandleProps {
     // bound: number, 

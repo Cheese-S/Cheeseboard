@@ -1,4 +1,4 @@
-import { Bound, Shape, Point } from "../../type";
+import { Bound, Point, Shape } from "../../type";
 
 export default abstract class ShapeUtil {
 

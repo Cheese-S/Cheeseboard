@@ -1,13 +1,13 @@
-import { CBTOOL, CB_HANDLE, EMPTY_BD, MIN_SIZE, CBSTROKE_WIDTH } from "../../constant";
-import { Bound, CBItem, CBStyle, Shape, Point, ItemCSS, CB_EDGE_HANDLE, CB_CORNER_HANDLE, Triangle, Text, Image } from "../../type";
-import { RectShapeUtil, EllipseShapeUtil, PenShapeUtil, ShapeUtil } from "../shapeUtil";
-import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
-import React, { CSSProperties } from "react";
-import { get_common_bound, is_bound_equal } from "../geometry";
-import { Vec } from "../vec";
-import TextShapeUtil from "../shapeUtil/TextShapeUtil";
 import { customAlphabet } from "nanoid";
+import { CSSProperties } from "react";
+import { CBSTROKE_WIDTH, CBTOOL, CB_HANDLE, EMPTY_BD, MIN_SIZE } from "../../constant";
+import { Bound, CBItem, CBStyle, CB_CORNER_HANDLE, CB_EDGE_HANDLE, Image, ItemCSS, Point, Shape, Text } from "../../type";
+import { get_common_bound, is_bound_equal } from "../geometry";
+import { EllipseShapeUtil, PenShapeUtil, RectShapeUtil, ShapeUtil } from "../shapeUtil";
 import ImageShapeUtil from "../shapeUtil/ImageShapeUtil";
+import TextShapeUtil from "../shapeUtil/TextShapeUtil";
+import TriangleShapeUtil from "../shapeUtil/TriangleShapeUtil";
+import { Vec } from "../vec";
 const nanoid = customAlphabet('1234567890', 9);
 
 const font_size = {

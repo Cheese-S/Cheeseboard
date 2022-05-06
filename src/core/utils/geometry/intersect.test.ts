@@ -1,7 +1,7 @@
-import { Vec } from "../vec/vec";
-import { Ellipse, Point, Rect, Triangle } from "../../type"
-import { seg_seg_intersect, pt_in_rect, rect_rect_intersect, rect_ellipse_intersect, get_rect_bound, get_ellipse_bound, get_triangle_bound, get_common_bound, get_bound_rect, rect_triangle_intersect } from "."
 import { toBeDeepCloseTo, toMatchCloseTo } from 'jest-matcher-deep-close-to';
+import { get_bound_rect, get_common_bound, get_ellipse_bound, get_rect_bound, get_triangle_bound, pt_in_rect, rect_ellipse_intersect, rect_rect_intersect, rect_triangle_intersect, seg_seg_intersect } from ".";
+import { Ellipse, Point, Rect, Triangle } from "../../type";
+import { Vec } from "../vec/vec";
 
 expect.extend({ toBeDeepCloseTo, toMatchCloseTo });
 

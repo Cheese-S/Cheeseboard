@@ -1,5 +1,5 @@
-import { CBCOLOR, CBTOOL, CBSTROKE_WIDTH, CB_HANDLE, CBACTION_TYPE } from "./constant"
 import { CSSProperties } from "react"
+import { CBACTION_TYPE, CBCOLOR, CBSTROKE_WIDTH, CBTOOL, CB_HANDLE } from "./constant"
 
 export type Shape = Rect | Ellipse | Triangle | Polyline | Text | Image
 

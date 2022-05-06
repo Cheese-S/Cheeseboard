@@ -1,11 +1,10 @@
 import React from "react";
-import { Rect } from "../../type";
-import { SVGContainer } from "../Container/SVGContainer";
-import { Container } from "../Container/Container";
-import styles from '../../../styles.module.css'
+import styles from '../../../styles.module.css';
 import { useIndicator } from "../../hook/useIndicator";
-import { ComponentProps } from './internal'
-import { HTMLContainer } from "../Container/HTMLContainer";
+import { Rect } from "../../type";
+import { Container } from "../Container/Container";
+import { SVGContainer } from "../Container/SVGContainer";
+import { ComponentProps } from './internal';
 
 interface RectComponentProps extends ComponentProps<Rect> {
 }
