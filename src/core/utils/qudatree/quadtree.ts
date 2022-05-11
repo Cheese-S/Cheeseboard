@@ -393,7 +393,7 @@ export class Quadtree {
             }
 
             this.qnodes.set(node, qnode_idx_num_children, -1);
-            for (let i = 0; i < temp_elts.size(); i++) {
+            for (let i = 0; i < temp_elts.size(); ++i) {
                 this.insert_qnode(node, depth, mx, my, sx, sy, temp_elts.get(i, 0)); 
             } 
         } else {

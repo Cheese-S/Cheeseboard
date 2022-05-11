@@ -52,11 +52,6 @@ export const Toolbar: React.FC = () => {
                     <Triangle />
                 </div>
             </button>
-            <button data-id={CBTOOL.ERASER} className={styles.cbToolButton} onClick={onClick}>
-                <div className={styles.cbToolButtonHighlight} style={ get_bgcolor(CBTOOL.ERASER)}>
-                    <XCircle />
-                </div>
-            </button>
         </div>
     )
 }

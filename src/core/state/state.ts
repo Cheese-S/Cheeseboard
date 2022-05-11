@@ -140,9 +140,9 @@ export const tool_state = atom<CBTOOL>({
 export const style_state = atom<CBStyle>({
     key: "style",
     default: {
-        color: CBCOLOR.RED,
-        size: CBSTROKE_WIDTH.MEDIUM,
-        fill: true,
+        color: CBCOLOR.BLACK,
+        size: CBSTROKE_WIDTH.SMALL,
+        fill: false,
         dotted: false,
         is_ghost: false
     }
