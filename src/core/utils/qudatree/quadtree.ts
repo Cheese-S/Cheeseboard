@@ -54,7 +54,7 @@ const qnd_idx_depth = 5;
 /**
  * This quadtree uses a triple referece structure. qnodes -> enodes -> elts
  * And elts stores an id that points to an external shape map that can be used for fine grained collision detection. 
- * SEE https://stackoverflow.com/questions/49699067/property-has-no-initializer-and-is-not-definitely-assigned-in-the-construc
+ * SEE https://stackoverflow.com/questions/41946007/efficient-and-well-explained-implementation-of-a-quadtree-for-2d-collision-det#comment107230829_48355534
  */
 
 export class Quadtree {
