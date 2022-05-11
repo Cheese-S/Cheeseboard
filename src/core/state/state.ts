@@ -80,7 +80,6 @@ export const item_state_accessor = selectorFamily<CBItem, number>({
         } else {
             set(item_state(itemID),
                 (prev) => {
-
                     if (prev.qt_id !== -1) {
                         qt.remove(prev.qt_id);
                     }

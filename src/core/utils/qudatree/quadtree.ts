@@ -179,10 +179,10 @@ export class Quadtree {
             }
 
             if (num_empty_leaves === 4) {
-                this.qnodes.remove(fc + 0);
-                this.qnodes.remove(fc + 1);
-                this.qnodes.remove(fc + 2);
                 this.qnodes.remove(fc + 3);
+                this.qnodes.remove(fc + 2);
+                this.qnodes.remove(fc + 1);
+                this.qnodes.remove(fc + 0);
 
                 this.qnodes.set(node, qnode_idx_fc, -1);
                 this.qnodes.set(node, qnode_idx_num_children, 0);

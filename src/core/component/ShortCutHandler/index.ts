@@ -1,1 +1,1 @@
-export * from './ShortcutHandler'
+export * from './ShortCutHandler'

@@ -12,7 +12,7 @@ import { ActionStack } from '../ActionStack/ActionStack'
 import { CanvasItemsWrapper } from '../CanvasItem'
 import { ToolWrapper } from '../Container/ToolWrapper'
 import { SelectedWrapper } from '../Selected'
-import { ShortCutHandler } from '../ShortcutHandler'
+import { ShortCutHandler } from '../ShortCutHandler'
 import { ToolbarWrapper } from '../Toolbar'
 let is_active = false;
 let before_action: CBItem[] | null = null;
